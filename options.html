@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>网页信息收集助手 - 设置</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      width: 600px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #333;
+      border-bottom: 2px solid #4CAF50;
+      padding-bottom: 10px;
+    }
+    .section {
+      margin: 30px 0;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+    .section h2 {
+      color: #555;
+      margin-top: 0;
+      font-size: 18px;
+    }
+    .form-group {
+      margin: 15px 0;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #555;
+    }
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    input:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+    .btn {
+      background: #4CAF50;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    .btn:hover {
+      background: #45a049;
+    }
+    .status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      display: block;
+    }
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      display: block;
+    }
+    .help-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚙️ 插件设置</h1>
+
+    <div class="section">
+      <h2>🤖 AI大模型API配置</h2>
+      <div class="form-group">
+        <label for="aiProvider">AI服务提供商</label>
+        <select id="aiProvider">
+          <option value="openai">OpenAI</option>
+          <option value="anthropic">Anthropic (Claude)</option>
+          <option value="custom">自定义</option>
+        </select>
+        <div class="help-text">选择你使用的AI服务提供商</div>
+      </div>
+
+      <div class="form-group">
+        <label for="aiApiUrl">AI API URL</label>
+        <input type="text" id="aiApiUrl" placeholder="https://api.openai.com/v1/chat/completions">
+        <div class="help-text">AI API的完整URL地址</div>
+      </div>
+
+      <div class="form-group">
+        <label for="aiApiKey">AI API Key</label>
+        <input type="password" id="aiApiKey" placeholder="sk-...">
+        <div class="help-text">你的AI API密钥</div>
+      </div>
+
+      <div class="form-group">
+        <label for="aiModel">AI模型</label>
+        <input type="text" id="aiModel" placeholder="gpt-4o-mini">
+        <div class="help-text">使用的AI模型名称</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📡 数据传递API配置</h2>
+      <div class="form-group">
+        <label for="dataApiUrl">数据API URL</label>
+        <input type="text" id="dataApiUrl" placeholder="https://your-api.com/api/webpage-data">
+        <div class="help-text">接收网页数据的API地址</div>
+      </div>
+
+      <div class="form-group">
+        <label for="dataApiKey">数据API Key (可选)</label>
+        <input type="password" id="dataApiKey" placeholder="可选的API密钥">
+        <div class="help-text">如果API需要认证，请填写密钥</div>
+      </div>
+
+      <div class="form-group">
+        <label for="dataApiMethod">请求方法</label>
+        <select id="dataApiMethod">
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn" id="saveBtn">保存设置</button>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
