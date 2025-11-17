@@ -72,6 +72,123 @@ function showStatus(message, type) {
   }, 3000);
 }
 
+// 显示测试结果
+function showTestResult(message, type, details = '') {
+  const testResultDiv = document.getElementById('testResult');
+  testResultDiv.innerHTML = message + (details ? `<br><small style="margin-top: 5px; display: block;">${details}</small>` : '');
+  testResultDiv.className = `status ${type}`;
+  testResultDiv.style.display = 'block';
+}
+
+// 测试AI API连接
+async function testAIAPI() {
+  const testBtn = document.getElementById('testAiBtn');
+  const originalText = testBtn.textContent;
+
+  // 获取当前表单的值（未保存的也可以测试）
+  const provider = document.getElementById('aiProvider').value;
+  const apiUrl = document.getElementById('aiApiUrl').value.trim();
+  const apiKey = document.getElementById('aiApiKey').value.trim();
+  const model = document.getElementById('aiModel').value.trim();
+
+  // 验证必填字段
+  if (!apiUrl) {
+    showTestResult('❌ 请填写AI API URL', 'error');
+    return;
+  }
+
+  if (!apiKey) {
+    showTestResult('❌ 请填写AI API Key', 'error');
+    return;
+  }
+
+  try {
+    // 禁用按钮并显示加载状态
+    testBtn.disabled = true;
+    testBtn.textContent = '⏳ 测试中...';
+    showTestResult('⏳ 正在测试API连接...', 'info');
+
+    // 测试提示词
+    const testPrompt = '请用一句话回复：AI API测试成功';
+
+    let response;
+    let result;
+
+    if (provider === 'anthropic') {
+      // Anthropic API测试
+      response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: model || 'claude-3-5-sonnet-20241022',
+          max_tokens: 100,
+          messages: [{
+            role: 'user',
+            content: testPrompt
+          }]
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`API错误 (${response.status}): ${errorData.error?.message || response.statusText}`);
+      }
+
+      const data = await response.json();
+      result = data.content[0].text;
+
+    } else {
+      // OpenAI或兼容API测试
+      response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: model || 'gpt-4o-mini',
+          messages: [{
+            role: 'user',
+            content: testPrompt
+          }],
+          max_tokens: 100
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`API错误 (${response.status}): ${errorData.error?.message || response.statusText}`);
+      }
+
+      const data = await response.json();
+      result = data.choices[0].message.content;
+    }
+
+    // 显示成功结果
+    showTestResult(
+      '✅ AI API连接成功！',
+      'success',
+      `模型: ${model || '默认'}<br>响应: ${result}`
+    );
+
+  } catch (error) {
+    console.error('AI API测试失败:', error);
+    showTestResult(
+      '❌ AI API测试失败',
+      'error',
+      error.message
+    );
+  } finally {
+    // 恢复按钮状态
+    testBtn.disabled = false;
+    testBtn.textContent = originalText;
+  }
+}
+
 // AI提供商变化时更新预设
 document.getElementById('aiProvider').addEventListener('change', (e) => {
   const provider = e.target.value;
@@ -85,6 +202,9 @@ document.getElementById('aiProvider').addEventListener('change', (e) => {
 
 // 保存按钮点击事件
 document.getElementById('saveBtn').addEventListener('click', saveSettings);
+
+// 测试AI API按钮点击事件
+document.getElementById('testAiBtn').addEventListener('click', testAIAPI);
 
 // 页面加载时加载设置
 document.addEventListener('DOMContentLoaded', loadSettings);

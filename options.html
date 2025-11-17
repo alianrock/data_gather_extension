@@ -83,6 +83,15 @@
       color: #721c24;
       display: block;
     }
+    .status.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      display: block;
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
     .help-text {
       font-size: 12px;
       color: #666;
@@ -123,6 +132,10 @@
         <input type="text" id="aiModel" placeholder="gpt-4o-mini">
         <div class="help-text">使用的AI模型名称</div>
       </div>
+
+      <button class="btn btn-secondary" id="testAiBtn" style="margin-top: 10px; background: #667eea;">🧪 测试AI API连接</button>
+
+      <div id="testResult" class="status" style="display: none; margin-top: 10px;"></div>
     </div>
 
     <div class="section">
