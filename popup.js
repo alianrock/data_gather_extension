@@ -282,31 +282,104 @@ function safeParseJSON(text) {
   }
 }
 
+// 语言配置
+const LANGUAGE_CONFIG = {
+  'zh-CN': { name: '中文', hook: '发现宝藏', recommend: '强烈推荐', highlight: '亮点' },
+  'zh-TW': { name: '中文', hook: '發現寶藏', recommend: '強烈推薦', highlight: '亮點' },
+  'en': { name: 'English', hook: 'Must See', recommend: 'Highly Recommended', highlight: 'Highlights' },
+  'ja': { name: '日本語', hook: '必見', recommend: 'おすすめ', highlight: 'ハイライト' },
+  'ko': { name: '한국어', hook: '필독', recommend: '강력 추천', highlight: '하이라이트' },
+  'es': { name: 'Español', hook: 'Imprescindible', recommend: 'Muy Recomendado', highlight: 'Destacados' },
+  'fr': { name: 'Français', hook: 'À Découvrir', recommend: 'Recommandé', highlight: 'Points Forts' },
+  'de': { name: 'Deutsch', hook: 'Muss Man Sehen', recommend: 'Empfehlung', highlight: 'Highlights' }
+};
+
+// 风格提示词配置
+const STYLE_PROMPTS = {
+  social: {
+    'zh-CN': `你是一个社交媒体内容创作专家。请为这个网页创建一段适合在社交媒体分享的精彩介绍。
+
+要求：
+1. 开头用一个吸引眼球的emoji和hook语句
+2. 用2-3句话概括核心价值，要有感染力和说服力
+3. 列出3个关键亮点（用emoji标注）
+4. 结尾加一个行动号召语句
+5. 语气要热情、真诚、有感染力，像朋友推荐好东西一样
+6. 总长度控制在200字以内`,
+    'en': `You are a social media content expert. Create an engaging introduction for sharing on social media.
+
+Requirements:
+1. Start with an eye-catching emoji and hook
+2. Summarize core value in 2-3 compelling sentences
+3. List 3 key highlights with emojis
+4. End with a call-to-action
+5. Be enthusiastic, authentic, and persuasive
+6. Keep it under 200 words`,
+    'default': `Create social media friendly content with emojis, highlights, and call-to-action. Be engaging and persuasive.`
+  },
+  professional: {
+    'zh-CN': `请用专业、正式的语气为这个网页生成摘要。包含：核心概述、主要功能/内容、适用场景。保持客观中立。`,
+    'en': `Generate a professional summary including: core overview, main features/content, use cases. Keep it objective and formal.`,
+    'default': `Generate a professional, formal summary with overview and key points.`
+  },
+  casual: {
+    'zh-CN': `用轻松活泼的语气介绍这个网页，就像跟朋友聊天一样。可以用一些口语化表达和emoji，让人觉得有趣想点进去看看。`,
+    'en': `Introduce this page in a fun, casual way - like chatting with friends. Use casual language and emojis to make it interesting.`,
+    'default': `Create a fun, casual summary with friendly tone and emojis.`
+  },
+  brief: {
+    'zh-CN': `用一句话概括这个网页的核心价值，再用3个要点列出最重要的信息。极简风格，不超过100字。`,
+    'en': `One sentence for core value, then 3 bullet points for key info. Minimalist style, under 100 words.`,
+    'default': `Ultra-brief: one sentence + 3 bullet points.`
+  }
+};
+
+// 构建AI提示词
+function buildSocialPrompt(pageInfo, language, style) {
+  const lang = language || 'zh-CN';
+  const styleKey = style || 'social';
+
+  // 获取风格提示
+  const stylePrompt = STYLE_PROMPTS[styleKey]?.[lang] ||
+                      STYLE_PROMPTS[styleKey]?.['default'] ||
+                      STYLE_PROMPTS.social['zh-CN'];
+
+  // 语言指示
+  const langName = LANGUAGE_CONFIG[lang]?.name || '中文';
+  const langInstruction = lang.startsWith('zh') ? '' : `\n\nIMPORTANT: Respond in ${langName} language.`;
+
+  return `${stylePrompt}${langInstruction}
+
+网页信息：
+- 标题: ${pageInfo.title || '无标题'}
+- URL: ${pageInfo.url || ''}
+- 描述: ${pageInfo.description || '无描述'}
+- 网站: ${pageInfo.domain || ''}
+- 主要标题: ${pageInfo.headings?.slice(0, 5).join(', ') || '无'}
+- 内容片段: ${pageInfo.bodyText?.substring(0, 800) || '无内容'}
+
+请直接输出内容，不要加任何标记或格式说明。`;
+}
+
 // 使用AI生成摘要
 async function generateAISummary(pageInfo) {
   try {
     // 获取AI API配置
-    const settings = await chrome.storage.sync.get(['aiApiUrl', 'aiApiKey', 'aiModel', 'aiProvider']);
+    const settings = await chrome.storage.sync.get([
+      'aiApiUrl', 'aiApiKey', 'aiModel', 'aiProvider',
+      'summaryLanguage', 'summaryStyle'
+    ]);
 
     if (!settings.aiApiUrl || !settings.aiApiKey) {
       throw new Error('请先在设置中配置AI API');
     }
 
-    // 构建提示词
-    const prompt = `请为以下网页生成一个简洁的摘要（200字以内）和详细介绍（500字以内）：
-
-网页标题: ${pageInfo.title}
-网页URL: ${pageInfo.url}
-网页描述: ${pageInfo.description}
-主要标题: ${pageInfo.headings.join(', ')}
-网页内容片段: ${pageInfo.bodyText.substring(0, 1000)}
-
-请以以下格式输出：
-【简介】
-（一段简洁的描述）
-
-【详细介绍】
-（详细的介绍内容）`;
+    // 构建社交化提示词
+    const prompt = buildSocialPrompt(
+      pageInfo,
+      settings.summaryLanguage || 'zh-CN',
+      settings.summaryStyle || 'social'
+    );
 
     let response;
     let responseText;
@@ -477,122 +550,182 @@ async function generateShareCard() {
     const canvas = document.getElementById('cardCanvas');
     const ctx = canvas.getContext('2d');
 
-    // 卡片尺寸设置
-    const cardWidth = 800;
-    const padding = 40;
-    const screenshotHeight = 400;
-    const headerHeight = 120;
-    const summaryHeight = 200;
-    const footerHeight = 60;
-    const cardHeight = headerHeight + screenshotHeight + summaryHeight + footerHeight + padding * 2;
+    // 卡片尺寸设置 - 更适合社交媒体的比例
+    const cardWidth = 1080;
+    const cardHeight = 1350; // 4:5 比例，适合 Instagram
+    const margin = 48;
+    const innerPadding = 32;
 
     canvas.width = cardWidth;
     canvas.height = cardHeight;
 
-    // 绘制背景渐变
-    const gradient = ctx.createLinearGradient(0, 0, cardWidth, cardHeight);
-    gradient.addColorStop(0, '#667eea');
-    gradient.addColorStop(1, '#764ba2');
-    ctx.fillStyle = gradient;
+    // 绘制渐变背景 - 更现代的配色
+    const bgGradient = ctx.createLinearGradient(0, 0, cardWidth, cardHeight);
+    bgGradient.addColorStop(0, '#1a1a2e');
+    bgGradient.addColorStop(0.5, '#16213e');
+    bgGradient.addColorStop(1, '#0f3460');
+    ctx.fillStyle = bgGradient;
     ctx.fillRect(0, 0, cardWidth, cardHeight);
 
-    // 绘制白色内容区域
+    // 添加装饰性光晕效果
+    const glowGradient = ctx.createRadialGradient(
+      cardWidth * 0.8, cardHeight * 0.2, 0,
+      cardWidth * 0.8, cardHeight * 0.2, cardWidth * 0.5
+    );
+    glowGradient.addColorStop(0, 'rgba(102, 126, 234, 0.3)');
+    glowGradient.addColorStop(1, 'rgba(102, 126, 234, 0)');
+    ctx.fillStyle = glowGradient;
+    ctx.fillRect(0, 0, cardWidth, cardHeight);
+
+    // 主内容卡片 - 毛玻璃效果背景
+    const cardX = margin;
+    const cardY = margin;
+    const cardInnerWidth = cardWidth - margin * 2;
+    const cardInnerHeight = cardHeight - margin * 2;
+
+    // 卡片背景（半透明白色）
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+    roundRect(ctx, cardX, cardY, cardInnerWidth, cardInnerHeight, 24);
+    ctx.fill();
+
+    // 添加卡片阴影效果（通过多层实现）
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 10;
+
+    // ========== 顶部品牌区域 ==========
+    const brandY = cardY + innerPadding;
+
+    // 品牌标签背景
+    const brandGradient = ctx.createLinearGradient(cardX + innerPadding, brandY, cardX + innerPadding + 200, brandY);
+    brandGradient.addColorStop(0, '#667eea');
+    brandGradient.addColorStop(1, '#764ba2');
+    ctx.fillStyle = brandGradient;
+    roundRect(ctx, cardX + innerPadding, brandY, 180, 36, 18);
+    ctx.fill();
+
+    ctx.shadowColor = 'transparent';
     ctx.fillStyle = '#ffffff';
-    roundRect(ctx, padding, padding, cardWidth - padding * 2, cardHeight - padding * 2, 16);
-    ctx.fill();
+    ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('📋 网页收集助手', cardX + innerPadding + 16, brandY + 24);
 
-    // 绘制标题
-    ctx.fillStyle = '#333333';
-    ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    const title = truncateText(ctx, collectedData.pageInfo.title || '无标题', cardWidth - padding * 4);
-    ctx.fillText(title, padding * 2, padding + 50);
+    // ========== 标题区域 ==========
+    const titleY = brandY + 70;
+    ctx.fillStyle = '#1a1a2e';
+    ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    const title = collectedData.pageInfo.title || '无标题';
+    const titleLines = wrapTextToLines(ctx, title, cardInnerWidth - innerPadding * 2, 2);
+    titleLines.forEach((line, i) => {
+      ctx.fillText(line, cardX + innerPadding, titleY + i * 44);
+    });
 
-    // 绘制URL
-    ctx.fillStyle = '#667eea';
-    ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    const url = truncateText(ctx, collectedData.pageInfo.url || '', cardWidth - padding * 4);
-    ctx.fillText(url, padding * 2, padding + 80);
-
-    // 绘制域名标签
-    ctx.fillStyle = '#f0f0f0';
+    // 域名标签
+    const domainY = titleY + titleLines.length * 44 + 16;
     const domain = collectedData.pageInfo.domain || new URL(collectedData.pageInfo.url).hostname;
-    ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    const domainWidth = ctx.measureText(domain).width + 20;
-    roundRect(ctx, padding * 2, padding + 90, domainWidth, 24, 12);
+    ctx.fillStyle = '#f0f4ff';
+    ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    const domainWidth = ctx.measureText('🌐 ' + domain).width + 24;
+    roundRect(ctx, cardX + innerPadding, domainY, domainWidth, 32, 16);
     ctx.fill();
-    ctx.fillStyle = '#666666';
-    ctx.fillText(domain, padding * 2 + 10, padding + 106);
+    ctx.fillStyle = '#667eea';
+    ctx.fillText('🌐 ' + domain, cardX + innerPadding + 12, domainY + 22);
 
-    // 加载并绘制截图
-    const screenshotY = padding + headerHeight;
+    // ========== 截图区域 ==========
+    const screenshotY = domainY + 56;
+    const screenshotHeight = 480;
+    const screenshotWidth = cardInnerWidth - innerPadding * 2;
+
     if (collectedData.screenshot) {
       try {
         const img = await loadImage(collectedData.screenshot);
-        // 计算截图绘制区域，保持宽高比
-        const maxWidth = cardWidth - padding * 4;
-        const maxHeight = screenshotHeight - 20;
-        const scale = Math.min(maxWidth / img.width, maxHeight / img.height);
+        const scale = Math.min(screenshotWidth / img.width, screenshotHeight / img.height);
         const drawWidth = img.width * scale;
         const drawHeight = img.height * scale;
-        const drawX = padding * 2 + (maxWidth - drawWidth) / 2;
+        const drawX = cardX + innerPadding + (screenshotWidth - drawWidth) / 2;
 
-        // 绘制截图边框
-        ctx.strokeStyle = '#e0e0e0';
-        ctx.lineWidth = 1;
-        roundRect(ctx, drawX - 2, screenshotY - 2, drawWidth + 4, drawHeight + 4, 8);
-        ctx.stroke();
+        // 截图阴影
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+        ctx.shadowBlur = 20;
+        ctx.shadowOffsetY = 8;
 
         // 绘制截图
         ctx.save();
-        roundRect(ctx, drawX, screenshotY, drawWidth, drawHeight, 6);
+        roundRect(ctx, drawX, screenshotY, drawWidth, drawHeight, 16);
         ctx.clip();
         ctx.drawImage(img, drawX, screenshotY, drawWidth, drawHeight);
         ctx.restore();
+
+        ctx.shadowColor = 'transparent';
       } catch (e) {
         console.error('加载截图失败:', e);
-        // 绘制占位符
-        ctx.fillStyle = '#f5f5f5';
-        roundRect(ctx, padding * 2, screenshotY, cardWidth - padding * 4, screenshotHeight - 20, 8);
+        ctx.fillStyle = '#f5f7fa';
+        roundRect(ctx, cardX + innerPadding, screenshotY, screenshotWidth, screenshotHeight, 16);
         ctx.fill();
-        ctx.fillStyle = '#999999';
-        ctx.font = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.fillStyle = '#adb5bd';
+        ctx.font = '18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('截图加载失败', cardWidth / 2, screenshotY + screenshotHeight / 2);
+        ctx.fillText('📷 截图加载失败', cardX + cardInnerWidth / 2, screenshotY + screenshotHeight / 2);
         ctx.textAlign = 'left';
       }
     }
 
-    // 绘制摘要区域
-    const summaryY = screenshotY + screenshotHeight;
-    ctx.fillStyle = '#f9f9f9';
-    roundRect(ctx, padding * 2, summaryY, cardWidth - padding * 4, summaryHeight - 20, 8);
+    // ========== AI摘要区域 ==========
+    const summaryY = screenshotY + screenshotHeight + 32;
+    const summaryHeight = 280;
+
+    // 摘要背景 - 渐变边框效果
+    const summaryGradient = ctx.createLinearGradient(
+      cardX + innerPadding, summaryY,
+      cardX + innerPadding + screenshotWidth, summaryY + summaryHeight
+    );
+    summaryGradient.addColorStop(0, 'rgba(102, 126, 234, 0.1)');
+    summaryGradient.addColorStop(1, 'rgba(118, 75, 162, 0.1)');
+    ctx.fillStyle = summaryGradient;
+    roundRect(ctx, cardX + innerPadding, summaryY, screenshotWidth, summaryHeight, 16);
     ctx.fill();
 
-    // 绘制摘要标题
-    ctx.fillStyle = '#333333';
-    ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    ctx.fillText('📝 AI 摘要', padding * 2 + 15, summaryY + 25);
+    // 摘要边框
+    ctx.strokeStyle = 'rgba(102, 126, 234, 0.3)';
+    ctx.lineWidth = 2;
+    roundRect(ctx, cardX + innerPadding, summaryY, screenshotWidth, summaryHeight, 16);
+    ctx.stroke();
 
-    // 绘制摘要内容（多行）
-    ctx.fillStyle = '#555555';
-    ctx.font = '13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    // 摘要图标和标题
+    ctx.fillStyle = '#667eea';
+    ctx.font = 'bold 16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('✨ AI 智能摘要', cardX + innerPadding + 20, summaryY + 32);
+
+    // 摘要内容
+    ctx.fillStyle = '#374151';
+    ctx.font = '15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     const summaryText = collectedData.summary || '暂无摘要';
-    wrapText(ctx, summaryText, padding * 2 + 15, summaryY + 50, cardWidth - padding * 4 - 30, 20, 6);
+    wrapText(ctx, summaryText, cardX + innerPadding + 20, summaryY + 60, screenshotWidth - 40, 24, 8);
 
-    // 绘制底部信息
-    const footerY = summaryY + summaryHeight;
-    ctx.fillStyle = '#999999';
-    ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    // ========== 底部信息 ==========
+    const footerY = cardY + cardInnerHeight - 50;
+
+    // 分隔线
+    ctx.strokeStyle = '#e5e7eb';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cardX + innerPadding, footerY - 16);
+    ctx.lineTo(cardX + cardInnerWidth - innerPadding, footerY - 16);
+    ctx.stroke();
+
+    // 时间
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     const timestamp = new Date(collectedData.timestamp).toLocaleString('zh-CN');
-    ctx.fillText(`收集时间: ${timestamp}`, padding * 2, footerY + 10);
+    ctx.fillText('🕐 ' + timestamp, cardX + innerPadding, footerY + 8);
 
-    // 绘制品牌信息
+    // 扫码提示
     ctx.textAlign = 'right';
-    ctx.fillText('由 网页信息收集助手 生成', cardWidth - padding * 2, footerY + 10);
+    ctx.fillText('长按保存 · 分享给朋友', cardX + cardInnerWidth - innerPadding, footerY + 8);
     ctx.textAlign = 'left';
 
     // 将canvas转换为图片
-    const cardDataUrl = canvas.toDataURL('image/png');
+    const cardDataUrl = canvas.toDataURL('image/png', 0.95);
     document.getElementById('cardPreviewImg').src = cardDataUrl;
     document.getElementById('cardPreviewSection').classList.remove('hidden');
 
@@ -607,6 +740,41 @@ async function generateShareCard() {
     setLoading(false);
     showStatus('❌ 生成卡片失败: ' + error.message, 'error');
   }
+}
+
+// 辅助函数：将文本换行并返回行数组
+function wrapTextToLines(ctx, text, maxWidth, maxLines) {
+  if (!text) return [''];
+
+  const chars = text.split('');
+  const lines = [];
+  let currentLine = '';
+
+  for (let i = 0; i < chars.length; i++) {
+    const testLine = currentLine + chars[i];
+    const metrics = ctx.measureText(testLine);
+
+    if (metrics.width > maxWidth && currentLine !== '') {
+      lines.push(currentLine);
+      currentLine = chars[i];
+
+      if (lines.length >= maxLines) {
+        // 截断最后一行
+        if (i < chars.length - 1) {
+          lines[lines.length - 1] = truncateText(ctx, lines[lines.length - 1], maxWidth - 30) ;
+        }
+        break;
+      }
+    } else {
+      currentLine = testLine;
+    }
+  }
+
+  if (currentLine && lines.length < maxLines) {
+    lines.push(currentLine);
+  }
+
+  return lines;
 }
 
 // 辅助函数：绘制圆角矩形

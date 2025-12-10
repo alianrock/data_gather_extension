@@ -21,6 +21,8 @@ async function loadSettings() {
     aiApiUrl: API_PRESETS.openai.url,
     aiApiKey: '',
     aiModel: API_PRESETS.openai.model,
+    summaryLanguage: 'zh-CN',
+    summaryStyle: 'social',
     dataApiUrl: '',
     dataApiKey: '',
     dataApiMethod: 'POST'
@@ -30,6 +32,8 @@ async function loadSettings() {
   document.getElementById('aiApiUrl').value = settings.aiApiUrl;
   document.getElementById('aiApiKey').value = settings.aiApiKey;
   document.getElementById('aiModel').value = settings.aiModel;
+  document.getElementById('summaryLanguage').value = settings.summaryLanguage;
+  document.getElementById('summaryStyle').value = settings.summaryStyle;
   document.getElementById('dataApiUrl').value = settings.dataApiUrl;
   document.getElementById('dataApiKey').value = settings.dataApiKey;
   document.getElementById('dataApiMethod').value = settings.dataApiMethod;
@@ -42,6 +46,8 @@ async function saveSettings() {
     aiApiUrl: document.getElementById('aiApiUrl').value.trim(),
     aiApiKey: document.getElementById('aiApiKey').value.trim(),
     aiModel: document.getElementById('aiModel').value.trim(),
+    summaryLanguage: document.getElementById('summaryLanguage').value,
+    summaryStyle: document.getElementById('summaryStyle').value,
     dataApiUrl: document.getElementById('dataApiUrl').value.trim(),
     dataApiKey: document.getElementById('dataApiKey').value.trim(),
     dataApiMethod: document.getElementById('dataApiMethod').value
