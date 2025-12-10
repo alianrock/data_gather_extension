@@ -1,0 +1,33 @@
+{
+  "description": "这是一个配置示例文件，展示如何配置扩展",
+  "aiConfig": {
+    "provider": "openai",
+    "apiUrl": "https://api.openai.com/v1/chat/completions",
+    "model": "gpt-4o-mini",
+    "apiKey": "sk-your-api-key-here"
+  },
+  "alternativeAIConfigs": {
+    "anthropic": {
+      "provider": "anthropic",
+      "apiUrl": "https://api.anthropic.com/v1/messages",
+      "model": "claude-3-5-sonnet-20241022",
+      "apiKey": "sk-ant-your-api-key-here"
+    },
+    "custom": {
+      "provider": "custom",
+      "apiUrl": "https://your-custom-api.com/v1/chat/completions",
+      "model": "your-model-name",
+      "apiKey": "your-api-key"
+    }
+  },
+  "dataApiConfig": {
+    "url": "https://your-api.com/api/webpage-data",
+    "method": "POST",
+    "apiKey": "optional-api-key"
+  },
+  "notes": [
+    "请不要提交包含真实API密钥的文件",
+    "在扩展的设置页面中配置这些参数",
+    "此文件仅作为参考"
+  ]
+}

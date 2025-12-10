@@ -297,139 +297,40 @@ const LANGUAGE_CONFIG = {
 // 风格提示词配置
 const STYLE_PROMPTS = {
   social: {
-    'zh-CN': `你是一个顶级社交媒体内容创作专家和网站评测博主。请为这个网页创建一段精彩的分享文案。
+    'zh-CN': `你是一个社交媒体内容创作专家。请为这个网页创建一段适合在社交媒体分享的精彩介绍。
 
-【输出格式要求】
+要求：
+1. 开头用一个吸引眼球的emoji和hook语句
+2. 用2-3句话概括核心价值，要有感染力和说服力
+3. 列出3个关键亮点（用emoji标注）
+4. 结尾加一个行动号召语句
+5. 语气要热情、真诚、有感染力，像朋友推荐好东西一样
+6. 总长度控制在200字以内`,
+    'en': `You are a social media content expert. Create an engaging introduction for sharing on social media.
 
-🎯 一句话总结
-用一句吸引人的话概括这个网站/页面是什么，能解决什么问题
-
-📝 详细介绍（150-200字）
-- 这是什么：详细说明网站/工具/文章的性质和用途
-- 核心价值：它能为用户带来什么好处
-- 特色亮点：与同类产品/内容相比有什么独特之处
-- 适合人群：谁最需要这个
-
-✨ 核心亮点
-• 亮点1：具体描述（带emoji）
-• 亮点2：具体描述（带emoji）
-• 亮点3：具体描述（带emoji）
-• 亮点4：具体描述（带emoji）
-
-💡 使用建议
-给出1-2条实用的使用建议或小技巧
-
-🏷️ 标签
-#标签1 #标签2 #标签3 #标签4 #标签5
-
-【写作要求】
-- 语气热情真诚，像朋友推荐好东西
-- 内容要具体，不要泛泛而谈
-- 突出实用价值和独特卖点
-- 适当使用emoji增加可读性`,
-    'en': `You are a top social media content creator and website reviewer. Create an engaging share post for this webpage.
-
-【Output Format】
-
-🎯 One-Line Summary
-A catchy sentence about what this is and what problem it solves
-
-📝 Detailed Introduction (150-200 words)
-- What it is: Explain the nature and purpose
-- Core value: Benefits for users
-- Unique features: What makes it stand out
-- Target audience: Who needs this most
-
-✨ Key Highlights
-• Highlight 1: Specific description (with emoji)
-• Highlight 2: Specific description (with emoji)
-• Highlight 3: Specific description (with emoji)
-• Highlight 4: Specific description (with emoji)
-
-💡 Pro Tips
-1-2 practical usage tips
-
-🏷️ Tags
-#tag1 #tag2 #tag3 #tag4 #tag5
-
-【Requirements】
-- Be enthusiastic and authentic
-- Be specific, not generic
-- Highlight practical value
-- Use emojis for readability`,
-    'default': `Create comprehensive social media content with summary, detailed intro, highlights, tips, and tags.`
+Requirements:
+1. Start with an eye-catching emoji and hook
+2. Summarize core value in 2-3 compelling sentences
+3. List 3 key highlights with emojis
+4. End with a call-to-action
+5. Be enthusiastic, authentic, and persuasive
+6. Keep it under 200 words`,
+    'default': `Create social media friendly content with emojis, highlights, and call-to-action. Be engaging and persuasive.`
   },
   professional: {
-    'zh-CN': `请用专业、正式的语气为这个网页生成详细摘要。
-
-【输出格式】
-
-📋 概述
-2-3句话概括网站/内容的核心定位
-
-📖 详细介绍（200字左右）
-客观描述主要功能、内容和特点
-
-🎯 核心功能/内容
-• 功能1：说明
-• 功能2：说明
-• 功能3：说明
-
-👥 适用场景
-说明适合什么人群、什么场景使用
-
-⚖️ 优劣分析
-优势：...
-不足：...
-
-保持客观中立，基于事实描述。`,
-    'en': `Generate a professional, detailed summary with overview, features, use cases, and pros/cons analysis.`,
-    'default': `Generate a professional summary with structured sections.`
+    'zh-CN': `请用专业、正式的语气为这个网页生成摘要。包含：核心概述、主要功能/内容、适用场景。保持客观中立。`,
+    'en': `Generate a professional summary including: core overview, main features/content, use cases. Keep it objective and formal.`,
+    'default': `Generate a professional, formal summary with overview and key points.`
   },
   casual: {
-    'zh-CN': `用轻松活泼的语气介绍这个网页，就像跟好朋友安利一样！
-
-【输出格式】
-
-😍 开场白
-用口语化的方式说说你发现了什么好东西
-
-💬 聊聊这是啥（100-150字）
-用大白话解释这个网站/内容是干嘛的，好在哪里
-
-🌟 我觉得最棒的几点
-• 第一点（配个emoji）
-• 第二点（配个emoji）
-• 第三点（配个emoji）
-
-🤔 小提醒
-说说使用时需要注意的或者小技巧
-
-👋 结尾
-一句俏皮话收尾，鼓励朋友去看看
-
-可以用网络流行语、颜文字，语气要自然亲切！`,
-    'en': `Introduce this in a fun, casual way like recommending to a friend. Use casual language, emojis, and a friendly tone.`,
-    'default': `Create a fun, casual summary with friendly tone.`
+    'zh-CN': `用轻松活泼的语气介绍这个网页，就像跟朋友聊天一样。可以用一些口语化表达和emoji，让人觉得有趣想点进去看看。`,
+    'en': `Introduce this page in a fun, casual way - like chatting with friends. Use casual language and emojis to make it interesting.`,
+    'default': `Create a fun, casual summary with friendly tone and emojis.`
   },
   brief: {
-    'zh-CN': `极简风格摘要，适合快速浏览。
-
-【输出格式】
-
-⚡ 一句话说明
-这是什么，用来干什么
-
-📌 三个关键点
-1.
-2.
-3.
-
-🏷️ 关键词：词1、词2、词3
-
-总字数控制在80字以内。`,
-    'en': `Ultra-brief: one sentence + 3 bullet points + keywords. Under 80 words.`,
-    'default': `Ultra-brief summary with key points.`
+    'zh-CN': `用一句话概括这个网页的核心价值，再用3个要点列出最重要的信息。极简风格，不超过100字。`,
+    'en': `One sentence for core value, then 3 bullet points for key info. Minimalist style, under 100 words.`,
+    'default': `Ultra-brief: one sentence + 3 bullet points.`
   }
 };
 
@@ -447,34 +348,17 @@ function buildSocialPrompt(pageInfo, language, style) {
   const langName = LANGUAGE_CONFIG[lang]?.name || '中文';
   const langInstruction = lang.startsWith('zh') ? '' : `\n\nIMPORTANT: Respond in ${langName} language.`;
 
-  // 提取更多有用信息
-  const headings = pageInfo.headings?.slice(0, 10).join('\n  - ') || '无';
-  const images = pageInfo.images?.slice(0, 5).map(img => img.alt || '图片').join(', ') || '无';
-  const keywords = pageInfo.keywords || '无';
-  const bodyText = pageInfo.bodyText?.substring(0, 2000) || '无内容';
-
   return `${stylePrompt}${langInstruction}
 
-【网页详细信息】
-
-基本信息：
+网页信息：
 - 标题: ${pageInfo.title || '无标题'}
-- 网址: ${pageInfo.url || ''}
-- 域名: ${pageInfo.domain || ''}
+- URL: ${pageInfo.url || ''}
 - 描述: ${pageInfo.description || '无描述'}
-- 关键词: ${keywords}
+- 网站: ${pageInfo.domain || ''}
+- 主要标题: ${pageInfo.headings?.slice(0, 5).join(', ') || '无'}
+- 内容片段: ${pageInfo.bodyText?.substring(0, 800) || '无内容'}
 
-页面结构：
-- 主要标题:
-  - ${headings}
-- 图片内容: ${images}
-- 链接数量: ${pageInfo.linkCount || 0}
-
-页面正文内容（前2000字）：
-${bodyText}
-
-【重要提示】
-请基于以上信息，按照指定格式输出。内容要具体、有深度，不要敷衍。直接输出内容，不要加额外的格式说明。`;
+请直接输出内容，不要加任何标记或格式说明。`;
 }
 
 // 使用AI生成摘要

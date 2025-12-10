@@ -3,7 +3,8 @@
     "allow": [
       "Bash(agent-foreman *)",
       "Bash(agent-foreman done:*)",
-      "Bash(zip:*)"
+      "Bash(zip:*)",
+      "Bash(rm:*)"
     ]
   }
 }
