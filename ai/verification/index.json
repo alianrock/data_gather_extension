@@ -1,0 +1,15 @@
+{
+  "features": {
+    "bugfix.ai.jsonParseError": {
+      "featureId": "bugfix.ai.jsonParseError",
+      "latestRun": 1,
+      "latestTimestamp": "2025-12-10T03:47:07.679Z",
+      "latestVerdict": "pass",
+      "totalRuns": 1,
+      "passCount": 1,
+      "failCount": 0
+    }
+  },
+  "updatedAt": "2025-12-10T03:47:07.684Z",
+  "version": "2.0.0"
+}

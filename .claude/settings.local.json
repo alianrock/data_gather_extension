@@ -4,7 +4,8 @@
       "Bash(agent-foreman *)",
       "Bash(agent-foreman status:*)",
       "Bash(agent-foreman list:*)",
-      "Bash(agent-foreman next:*)"
+      "Bash(agent-foreman next:*)",
+      "Bash(agent-foreman done bugfix.ai.jsonParseError)"
     ]
   }
 }
