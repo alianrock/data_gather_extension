@@ -22,6 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 复制卡片按钮点击事件
   document.getElementById('copyCardBtn').addEventListener('click', copyCardToClipboard);
+
+  // 社交媒体分享按钮点击事件
+  document.getElementById('shareTwitterBtn').addEventListener('click', () => shareToSocialMedia('twitter'));
+  document.getElementById('shareWeiboBtn').addEventListener('click', () => shareToSocialMedia('weibo'));
+  document.getElementById('shareWechatBtn').addEventListener('click', () => shareToSocialMedia('wechat'));
+  document.getElementById('shareFacebookBtn').addEventListener('click', () => shareToSocialMedia('facebook'));
+  document.getElementById('shareLinkedinBtn').addEventListener('click', () => shareToSocialMedia('linkedin'));
+  document.getElementById('shareCopyLinkBtn').addEventListener('click', copyShareLink);
 });
 
 // 显示状态消息
@@ -112,8 +120,9 @@ async function collectPageInfo() {
       timestamp: new Date().toISOString()
     };
 
-    // 显示生成卡片按钮和发送按钮
+    // 显示生成卡片按钮、分享区域和发送按钮
     document.getElementById('generateCardBtn').classList.remove('hidden');
+    document.getElementById('shareSection').classList.remove('hidden');
     document.getElementById('sendDataBtn').classList.remove('hidden');
 
     setLoading(false);
@@ -715,6 +724,122 @@ async function copyCardToClipboard() {
     ]);
 
     showStatus('✅ 卡片已复制到剪贴板', 'success');
+  } catch (error) {
+    console.error('复制失败:', error);
+    showStatus('❌ 复制失败: ' + error.message, 'error');
+  }
+}
+
+// 分享到社交媒体
+function shareToSocialMedia(platform) {
+  if (!collectedData || !collectedData.pageInfo) {
+    showStatus('请先收集网页信息', 'error');
+    return;
+  }
+
+  const { title, url, description, domain } = collectedData.pageInfo;
+  const summary = collectedData.summary || description || '';
+  const shortSummary = summary.length > 200 ? summary.substring(0, 200) + '...' : summary;
+
+  let shareUrl = '';
+  const encodedUrl = encodeURIComponent(url);
+  const encodedTitle = encodeURIComponent(title);
+  const encodedDesc = encodeURIComponent(shortSummary);
+
+  switch (platform) {
+    case 'twitter':
+      // Twitter/X 分享
+      const tweetText = `${title}\n\n${shortSummary}`;
+      shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodedUrl}`;
+      openShareWindow(shareUrl, 'Twitter', 600, 400);
+      showStatus('✅ 正在打开 Twitter 分享窗口', 'success');
+      break;
+
+    case 'weibo':
+      // 微博分享
+      shareUrl = `https://service.weibo.com/share/share.php?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedDesc}`;
+      openShareWindow(shareUrl, '微博', 700, 500);
+      showStatus('✅ 正在打开微博分享窗口', 'success');
+      break;
+
+    case 'wechat':
+      // 微信不支持直接URL分享，复制内容到剪贴板
+      copyWechatShareContent();
+      break;
+
+    case 'facebook':
+      // Facebook 分享
+      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}`;
+      openShareWindow(shareUrl, 'Facebook', 600, 400);
+      showStatus('✅ 正在打开 Facebook 分享窗口', 'success');
+      break;
+
+    case 'linkedin':
+      // LinkedIn 分享
+      shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}&summary=${encodedDesc}`;
+      openShareWindow(shareUrl, 'LinkedIn', 600, 500);
+      showStatus('✅ 正在打开 LinkedIn 分享窗口', 'success');
+      break;
+
+    default:
+      showStatus('不支持的分享平台', 'error');
+  }
+}
+
+// 打开分享窗口
+function openShareWindow(url, title, width, height) {
+  const left = (screen.width - width) / 2;
+  const top = (screen.height - height) / 2;
+  const features = `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes,resizable=yes`;
+
+  window.open(url, title, features);
+}
+
+// 复制微信分享内容
+async function copyWechatShareContent() {
+  if (!collectedData || !collectedData.pageInfo) {
+    showStatus('请先收集网页信息', 'error');
+    return;
+  }
+
+  const { title, url, description } = collectedData.pageInfo;
+  const summary = collectedData.summary || description || '';
+
+  // 构建微信分享文本
+  const shareText = `📋 ${title}
+
+${summary}
+
+🔗 ${url}
+
+---
+由 网页信息收集助手 生成`;
+
+  try {
+    await navigator.clipboard.writeText(shareText);
+    showStatus('✅ 分享内容已复制到剪贴板，请打开微信粘贴分享', 'success');
+  } catch (error) {
+    console.error('复制失败:', error);
+    showStatus('❌ 复制失败: ' + error.message, 'error');
+  }
+}
+
+// 复制分享链接
+async function copyShareLink() {
+  if (!collectedData || !collectedData.pageInfo) {
+    showStatus('请先收集网页信息', 'error');
+    return;
+  }
+
+  const { title, url, description } = collectedData.pageInfo;
+  const summary = collectedData.summary || description || '';
+
+  // 构建分享文本
+  const shareText = `${title}\n\n${summary}\n\n🔗 ${url}`;
+
+  try {
+    await navigator.clipboard.writeText(shareText);
+    showStatus('✅ 分享链接已复制到剪贴板', 'success');
   } catch (error) {
     console.error('复制失败:', error);
     showStatus('❌ 复制失败: ' + error.message, 'error');

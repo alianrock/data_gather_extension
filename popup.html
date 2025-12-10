@@ -191,6 +191,80 @@
     .hidden {
       display: none;
     }
+
+    .share-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .share-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+
+    .share-btn .share-icon {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .share-btn.twitter {
+      background: #000000;
+    }
+
+    .share-btn.twitter:hover {
+      background: #333333;
+    }
+
+    .share-btn.weibo {
+      background: #e6162d;
+    }
+
+    .share-btn.weibo:hover {
+      background: #c41425;
+    }
+
+    .share-btn.wechat {
+      background: #07c160;
+    }
+
+    .share-btn.wechat:hover {
+      background: #06ad56;
+    }
+
+    .share-btn.facebook {
+      background: #1877f2;
+    }
+
+    .share-btn.facebook:hover {
+      background: #166fe5;
+    }
+
+    .share-btn.linkedin {
+      background: #0a66c2;
+    }
+
+    .share-btn.linkedin:hover {
+      background: #095196;
+    }
+
+    .share-btn.copylink {
+      background: #6c757d;
+    }
+
+    .share-btn.copylink:hover {
+      background: #5a6268;
+    }
   </style>
 </head>
 <body>
@@ -243,6 +317,31 @@
       <div style="margin-top: 10px; display: flex; gap: 10px;">
         <button id="downloadCardBtn" class="btn btn-primary" style="flex: 1;">💾 下载卡片</button>
         <button id="copyCardBtn" class="btn btn-primary" style="flex: 1;">📋 复制卡片</button>
+      </div>
+    </div>
+
+    <!-- 社交媒体分享 -->
+    <div id="shareSection" class="info-card hidden">
+      <h3>📢 分享到社交媒体</h3>
+      <div class="share-buttons">
+        <button id="shareTwitterBtn" class="btn share-btn twitter">
+          <span class="share-icon">𝕏</span> Twitter/X
+        </button>
+        <button id="shareWeiboBtn" class="btn share-btn weibo">
+          <span class="share-icon">微</span> 微博
+        </button>
+        <button id="shareWechatBtn" class="btn share-btn wechat">
+          <span class="share-icon">微</span> 微信
+        </button>
+        <button id="shareFacebookBtn" class="btn share-btn facebook">
+          <span class="share-icon">f</span> Facebook
+        </button>
+        <button id="shareLinkedinBtn" class="btn share-btn linkedin">
+          <span class="share-icon">in</span> LinkedIn
+        </button>
+        <button id="shareCopyLinkBtn" class="btn share-btn copylink">
+          <span class="share-icon">🔗</span> 复制链接
+        </button>
       </div>
     </div>
 

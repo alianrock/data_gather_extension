@@ -1,0 +1,18 @@
+{
+  "featureId": "popup.share.socialMedia",
+  "runNumber": 1,
+  "timestamp": "2025-12-10T03:56:28.322Z",
+  "commitHash": "ccda8de72cc56b55c76055a76d0cc5c9c0c4c05a",
+  "changedFiles": [],
+  "diffSummary": "Autonomous exploration (no diff)",
+  "automatedChecks": [
+    {
+      "type": "init-script",
+      "success": true,
+      "duration": 8
+    }
+  ],
+  "criteriaResults": [],
+  "verdict": "pass",
+  "verifiedBy": "claude"
+}
