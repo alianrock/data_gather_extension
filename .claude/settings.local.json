@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(agent-foreman *)",
+      "Bash(agent-foreman status:*)",
+      "Bash(agent-foreman list:*)",
+      "Bash(agent-foreman next:*)"
+    ]
+  }
+}

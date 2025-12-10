@@ -1,0 +1,61 @@
+{
+  "version": "1.0.0",
+  "capabilities": {
+    "hasTests": false,
+    "testCommand": null,
+    "testFramework": null,
+    "hasTypeCheck": false,
+    "typeCheckCommand": null,
+    "hasLint": false,
+    "lintCommand": null,
+    "hasBuild": false,
+    "buildCommand": null,
+    "hasGit": true,
+    "source": "ai-discovered",
+    "confidence": 0.5,
+    "languages": [
+      "JavaScript",
+      "HTML",
+      "CSS"
+    ],
+    "detectedAt": "2025-12-10T03:24:42.718Z",
+    "testInfo": {
+      "available": false,
+      "command": null,
+      "framework": null,
+      "confidence": 0,
+      "selectiveFileTemplate": null,
+      "selectiveNameTemplate": null,
+      "packageManager": null
+    },
+    "e2eInfo": {
+      "available": false,
+      "command": null,
+      "framework": null,
+      "confidence": 0,
+      "configFile": null,
+      "grepTemplate": null,
+      "fileTemplate": null
+    },
+    "typeCheckInfo": {
+      "available": false,
+      "command": null,
+      "confidence": 0
+    },
+    "lintInfo": {
+      "available": false,
+      "command": null,
+      "confidence": 0
+    },
+    "buildInfo": {
+      "available": false,
+      "command": null,
+      "confidence": 0
+    }
+  },
+  "commitHash": "1e6afe608e73bb8dab4b627ea69930fdcd7010e6",
+  "trackedFiles": [
+    "manifest.json",
+    "config.example.json"
+  ]
+}
