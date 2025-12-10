@@ -8,8 +8,17 @@
       "totalRuns": 1,
       "passCount": 1,
       "failCount": 0
+    },
+    "popup.card.generateImage": {
+      "featureId": "popup.card.generateImage",
+      "latestRun": 1,
+      "latestTimestamp": "2025-12-10T03:52:56.426Z",
+      "latestVerdict": "pass",
+      "totalRuns": 1,
+      "passCount": 1,
+      "failCount": 0
     }
   },
-  "updatedAt": "2025-12-10T03:47:07.684Z",
+  "updatedAt": "2025-12-10T03:52:56.431Z",
   "version": "2.0.0"
 }

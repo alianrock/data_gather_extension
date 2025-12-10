@@ -1,10 +1,10 @@
 {
   "version": "2.0.0",
-  "updatedAt": "2025-12-10T03:47:07.705Z",
+  "updatedAt": "2025-12-10T03:52:56.449Z",
   "metadata": {
     "projectGoal": "网页信息收集助手 Chrome 扩展",
     "createdAt": "2025-12-10T03:23:36.693Z",
-    "updatedAt": "2025-12-10T03:47:07.685Z",
+    "updatedAt": "2025-12-10T03:52:56.433Z",
     "version": "1.0.0"
   },
   "features": {
@@ -14,29 +14,11 @@
       "module": "background",
       "description": "Handle extension installation and update events, open options page on first install"
     },
-    "popup.collection.trigger": {
-      "status": "failing",
-      "priority": 10,
-      "module": "popup",
-      "description": "Trigger webpage information collection via button click"
-    },
-    "popup.collection.extractPageInfo": {
-      "status": "failing",
-      "priority": 11,
-      "module": "popup",
-      "description": "Extract page title, URL, description, keywords, body text, headings, images, and link count from current webpage"
-    },
     "manifest.permissions.activeTab": {
       "status": "failing",
       "priority": 52,
       "module": "manifest",
       "description": "Permission to access currently active tab"
-    },
-    "config.ai.anthropicConfig": {
-      "status": "failing",
-      "priority": 49,
-      "module": "config",
-      "description": "Configuration template for Anthropic Claude API integration"
     },
     "popup.screenshot.capture": {
       "status": "failing",
@@ -44,11 +26,11 @@
       "module": "popup",
       "description": "Capture visible tab screenshot as PNG using Chrome tabs API"
     },
-    "popup.ui.displayScreenshot": {
+    "popup.collection.extractPageInfo": {
       "status": "failing",
-      "priority": 16,
+      "priority": 11,
       "module": "popup",
-      "description": "Display captured screenshot preview in popup UI"
+      "description": "Extract page title, URL, description, keywords, body text, headings, images, and link count from current webpage"
     },
     "popup.navigation.openSettings": {
       "status": "failing",
@@ -56,17 +38,23 @@
       "module": "popup",
       "description": "Navigate to extension options page from popup"
     },
-    "popup.api.sendData": {
-      "status": "failing",
-      "priority": 14,
-      "module": "popup",
-      "description": "Send collected data (page info, screenshot, summary) to configured external API endpoint"
-    },
     "popup.ui.setLoading": {
       "status": "failing",
       "priority": 19,
       "module": "popup",
       "description": "Toggle loading spinner and button disabled state"
+    },
+    "popup.ui.displayScreenshot": {
+      "status": "failing",
+      "priority": 16,
+      "module": "popup",
+      "description": "Display captured screenshot preview in popup UI"
+    },
+    "config.ai.anthropicConfig": {
+      "status": "failing",
+      "priority": 49,
+      "module": "config",
+      "description": "Configuration template for Anthropic Claude API integration"
     },
     "background.messaging.sendToAPI": {
       "status": "failing",
@@ -74,17 +62,29 @@
       "module": "background",
       "description": "Handle data sending requests from popup via message passing"
     },
-    "popup.ui.showStatus": {
+    "popup.collection.trigger": {
       "status": "failing",
-      "priority": 18,
+      "priority": 10,
       "module": "popup",
-      "description": "Show status messages (info, success, error) with auto-dismiss"
+      "description": "Trigger webpage information collection via button click"
+    },
+    "popup.api.sendData": {
+      "status": "failing",
+      "priority": 14,
+      "module": "popup",
+      "description": "Send collected data (page info, screenshot, summary) to configured external API endpoint"
     },
     "background.messaging.generateAISummary": {
       "status": "failing",
       "priority": 24,
       "module": "background",
       "description": "Handle AI summary generation requests from popup via message passing"
+    },
+    "background.api.sendDataToAPI": {
+      "status": "failing",
+      "priority": 28,
+      "module": "background",
+      "description": "Send collected data to configured external API with optional Bearer authentication"
     },
     "popup.ui.displaySummary": {
       "status": "failing",
@@ -104,23 +104,23 @@
       "module": "background",
       "description": "Call Anthropic Claude API with x-api-key authentication"
     },
-    "background.contextMenu.onClick": {
-      "status": "failing",
-      "priority": 30,
-      "module": "background",
-      "description": "Handle context menu click to open extension popup"
-    },
-    "background.api.sendDataToAPI": {
-      "status": "failing",
-      "priority": 28,
-      "module": "background",
-      "description": "Send collected data to configured external API with optional Bearer authentication"
-    },
     "content.extraction.extractPageInfo": {
       "status": "failing",
       "priority": 34,
       "module": "content",
       "description": "Extract comprehensive page info including title, URL, metadata, content, headings, images, links, and structured data"
+    },
+    "popup.ui.showStatus": {
+      "status": "failing",
+      "priority": 18,
+      "module": "popup",
+      "description": "Show status messages (info, success, error) with auto-dismiss"
+    },
+    "background.contextMenu.onClick": {
+      "status": "failing",
+      "priority": 30,
+      "module": "background",
+      "description": "Handle context menu click to open extension popup"
     },
     "content.extraction.getCanonicalUrl": {
       "status": "failing",
@@ -128,23 +128,11 @@
       "module": "content",
       "description": "Extract canonical URL from link[rel=canonical] element"
     },
-    "content.extraction.getMetaContent": {
-      "status": "failing",
-      "priority": 35,
-      "module": "content",
-      "description": "Extract content from meta tags by name or property attribute"
-    },
     "content.extraction.extractLinks": {
       "status": "failing",
       "priority": 40,
       "module": "content",
       "description": "Extract unique links with URL, text, and isExternal flag (up to 20)"
-    },
-    "content.extraction.extractHeadings": {
-      "status": "failing",
-      "priority": 38,
-      "module": "content",
-      "description": "Extract h1-h6 headings with level and text (up to 20)"
     },
     "content.extraction.extractImages": {
       "status": "failing",
@@ -152,11 +140,11 @@
       "module": "content",
       "description": "Extract image src, alt, width, height filtering small images (up to 10)"
     },
-    "options.ui.showStatus": {
+    "content.extraction.getMetaContent": {
       "status": "failing",
-      "priority": 47,
-      "module": "options",
-      "description": "Display success or error status messages with auto-dismiss"
+      "priority": 35,
+      "module": "content",
+      "description": "Extract content from meta tags by name or property attribute"
     },
     "options.storage.saveSettings": {
       "status": "failing",
@@ -164,23 +152,11 @@
       "module": "options",
       "description": "Save settings to Chrome sync storage with validation"
     },
-    "content.ui.highlightElement": {
+    "options.ui.showStatus": {
       "status": "failing",
-      "priority": 42,
-      "module": "content",
-      "description": "Visually highlight DOM elements with outline and background color, auto-remove after 3 seconds"
-    },
-    "config.dataApi.dataApiConfig": {
-      "status": "failing",
-      "priority": 51,
-      "module": "config",
-      "description": "Configuration template for data receiving API endpoint"
-    },
-    "config.ai.customConfig": {
-      "status": "failing",
-      "priority": 50,
-      "module": "config",
-      "description": "Configuration template for custom AI API integration"
+      "priority": 47,
+      "module": "options",
+      "description": "Display success or error status messages with auto-dismiss"
     },
     "background.ai.openaiIntegration": {
       "status": "failing",
@@ -194,11 +170,29 @@
       "module": "content",
       "description": "Respond to getPageInfo message with extracted page data"
     },
+    "config.ai.customConfig": {
+      "status": "failing",
+      "priority": 50,
+      "module": "config",
+      "description": "Configuration template for custom AI API integration"
+    },
     "manifest.permissions.tabs": {
       "status": "failing",
       "priority": 55,
       "module": "manifest",
       "description": "Permission to access tabs API for screenshots"
+    },
+    "content.ui.highlightElement": {
+      "status": "failing",
+      "priority": 42,
+      "module": "content",
+      "description": "Visually highlight DOM elements with outline and background color, auto-remove after 3 seconds"
+    },
+    "config.dataApi.dataApiConfig": {
+      "status": "failing",
+      "priority": 51,
+      "module": "config",
+      "description": "Configuration template for data receiving API endpoint"
     },
     "manifest.permissions.storage": {
       "status": "failing",
@@ -230,23 +224,17 @@
       "module": "options",
       "description": "Auto-fill API URL and model when provider selection changes"
     },
+    "content.extraction.extractHeadings": {
+      "status": "failing",
+      "priority": 38,
+      "module": "content",
+      "description": "Extract h1-h6 headings with level and text (up to 20)"
+    },
     "manifest.hostPermissions.allUrls": {
       "status": "failing",
       "priority": 56,
       "module": "manifest",
       "description": "Permission to access all URLs for content script injection"
-    },
-    "content.extraction.extractStructuredData": {
-      "status": "failing",
-      "priority": 41,
-      "module": "content",
-      "description": "Parse JSON-LD structured data from script[type=application/ld+json] elements"
-    },
-    "background.contextMenu.create": {
-      "status": "failing",
-      "priority": 29,
-      "module": "background",
-      "description": "Create right-click context menu item for collecting page info"
     },
     "manifest.permissions.scripting": {
       "status": "failing",
@@ -254,17 +242,23 @@
       "module": "manifest",
       "description": "Permission to inject and execute scripts in webpages"
     },
-    "content.extraction.extractMainContent": {
+    "background.contextMenu.create": {
       "status": "failing",
-      "priority": 37,
-      "module": "content",
-      "description": "Extract main text content from page, filtering out scripts, styles, nav, header, footer, aside"
+      "priority": 29,
+      "module": "background",
+      "description": "Create right-click context menu item for collecting page info"
     },
     "background.tabs.onUpdated": {
       "status": "failing",
       "priority": 31,
       "module": "background",
       "description": "Listen for tab update events (page load complete)"
+    },
+    "content.extraction.extractMainContent": {
+      "status": "failing",
+      "priority": 37,
+      "module": "content",
+      "description": "Extract main text content from page, filtering out scripts, styles, nav, header, footer, aside"
     },
     "popup.ui.displayPageInfo": {
       "status": "failing",
@@ -273,7 +267,7 @@
       "description": "Display extracted page title, URL, and description in popup UI"
     },
     "popup.card.generateImage": {
-      "status": "failing",
+      "status": "passing",
       "priority": 2,
       "module": "popup",
       "description": "添加卡片生成功能 - 将网站简介、网站截图组合生成一张可分享的卡片图片"
@@ -284,11 +278,11 @@
       "module": "popup",
       "description": "添加分享到社媒功能 - 支持分享到微信、微博、Twitter等社交媒体平台"
     },
-    "bugfix.ai.jsonParseError": {
-      "status": "passing",
-      "priority": 1,
-      "module": "background",
-      "description": "修复AI接口对接错误生成摘要失败: JSON解析错误 - Unexpected non-whitespace character after JSON at position 4，导致使用默认摘要而非AI生成的摘要"
+    "content.messaging.highlightElement": {
+      "status": "failing",
+      "priority": 33,
+      "module": "content",
+      "description": "Respond to highlightElement message by visually highlighting DOM elements"
     },
     "background.messaging.captureScreenshot": {
       "status": "failing",
@@ -296,11 +290,17 @@
       "module": "background",
       "description": "Handle screenshot capture requests from popup via message passing"
     },
-    "content.messaging.highlightElement": {
+    "bugfix.ai.jsonParseError": {
+      "status": "passing",
+      "priority": 1,
+      "module": "background",
+      "description": "修复AI接口对接错误生成摘要失败: JSON解析错误 - Unexpected non-whitespace character after JSON at position 4，导致使用默认摘要而非AI生成的摘要"
+    },
+    "content.extraction.extractStructuredData": {
       "status": "failing",
-      "priority": 33,
+      "priority": 41,
       "module": "content",
-      "description": "Respond to highlightElement message by visually highlighting DOM elements"
+      "description": "Parse JSON-LD structured data from script[type=application/ld+json] elements"
     },
     "popup.ai.generateSummary": {
       "status": "failing",

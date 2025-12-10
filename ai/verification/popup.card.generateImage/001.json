@@ -1,0 +1,18 @@
+{
+  "featureId": "popup.card.generateImage",
+  "runNumber": 1,
+  "timestamp": "2025-12-10T03:52:56.426Z",
+  "commitHash": "9a0fbc6b5bd1bf12ed8ea49ada9b56c1f7927e82",
+  "changedFiles": [],
+  "diffSummary": "Autonomous exploration (no diff)",
+  "automatedChecks": [
+    {
+      "type": "init-script",
+      "success": true,
+      "duration": 12
+    }
+  ],
+  "criteriaResults": [],
+  "verdict": "pass",
+  "verifiedBy": "claude"
+}

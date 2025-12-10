@@ -233,6 +233,22 @@
       </div>
     </div>
 
+    <!-- 卡片预览 -->
+    <div id="cardPreviewSection" class="info-card hidden">
+      <h3>🎨 分享卡片</h3>
+      <div class="card-preview">
+        <canvas id="cardCanvas" style="display: none;"></canvas>
+        <img id="cardPreviewImg" src="" alt="分享卡片" style="max-width: 100%; border-radius: 6px; border: 1px solid #ddd;">
+      </div>
+      <div style="margin-top: 10px; display: flex; gap: 10px;">
+        <button id="downloadCardBtn" class="btn btn-primary" style="flex: 1;">💾 下载卡片</button>
+        <button id="copyCardBtn" class="btn btn-primary" style="flex: 1;">📋 复制卡片</button>
+      </div>
+    </div>
+
+    <!-- 生成卡片按钮 -->
+    <button id="generateCardBtn" class="btn btn-success hidden">🎨 生成分享卡片</button>
+
     <!-- 发送数据按钮 -->
     <button id="sendDataBtn" class="btn btn-success hidden">📤 发送数据到API</button>
   </div>

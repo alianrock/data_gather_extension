@@ -13,6 +13,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 发送数据按钮点击事件
   document.getElementById('sendDataBtn').addEventListener('click', sendDataToAPI);
+
+  // 生成卡片按钮点击事件
+  document.getElementById('generateCardBtn').addEventListener('click', generateShareCard);
+
+  // 下载卡片按钮点击事件
+  document.getElementById('downloadCardBtn').addEventListener('click', downloadCard);
+
+  // 复制卡片按钮点击事件
+  document.getElementById('copyCardBtn').addEventListener('click', copyCardToClipboard);
 });
 
 // 显示状态消息
@@ -103,7 +112,8 @@ async function collectPageInfo() {
       timestamp: new Date().toISOString()
     };
 
-    // 显示发送按钮
+    // 显示生成卡片按钮和发送按钮
+    document.getElementById('generateCardBtn').classList.remove('hidden');
     document.getElementById('sendDataBtn').classList.remove('hidden');
 
     setLoading(false);
@@ -442,5 +452,271 @@ async function sendDataToAPI() {
     console.error('发送数据失败:', error);
     setLoading(false);
     showStatus('❌ 发送失败: ' + error.message, 'error');
+  }
+}
+
+// 生成分享卡片
+async function generateShareCard() {
+  if (!collectedData) {
+    showStatus('请先收集网页信息', 'error');
+    return;
+  }
+
+  try {
+    setLoading(true, '正在生成分享卡片...');
+
+    const canvas = document.getElementById('cardCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // 卡片尺寸设置
+    const cardWidth = 800;
+    const padding = 40;
+    const screenshotHeight = 400;
+    const headerHeight = 120;
+    const summaryHeight = 200;
+    const footerHeight = 60;
+    const cardHeight = headerHeight + screenshotHeight + summaryHeight + footerHeight + padding * 2;
+
+    canvas.width = cardWidth;
+    canvas.height = cardHeight;
+
+    // 绘制背景渐变
+    const gradient = ctx.createLinearGradient(0, 0, cardWidth, cardHeight);
+    gradient.addColorStop(0, '#667eea');
+    gradient.addColorStop(1, '#764ba2');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, cardWidth, cardHeight);
+
+    // 绘制白色内容区域
+    ctx.fillStyle = '#ffffff';
+    roundRect(ctx, padding, padding, cardWidth - padding * 2, cardHeight - padding * 2, 16);
+    ctx.fill();
+
+    // 绘制标题
+    ctx.fillStyle = '#333333';
+    ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    const title = truncateText(ctx, collectedData.pageInfo.title || '无标题', cardWidth - padding * 4);
+    ctx.fillText(title, padding * 2, padding + 50);
+
+    // 绘制URL
+    ctx.fillStyle = '#667eea';
+    ctx.font = '14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    const url = truncateText(ctx, collectedData.pageInfo.url || '', cardWidth - padding * 4);
+    ctx.fillText(url, padding * 2, padding + 80);
+
+    // 绘制域名标签
+    ctx.fillStyle = '#f0f0f0';
+    const domain = collectedData.pageInfo.domain || new URL(collectedData.pageInfo.url).hostname;
+    ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    const domainWidth = ctx.measureText(domain).width + 20;
+    roundRect(ctx, padding * 2, padding + 90, domainWidth, 24, 12);
+    ctx.fill();
+    ctx.fillStyle = '#666666';
+    ctx.fillText(domain, padding * 2 + 10, padding + 106);
+
+    // 加载并绘制截图
+    const screenshotY = padding + headerHeight;
+    if (collectedData.screenshot) {
+      try {
+        const img = await loadImage(collectedData.screenshot);
+        // 计算截图绘制区域，保持宽高比
+        const maxWidth = cardWidth - padding * 4;
+        const maxHeight = screenshotHeight - 20;
+        const scale = Math.min(maxWidth / img.width, maxHeight / img.height);
+        const drawWidth = img.width * scale;
+        const drawHeight = img.height * scale;
+        const drawX = padding * 2 + (maxWidth - drawWidth) / 2;
+
+        // 绘制截图边框
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth = 1;
+        roundRect(ctx, drawX - 2, screenshotY - 2, drawWidth + 4, drawHeight + 4, 8);
+        ctx.stroke();
+
+        // 绘制截图
+        ctx.save();
+        roundRect(ctx, drawX, screenshotY, drawWidth, drawHeight, 6);
+        ctx.clip();
+        ctx.drawImage(img, drawX, screenshotY, drawWidth, drawHeight);
+        ctx.restore();
+      } catch (e) {
+        console.error('加载截图失败:', e);
+        // 绘制占位符
+        ctx.fillStyle = '#f5f5f5';
+        roundRect(ctx, padding * 2, screenshotY, cardWidth - padding * 4, screenshotHeight - 20, 8);
+        ctx.fill();
+        ctx.fillStyle = '#999999';
+        ctx.font = '16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('截图加载失败', cardWidth / 2, screenshotY + screenshotHeight / 2);
+        ctx.textAlign = 'left';
+      }
+    }
+
+    // 绘制摘要区域
+    const summaryY = screenshotY + screenshotHeight;
+    ctx.fillStyle = '#f9f9f9';
+    roundRect(ctx, padding * 2, summaryY, cardWidth - padding * 4, summaryHeight - 20, 8);
+    ctx.fill();
+
+    // 绘制摘要标题
+    ctx.fillStyle = '#333333';
+    ctx.font = 'bold 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillText('📝 AI 摘要', padding * 2 + 15, summaryY + 25);
+
+    // 绘制摘要内容（多行）
+    ctx.fillStyle = '#555555';
+    ctx.font = '13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    const summaryText = collectedData.summary || '暂无摘要';
+    wrapText(ctx, summaryText, padding * 2 + 15, summaryY + 50, cardWidth - padding * 4 - 30, 20, 6);
+
+    // 绘制底部信息
+    const footerY = summaryY + summaryHeight;
+    ctx.fillStyle = '#999999';
+    ctx.font = '12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    const timestamp = new Date(collectedData.timestamp).toLocaleString('zh-CN');
+    ctx.fillText(`收集时间: ${timestamp}`, padding * 2, footerY + 10);
+
+    // 绘制品牌信息
+    ctx.textAlign = 'right';
+    ctx.fillText('由 网页信息收集助手 生成', cardWidth - padding * 2, footerY + 10);
+    ctx.textAlign = 'left';
+
+    // 将canvas转换为图片
+    const cardDataUrl = canvas.toDataURL('image/png');
+    document.getElementById('cardPreviewImg').src = cardDataUrl;
+    document.getElementById('cardPreviewSection').classList.remove('hidden');
+
+    // 保存卡片数据URL
+    collectedData.cardDataUrl = cardDataUrl;
+
+    setLoading(false);
+    showStatus('✅ 分享卡片生成成功！', 'success');
+
+  } catch (error) {
+    console.error('生成卡片失败:', error);
+    setLoading(false);
+    showStatus('❌ 生成卡片失败: ' + error.message, 'error');
+  }
+}
+
+// 辅助函数：绘制圆角矩形
+function roundRect(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+// 辅助函数：加载图片
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+// 辅助函数：截断文本
+function truncateText(ctx, text, maxWidth) {
+  if (!text) return '';
+  if (ctx.measureText(text).width <= maxWidth) {
+    return text;
+  }
+
+  let truncated = text;
+  while (truncated.length > 0 && ctx.measureText(truncated + '...').width > maxWidth) {
+    truncated = truncated.slice(0, -1);
+  }
+  return truncated + '...';
+}
+
+// 辅助函数：自动换行绘制文本
+function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+  if (!text) return;
+
+  // 清理文本，移除多余空白
+  const cleanText = text.replace(/\s+/g, ' ').trim();
+  const words = cleanText.split('');
+  let line = '';
+  let lineCount = 0;
+
+  for (let i = 0; i < words.length; i++) {
+    const testLine = line + words[i];
+    const metrics = ctx.measureText(testLine);
+
+    if (metrics.width > maxWidth && line !== '') {
+      ctx.fillText(line, x, y + lineCount * lineHeight);
+      line = words[i];
+      lineCount++;
+
+      if (lineCount >= maxLines) {
+        // 在最后一行添加省略号
+        const remaining = words.slice(i).join('');
+        if (remaining.length > 0) {
+          let lastLine = truncateText(ctx, line + remaining, maxWidth - 20);
+          if (!lastLine.endsWith('...')) {
+            lastLine = truncateText(ctx, lastLine, maxWidth - 20);
+          }
+          ctx.fillText(lastLine, x, y + (lineCount - 1) * lineHeight);
+        }
+        return;
+      }
+    } else {
+      line = testLine;
+    }
+  }
+
+  if (line && lineCount < maxLines) {
+    ctx.fillText(line, x, y + lineCount * lineHeight);
+  }
+}
+
+// 下载卡片
+function downloadCard() {
+  if (!collectedData || !collectedData.cardDataUrl) {
+    showStatus('请先生成分享卡片', 'error');
+    return;
+  }
+
+  const link = document.createElement('a');
+  link.download = `webpage-card-${Date.now()}.png`;
+  link.href = collectedData.cardDataUrl;
+  link.click();
+
+  showStatus('✅ 卡片已开始下载', 'success');
+}
+
+// 复制卡片到剪贴板
+async function copyCardToClipboard() {
+  if (!collectedData || !collectedData.cardDataUrl) {
+    showStatus('请先生成分享卡片', 'error');
+    return;
+  }
+
+  try {
+    // 将data URL转换为Blob
+    const response = await fetch(collectedData.cardDataUrl);
+    const blob = await response.blob();
+
+    // 使用Clipboard API复制图片
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        [blob.type]: blob
+      })
+    ]);
+
+    showStatus('✅ 卡片已复制到剪贴板', 'success');
+  } catch (error) {
+    console.error('复制失败:', error);
+    showStatus('❌ 复制失败: ' + error.message, 'error');
   }
 }
