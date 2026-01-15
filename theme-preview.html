@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>完整设计系统方案预览 - Web Collector</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@700&family=JetBrains+Mono&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #f1f5f9;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .preview-section {
+      width: 100%;
+      max-width: 900px;
+      padding: 40px;
+      background: var(--bg-main);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .theme-label {
+      position: absolute;
+      top: -20px;
+      left: 20px;
+      background: #1e293b;
+      color: white;
+      padding: 8px 20px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 40px;
+      color: var(--text-main);
+      font-family: var(--font-main);
+    }
+
+    .demo-card {
+      background: var(--bg-card);
+      border: var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: var(--backdrop);
+    }
+
+    .demo-card h3 { margin: 0 0 12px 0; font-size: 20px; }
+    .demo-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    .demo-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      background: var(--primary-gradient, var(--primary));
+      color: white;
+      border: none;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: var(--btn-shadow);
+      transition: var(--transition);
+    }
+
+    .demo-btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      margin-left: 10px;
+      box-shadow: none;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: var(--primary);
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    /* --- 方案一：极简实验室 --- */
+    .theme-minimal {
+      --primary: #002FA7;
+      --bg-main: #ffffff;
+      --bg-card: #ffffff;
+      --text-main: #171717;
+      --text-muted: #737373;
+      --border-color: #e5e5e5;
+      --radius: 2px;
+      --shadow: none;
+      --card-border: 1px solid var(--border-color);
+      --font-main: 'Inter', sans-serif;
+      --btn-shadow: none;
+    }
+    .theme-minimal .demo-btn { box-shadow: none; border: 1px solid var(--primary); }
+
+    /* --- 方案二：复古纸张 --- */
+    .theme-retro {
+      --primary: #2D463E;
+      --bg-main: #F5F2ED;
+      --bg-card: #FCFAF7;
+      --text-main: #1C1917;
+      --text-muted: #78716c;
+      --border-color: #E7E2DA;
+      --radius: 16px;
+      --shadow: 0 10px 25px -5px rgba(45, 70, 62, 0.08);
+      --card-border: 1px solid var(--border-color);
+      --font-main: 'Noto Serif SC', serif;
+      --btn-shadow: 0 4px 12px rgba(45, 70, 62, 0.2);
+    }
+
+    /* --- 方案三：深邃星空 --- */
+    .theme-dark {
+      --primary: #F472B6;
+      --primary-gradient: linear-gradient(135deg, #F472B6 0%, #8B5CF6 100%);
+      --bg-main: #0B0E14;
+      --bg-card: rgba(23, 27, 35, 0.6);
+      --text-main: #F9FAFB;
+      --text-muted: #9CA3AF;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --radius: 24px;
+      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      --card-border: 1px solid rgba(255, 255, 255, 0.1);
+      --font-main: 'Inter', sans-serif;
+      --backdrop: blur(12px);
+      --btn-shadow: 0 4px 14px rgba(244, 114, 182, 0.3);
+    }
+    .theme-dark .preview-section { background: #000; }
+
+    /* --- 方案四：北欧晨霜 (Nordic Frost) --- */
+    .theme-nordic {
+      --primary: #5E81AC;
+      --bg-main: #ECEFF4;
+      --bg-card: #ffffff;
+      --text-main: #2E3440;
+      --text-muted: #4C566A;
+      --border-color: #D8DEE9;
+      --radius: 20px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.03);
+      --card-border: 1px solid #E5E9F0;
+      --font-main: 'Inter', sans-serif;
+      --btn-shadow: 0 4px 12px rgba(94, 129, 172, 0.2);
+    }
+
+    /* --- 方案五：新粗犷主义 (Neo-Brutalism) --- */
+    .theme-brutal {
+      --primary: #FFD100;
+      --bg-main: #F0F0F0;
+      --bg-card: #ffffff;
+      --text-main: #000000;
+      --text-muted: #333333;
+      --border-color: #000000;
+      --radius: 0px;
+      --shadow: 8px 8px 0px #000000;
+      --card-border: 3px solid #000000;
+      --font-main: 'Space Grotesk', sans-serif;
+      --btn-shadow: 4px 4px 0px #000000;
+    }
+    .theme-brutal .demo-btn { color: #000; border: 3px solid #000; }
+    .theme-brutal .badge { border-radius: 0; border: 2px solid #000; color: #000; font-weight: 900; }
+
+    /* --- 方案六：瑞士国际 (Swiss International) --- */
+    .theme-swiss {
+      --primary: #E62E2D;
+      --bg-main: #ffffff;
+      --bg-card: #f9f9f9;
+      --text-main: #000000;
+      --text-muted: #666666;
+      --border-color: #000000;
+      --radius: 0px;
+      --shadow: none;
+      --card-border: none;
+      --font-main: 'Inter', sans-serif;
+      --btn-shadow: none;
+    }
+    .theme-swiss .demo-card { border-left: 4px solid var(--primary); }
+    .theme-swiss h2, .theme-swiss h3 { font-weight: 800; letter-spacing: -1px; text-transform: uppercase; }
+
+    /* --- 方案七：有机黏土 (Organic Clay) --- */
+    .theme-clay {
+      --primary: #FF9999;
+      --bg-main: #FFF5F5;
+      --bg-card: #ffffff;
+      --text-main: #4A4A4A;
+      --text-muted: #8E8E8E;
+      --border-color: #FFE4E4;
+      --radius: 32px;
+      --shadow: inset 0 -4px 10px rgba(0,0,0,0.05), 0 10px 30px rgba(255, 153, 153, 0.1);
+      --card-border: 2px solid #ffffff;
+      --font-main: 'Inter', sans-serif;
+      --btn-shadow: 0 8px 20px rgba(255, 153, 153, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 方案一：极简实验室 -->
+  <div class="preview-section theme-minimal">
+    <div class="theme-label">PLAN A: MINIMALIST LAB</div>
+    <div class="demo-grid">
+      <div class="demo-card">
+        <div class="badge" style="background: #002FA7;">TECH TOOL</div>
+        <h3>未来设计趋势报告</h3>
+        <p>通过数据分析和AI预测，我们深入探讨了2026年数字产品的交互逻辑与视觉演进...</p>
+        <button class="demo-btn">智能提取</button>
+      </div>
+      <div>
+        <h2 style="margin-top: 0;">极简主义的理智</h2>
+        <p>去掉所有不必要的装饰，只留下内容本身。使用 0.5px 的线条和直角设计，营造一种实验室般的精确感。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 方案二：复古纸张 -->
+  <div class="preview-section theme-retro">
+    <div class="theme-label">PLAN B: RETRO PAPER</div>
+    <div class="demo-grid">
+      <div class="demo-card">
+        <div class="badge" style="background: #2D463E;">灵感收集</div>
+        <h3>京都夏日旅行笔记</h3>
+        <p>那些藏在巷弄里的古老书店，空气中弥漫着淡淡的油墨香气，仿佛时间在此静止...</p>
+        <button class="demo-btn">保存灵感</button>
+      </div>
+      <div>
+        <h2 style="margin-top: 0;">纸质阅读的温度</h2>
+        <p>模拟天然纸张的暖米色调，配合温润的大圆角和沉静的森林绿。这不仅仅是一个工具，更是一本私人数字笔记。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 方案三：深邃星空 -->
+  <div class="preview-section theme-dark">
+    <div class="theme-label">PLAN C: DARK NEBULA</div>
+    <div class="demo-grid">
+      <div class="demo-card">
+        <div class="badge">AI INSIGHT</div>
+        <h3 style="background: linear-gradient(to right, #F472B6, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">神经网络加速方案</h3>
+        <p>利用分布式计算架构，我们将模型推理速度提升了 400%，并显著降低了显存占用...</p>
+        <button class="demo-btn">深度解析</button>
+      </div>
+      <div>
+        <h2 style="margin-top: 0; color: #fff;">赛博时代的探索</h2>
+        <p>深色背景下的毛玻璃特效，配合霓虹渐变。让每一次点击都像是穿梭在二进制的星空之中。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 方案四：北欧晨霜 -->
+  <div class="preview-section theme-nordic">
+    <div class="theme-label">PLAN D: NORDIC FROST</div>
+    <div class="demo-grid">
+      <div class="demo-card">
+        <div class="badge">Resources</div>
+        <h3>北欧设计哲学：光与影</h3>
+        <p>在漫长的冬季里，如何利用柔和的色彩与光线营造出温暖的居家氛围...</p>
+        <button class="demo-btn">阅读全文</button>
+      </div>
+      <div>
+        <h2 style="margin-top: 0; font-weight: 600;">清爽与平衡</h2>
+        <p>受北欧自然景观启发，使用冷色调的灰蓝色与纯白。高呼吸感的布局，让信息在指尖轻盈跳动。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 方案五：新粗犷主义 -->
+  <div class="preview-section theme-brutal">
+    <div class="theme-label">PLAN E: NEO-BRUTALISM</div>
+    <div class="demo-grid">
+      <div class="demo-card">
+        <div class="badge">ALERT</div>
+        <h3>不顺从的视觉表达</h3>
+        <p>粗黑的边框、浓烈的对比、生硬的投影。这是一场反抗“过度平滑”的设计革命。</p>
+        <button class="demo-btn">加入革命</button>
+      </div>
+      <div>
+        <h2 style="margin-top: 0; font-weight: 900;">原始的张力</h2>
+        <p>放弃柔和，选择力量。这种风格在年轻人和潮流品牌中极受欢迎，具有极强的视觉冲击力。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 方案六：瑞士国际 -->
+  <div class="preview-section theme-swiss">
+    <div class="theme-label">PLAN F: SWISS INTERNATIONAL</div>
+    <div class="demo-grid">
+      <div class="demo-card">
+        <div class="badge">CLASSIFIED</div>
+        <h3>客观与秩序</h3>
+        <p>基于严格的数学网格，将排版的功能性发挥到极致。红色不仅是装饰，更是信号。</p>
+        <button class="demo-btn">开始构建</button>
+      </div>
+      <div>
+        <h2 style="margin-top: 0; font-weight: 800;">永恒的现代</h2>
+        <p>自1950年代以来，这种强调客观性、可读性和排版的风格一直是全球专业领域的视觉标准。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 方案七：有机黏土 -->
+  <div class="preview-section theme-clay">
+    <div class="theme-label">PLAN G: ORGANIC CLAY</div>
+    <div class="demo-grid">
+      <div class="demo-card">
+        <div class="badge">SWEET</div>
+        <h3>像奶油一样顺滑</h3>
+        <p>超大圆角与柔和的内阴影，配合甜美的粉色系。每一个组件都想让人伸手触碰。</p>
+        <button class="demo-btn">感受触感</button>
+      </div>
+      <div>
+        <h2 style="margin-top: 0; font-weight: 700;">触感的重塑</h2>
+        <p>灵感来源于黏土建模，通过精妙的阴影营造出3D实物感。非常适合生活类、女性向或解压类应用。</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

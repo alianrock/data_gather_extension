@@ -100,22 +100,124 @@ function getCanonicalUrl() {
   return canonical ? canonical.href : '';
 }
 
-// 提取主要内容
+// 提取主要内容 - 使用智能算法提取网页核心内容
 function extractMainContent() {
-  // 尝试找到主要内容区域
-  const mainContent = document.querySelector('main') ||
-                     document.querySelector('article') ||
-                     document.querySelector('[role="main"]') ||
-                     document.body;
+  // 优先查找语义化标签
+  let mainContent = document.querySelector('main') ||
+                   document.querySelector('article') ||
+                   document.querySelector('[role="main"]') ||
+                   document.querySelector('.main-content') ||
+                   document.querySelector('.content') ||
+                   document.querySelector('#content') ||
+                   document.querySelector('#main');
 
-  // 移除脚本、样式等标签
+  // 如果没有找到，使用内容密度算法找到主要内容区域
+  if (!mainContent || mainContent === document.body) {
+    mainContent = findMainContentByDensity();
+  }
+
+  // 如果还是没找到，使用body
+  if (!mainContent) {
+    mainContent = document.body;
+  }
+
+  // 移除脚本、样式等不需要的标签
   const clone = mainContent.cloneNode(true);
-  const unwantedElements = clone.querySelectorAll('script, style, nav, header, footer, aside');
-  unwantedElements.forEach(el => el.remove());
+  const unwantedSelectors = [
+    'script', 'style', 'nav', 'header', 'footer', 'aside',
+    '.sidebar', '.navigation', '.menu', '.ad', '.advertisement',
+    '.comment', '.comments', '.social-share', '.share-buttons',
+    '.related', '.related-posts', '.breadcrumb', '.breadcrumbs'
+  ];
+  
+  unwantedSelectors.forEach(selector => {
+    const elements = clone.querySelectorAll(selector);
+    elements.forEach(el => el.remove());
+  });
 
-  // 获取文本内容，限制长度
-  const text = clone.innerText || clone.textContent || '';
-  return text.trim().substring(0, 5000);
+  // 提取文本内容
+  let text = clone.innerText || clone.textContent || '';
+  
+  // 清理文本：移除多余空白、换行
+  text = text.replace(/\s+/g, ' ').trim();
+  
+  // 移除常见的无用文本模式
+  text = text.replace(/\s*(Cookie|隐私|Privacy|Terms|条款|使用|使用条款)\s*/gi, '');
+  
+  // 如果文本太短，尝试从段落中提取
+  if (text.length < 200) {
+    const paragraphs = Array.from(clone.querySelectorAll('p'))
+      .map(p => p.innerText.trim())
+      .filter(t => t.length > 50)
+      .slice(0, 10)
+      .join(' ');
+    
+    if (paragraphs.length > text.length) {
+      text = paragraphs;
+    }
+  }
+  
+  // 限制长度，但保留更多内容用于AI分析
+  return text.substring(0, 8000);
+}
+
+// 使用内容密度算法找到主要内容区域
+function findMainContentByDensity() {
+  const candidates = [];
+  const allElements = document.querySelectorAll('div, section, article, main');
+  
+  allElements.forEach(element => {
+    // 跳过明显不是内容的元素
+    const tagName = element.tagName.toLowerCase();
+    const className = element.className || '';
+    const id = element.id || '';
+    
+    const skipPatterns = [
+      /nav/i, /menu/i, /sidebar/i, /footer/i, /header/i,
+      /ad/i, /comment/i, /social/i, /share/i, /related/i
+    ];
+    
+    if (skipPatterns.some(pattern => 
+      pattern.test(className) || pattern.test(id) || pattern.test(tagName)
+    )) {
+      return;
+    }
+    
+    // 计算文本密度
+    const text = element.innerText || '';
+    const textLength = text.trim().length;
+    
+    // 跳过太短的内容
+    if (textLength < 200) {
+      return;
+    }
+    
+    // 计算链接密度（链接太多可能是导航栏）
+    const links = element.querySelectorAll('a');
+    const linkDensity = links.length / Math.max(textLength / 100, 1);
+    
+    // 计算段落密度
+    const paragraphs = element.querySelectorAll('p');
+    const paragraphDensity = paragraphs.length / Math.max(textLength / 500, 1);
+    
+    // 计算内容分数
+    const score = textLength * (1 - Math.min(linkDensity, 0.5)) * (1 + paragraphDensity * 0.5);
+    
+    candidates.push({
+      element: element,
+      score: score,
+      textLength: textLength
+    });
+  });
+  
+  // 按分数排序，返回得分最高的元素
+  candidates.sort((a, b) => b.score - a.score);
+  
+  if (candidates.length > 0 && candidates[0].textLength > 300) {
+    return candidates[0].element;
+  }
+  
+  return null;
 }
 
 // 提取标题
@@ -228,5 +330,5 @@ if (document.readyState === 'loading') {
 }
 
 function init() {
-  console.log('网页信息收集助手内容脚本已加载');
+  // 内容脚本已初始化
 }

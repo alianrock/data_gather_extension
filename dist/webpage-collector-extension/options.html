@@ -3,180 +3,334 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>网页信息收集助手 - 设置</title>
+  <title>设置 - Web Collector</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
     body {
-      width: 600px;
-      padding: 20px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-main);
+      padding: var(--spacing-xl) var(--spacing-md);
     }
+
     .container {
-      max-width: 800px;
+      max-width: 720px;
       margin: 0 auto;
     }
-    h1 {
-      color: #333;
-      border-bottom: 2px solid #4CAF50;
-      padding-bottom: 10px;
+
+    .settings-header {
+      margin-bottom: var(--spacing-xl);
     }
-    .section {
-      margin: 30px 0;
-      padding: 20px;
-      background: #f9f9f9;
-      border-radius: 8px;
+
+    .settings-header h1 {
+      font-size: 28px;
+      font-weight: 850;
+      color: var(--text-main);
+      letter-spacing: -0.04em;
+      margin-bottom: var(--spacing-xs);
     }
-    .section h2 {
-      color: #555;
-      margin-top: 0;
-      font-size: 18px;
-    }
-    .form-group {
-      margin: 15px 0;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 500;
-      color: #555;
-    }
-    input[type="text"],
-    input[type="password"],
-    select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+
+    .settings-header p {
+      color: var(--text-muted);
       font-size: 14px;
-      box-sizing: border-box;
+      opacity: 0.8;
     }
-    input:focus {
-      outline: none;
-      border-color: #4CAF50;
+
+    .section-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--spacing-lg);
+      overflow: hidden;
+      transition: var(--transition);
     }
-    .btn {
-      background: #4CAF50;
-      color: white;
-      padding: 12px 30px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+
+    .section-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .section-header {
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-header);
+    }
+
+    .section-header h2 {
       font-size: 16px;
-      margin-top: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .btn:hover {
-      background: #45a049;
+
+    .section-body {
+      padding: var(--spacing-lg);
     }
-    .status {
-      margin-top: 15px;
-      padding: 10px;
-      border-radius: 4px;
-      display: none;
+
+    .form-group {
+      margin-bottom: var(--spacing-lg);
     }
-    .status.success {
-      background: #d4edda;
-      color: #155724;
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
       display: block;
     }
-    .status.error {
-      background: #f8d7da;
-      color: #721c24;
-      display: block;
-    }
+
     .help-text {
       font-size: 12px;
-      color: #666;
-      margin-top: 5px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    .status-container {
+      position: fixed;
+      bottom: var(--spacing-xl);
+      right: var(--spacing-xl);
+      z-index: 100;
+    }
+
+    .status {
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      font-size: 14px;
+      font-weight: 600;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: none;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(20px) scale(0.95); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-main);
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--spacing-lg);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+    
+    .checkbox-group:hover {
+      border-color: var(--primary);
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: var(--primary);
+      margin: 0;
+      flex-shrink: 0;
+      appearance: auto;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>⚙️ 插件设置</h1>
+    <header class="settings-header">
+      <h1>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 32px; height: 32px; vertical-align: middle; margin-right: 12px; color: var(--primary);">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.59c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.127c-.332.183-.582.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.59c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.127.332-.183.582-.495.644-.869l.214-1.281Z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+        偏好设置
+      </h1>
+      <p>配置您的 AI 模型、数据库同步及其他个性化选项</p>
+    </header>
 
-    <div class="section">
-      <h2>🤖 AI大模型API配置</h2>
-      <div class="form-group">
-        <label for="aiProvider">AI服务提供商</label>
-        <select id="aiProvider">
-          <option value="openai">OpenAI</option>
-          <option value="anthropic">Anthropic (Claude)</option>
-          <option value="custom">自定义</option>
-        </select>
-        <div class="help-text">选择你使用的AI服务提供商</div>
+    <!-- AI 配置 -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px; margin-right: 10px; color: var(--primary);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+          </svg>
+          AI 大模型配置
+        </h2>
       </div>
+      <div class="section-body">
+        <div class="form-group">
+          <label for="aiProvider">服务提供商</label>
+          <select id="aiProvider">
+            <option value="openai">OpenAI</option>
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="custom">自定义 (硅基流动/DeepSeek等)</option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="aiApiUrl">AI API URL</label>
-        <input type="text" id="aiApiUrl" placeholder="https://api.openai.com/v1/chat/completions">
-        <div class="help-text">AI API的完整URL地址</div>
-      </div>
+        <div class="form-group">
+          <label for="aiApiUrl">API 接口地址</label>
+          <input type="text" id="aiApiUrl" placeholder="https://api.openai.com/v1/chat/completions">
+          <div class="help-text">完整的 API 端点地址</div>
+        </div>
 
-      <div class="form-group">
-        <label for="aiApiKey">AI API Key</label>
-        <input type="password" id="aiApiKey" placeholder="sk-...">
-        <div class="help-text">你的AI API密钥</div>
-      </div>
+        <div class="form-group">
+          <label for="aiApiKey">API 密钥 (API Key)</label>
+          <input type="password" id="aiApiKey" placeholder="sk-...">
+        </div>
 
-      <div class="form-group">
-        <label for="aiModel">AI模型</label>
-        <input type="text" id="aiModel" placeholder="gpt-4o-mini">
-        <div class="help-text">使用的AI模型名称</div>
-      </div>
+        <div class="form-group">
+          <label for="aiModel">指定模型</label>
+          <input type="text" id="aiModel" placeholder="gpt-4o-mini">
+        </div>
 
-      <div class="form-group">
-        <label for="summaryLanguage">摘要语言</label>
-        <select id="summaryLanguage">
-          <option value="zh-CN">中文（简体）</option>
-          <option value="zh-TW">中文（繁体）</option>
-          <option value="en">English</option>
-          <option value="ja">日本語</option>
-          <option value="ko">한국어</option>
-          <option value="es">Español</option>
-          <option value="fr">Français</option>
-          <option value="de">Deutsch</option>
-        </select>
-        <div class="help-text">AI生成摘要使用的语言</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label for="summaryLanguage">生成语言</label>
+            <select id="summaryLanguage">
+              <option value="zh-CN">简体中文</option>
+              <option value="zh-TW">繁体中文</option>
+              <option value="en">English</option>
+              <option value="ja">日本語</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="summaryStyle">生成风格</label>
+            <select id="summaryStyle">
+              <option value="social">✨ 社交分享</option>
+              <option value="professional">💼 专业正式</option>
+              <option value="casual">💬 轻松活泼</option>
+              <option value="brief">⚡ 极简精炼</option>
+            </select>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="form-group">
-        <label for="summaryStyle">摘要风格</label>
-        <select id="summaryStyle">
-          <option value="social">社交分享风格（推荐）</option>
-          <option value="professional">专业正式风格</option>
-          <option value="casual">轻松活泼风格</option>
-          <option value="brief">极简精炼风格</option>
-        </select>
-        <div class="help-text">AI生成摘要的语气和风格</div>
+    <!-- 界面主题 -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px; margin-right: 10px; color: var(--primary);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.903a4.43 4.43 0 0 1-1.155-2.141 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848 5.25 5.25 0 0 1-10.233 2.333Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6 20.25a6 6 0 1 1 12 0" />
+          </svg>
+          界面主题
+        </h2>
       </div>
+      <div class="section-body">
+        <div class="form-group">
+          <label for="theme">选择主题风格</label>
+          <select id="theme">
+            <option value="default">✨ 现代默认 (Modern Default)</option>
+            <option value="minimal">🧪 极简实验室 (Minimalist Lab)</option>
+            <option value="retro">📜 复古纸张 (Retro Paper)</option>
+            <option value="dark">🌌 深邃星空 (Dark Nebula)</option>
+            <option value="nordic">❄️ 北欧晨霜 (Nordic Frost)</option>
+            <option value="brutal">⚡ 新粗犷主义 (Neo-Brutalism)</option>
+            <option value="swiss">🇨🇭 瑞士国际 (Swiss International)</option>
+            <option value="clay">🧸 有机黏土 (Organic Clay)</option>
+          </select>
+          <div class="help-text">更改主题将立即应用于所有插件界面。</div>
+        </div>
+
+        <!-- 主题预览效果 -->
+        <div class="theme-preview-container" style="margin-top: 20px;">
+          <label>预览效果</label>
+          <div class="card" style="margin-bottom: 0; pointer-events: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span class="badge badge-primary">预览标签</span>
+              <div style="display: flex; gap: 4px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: #ff5f57;"></div>
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: #febc2e;"></div>
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: #28c840;"></div>
+              </div>
+            </div>
+            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">这是一个主题预览标题</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">选择上方的主题，这里会立即显示对应的色彩、圆角和阴影效果。</p>
+            <button class="btn btn-primary" style="height: 36px; padding: 0 16px; width: auto; font-size: 13px;">预览按钮</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Turso 配置 -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px; margin-right: 10px; color: var(--primary);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.128 16.556 17.975 12 17.975s-8.25-1.847-8.25-4.125v-3.75m16.5 0v3.75" />
+          </svg>
+          Turso 云端同步
+        </h2>
+      </div>
+      <div class="section-body">
+        <div class="checkbox-group">
+          <input type="checkbox" id="tursoEnabled">
+          <label for="tursoEnabled" style="margin-bottom: 0;">启用 Turso 实时同步</label>
+        </div>
+
+        <div class="form-group">
+          <label for="tursoDbUrl">数据库 URL</label>
+          <input type="text" id="tursoDbUrl" placeholder="libsql://your-db.turso.io">
+        </div>
+
+        <div class="form-group">
+          <label for="tursoAuthToken">认证令牌 (Auth Token)</label>
+          <input type="password" id="tursoAuthToken" placeholder="JWT Token...">
+        </div>
+
+        <div class="btn-group">
+          <button type="button" id="testTursoBtn" class="btn btn-outline" style="flex: 1;">测试连接</button>
+          <button type="button" id="initTursoBtn" class="btn btn-outline" style="flex: 1; border-color: #f59e0b; color: #d97706;">初始化表结构</button>
+        </div>
+        <div id="tursoStatus" class="help-text" style="margin-top: 12px; text-align: center;"></div>
+      </div>
+    </section>
+
+    <!-- 数据 API -->
+    <section class="section-card">
+      <div class="section-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px; margin-right: 10px; color: var(--primary);">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+          </svg>
+          数据转发 API (Webhook)
+        </h2>
+      </div>
+      <div class="section-body">
+        <div class="form-group">
+          <label for="dataApiUrl">接收地址</label>
+          <input type="text" id="dataApiUrl" placeholder="https://your-server.com/webhook">
+        </div>
+        <div class="form-group">
+          <label for="dataApiKey">鉴权密钥 (Optional)</label>
+          <input type="password" id="dataApiKey" placeholder="Auth Token...">
+        </div>
+      </div>
+    </section>
+
+    <div style="margin-bottom: 60px; display: flex; justify-content: flex-end;">
+      <button id="saveBtn" class="btn btn-primary" style="padding: 12px 32px; font-size: 15px; width: auto; height: auto;">保存所有更改</button>
     </div>
 
-    <div class="section">
-      <h2>📡 数据传递API配置</h2>
-      <div class="form-group">
-        <label for="dataApiUrl">数据API URL</label>
-        <input type="text" id="dataApiUrl" placeholder="https://your-api.com/api/webpage-data">
-        <div class="help-text">接收网页数据的API地址</div>
-      </div>
-
-      <div class="form-group">
-        <label for="dataApiKey">数据API Key (可选)</label>
-        <input type="password" id="dataApiKey" placeholder="可选的API密钥">
-        <div class="help-text">如果API需要认证，请填写密钥</div>
-      </div>
-
-      <div class="form-group">
-        <label for="dataApiMethod">请求方法</label>
-        <select id="dataApiMethod">
-          <option value="POST">POST</option>
-          <option value="PUT">PUT</option>
-        </select>
-      </div>
+    <div class="status-container">
+      <div id="status" class="status"></div>
     </div>
-
-    <button class="btn" id="saveBtn">保存设置</button>
-
-    <div class="status" id="status"></div>
   </div>
 
   <script src="options.js"></script>

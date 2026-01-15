@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分享卡片模板预览</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@700&family=Space+Grotesk:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: #f0f2f5;
+            padding: 40px;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+        }
+
+        .template-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .template-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 100px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 缩放容器以适应屏幕 */
+        .card-wrapper {
+            width: 540px;
+            /* 1080 / 2 */
+            height: 675px;
+            /* 1350 / 2 */
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            /* 视觉上的圆角 */
+            overflow: hidden;
+            background: white;
+        }
+
+        .share-card {
+            transform: scale(0.5);
+            transform-origin: top left;
+            /* 强制重置为原始尺寸 */
+            width: 1080px;
+            height: 1350px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Premium Style -->
+    <div class="template-container">
+        <div class="template-label">✨ Premium Luxury</div>
+        <div class="card-wrapper">
+            <div class="share-card card-premium" style="--theme-primary: #6366f1; --theme-secondary: #a855f7;">
+                <div class="premium-bg-accent"></div>
+                <div class="card-inner">
+                    <div class="card-header">
+                        <div class="brand-box">
+                            <div class="brand-icon"></div>
+                            <span class="brand-text">Web Collector</span>
+                        </div>
+                        <div class="date-badge">January 15, 2026</div>
+                    </div>
+
+                    <div class="main-content">
+                        <div class="category-pill">DESIGN TRENDS</div>
+                        <h1 class="card-title">2026年UI设计趋势深度解析：从玻璃拟态到神经形态</h1>
+                        <div class="card-domain">design-daily.com</div>
+
+                        <div class="visual-container">
+                            <div class="screenshot-wrapper">
+                                <img class="screenshot-img"
+                                    src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
+                                    alt="Screenshot">
+                            </div>
+                        </div>
+
+                        <div class="summary-box">
+                            <div class="summary-text">
+                                本文深入探讨了2026年最前沿的界面设计趋势。随着硬件性能的提升，高斯模糊与实时光追效果在移动端得到了广泛应用。设计师们开始追求更加细腻的质感表现，将物理世界的材质特性（如玻璃、金属、织物）完美融入数字界面。同时，AI辅助设计工具的普及，让个性化动态排版成为可能。
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="footer-info">
+                            <span class="footer-label">Curated by</span>
+                            <span class="footer-value">AI Assistant</span>
+                        </div>
+                        <div class="qr-placeholder">QR CODE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern Style -->
+    <div class="template-container">
+        <div class="template-label">🔹 Modern Glass</div>
+        <div class="card-wrapper">
+            <div class="share-card card-modern" style="--theme-primary: #3b82f6; --theme-secondary: #2563eb;">
+                <div class="card-inner">
+                    <div class="card-header">
+                        <div class="card-brand">
+                            <div class="brand-icon"></div>
+                            <span class="brand-name">Web Collector</span>
+                        </div>
+                        <span class="card-category-tag">TECHNOLOGY</span>
+                    </div>
+
+                    <div class="card-screenshot">
+                        <div class="browser-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <img class="screenshot-img"
+                            src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2670&auto=format&fit=crop"
+                            alt="Screenshot">
+                    </div>
+
+                    <h1 class="card-title">The Future of Cyber Security in 2026</h1>
+                    <div class="card-domain">🔗 security-weekly.io</div>
+
+                    <div class="card-summary">
+                        <div class="summary-line"></div>
+                        <div class="summary-text">
+                            As we move further into the digital age, cybersecurity threats are evolving at an
+                            unprecedented rate. This article discusses the new wave of AI-driven attacks and how quantum
+                            encryption is becoming the new standard for data protection. Experts predict that by the end
+                            of 2026, zero-trust architecture will be mandatory for all enterprise systems.
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <span class="card-date">2026/01/15 • Web Collector AI</span>
+                        <span class="card-cta">长按识别精彩内容</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Elegant Style -->
+    <div class="template-container">
+        <div class="template-label">✒️ Elegant Minimal</div>
+        <div class="card-wrapper">
+            <div class="share-card card-elegant">
+                <div class="card-inner">
+                    <div class="card-inner-inner">
+                        <h1 class="card-title">The Art of Slow Living: Finding Peace in Chaos</h1>
+                        <div class="card-meta">LIFESTYLE / SOURCE: mindful-life.org</div>
+                        <div class="card-divider"></div>
+                        <div class="summary-text">
+                            In a world that never stops moving, finding moments of stillness is an act of rebellion.
+                            Slow living isn't about doing nothing; it's about doing things with intention and presence.
+                            This guide explores practical ways to disconnect from the digital noise and reconnect with
+                            yourself and nature.
+                        </div>
+
+                        <div class="card-screenshot">
+                            <img class="screenshot-img"
+                                src="https://images.unsplash.com/photo-1499728603963-bc0922fc718f?q=80&w=2670&auto=format&fit=crop"
+                                alt="Screenshot">
+                        </div>
+
+                        <div class="card-footer">
+                            <span>COLLECTED BY WEB COLLECTOR</span>
+                            <span>2026 • ALL RIGHTS RESERVED</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Retro Style -->
+    <div class="template-container">
+        <div class="template-label">📜 Retro Paper</div>
+        <div class="card-wrapper">
+            <div class="share-card card-retro">
+                <div class="card-inner">
+                    <div class="stamp">HIST</div>
+
+                    <h1 class="card-title">Ancient Libraries of the World</h1>
+                    <div class="card-meta">Date: 2026/1/15 / Source: history-channel.com</div>
+
+                    <div class="summary-container">
+                        <div class="summary-line-bg"></div>
+                        <div class="summary-text">
+                            From the Library of Alexandria to the modern archives of the Vatican, libraries have always
+                            been the sanctuaries of human knowledge. This retrospective looks at how these institutions
+                            have survived wars, fires, and the passage of time to preserve our collective memory.
+                        </div>
+                    </div>
+
+                    <div class="card-screenshot">
+                        <img class="screenshot-img"
+                            src="https://images.unsplash.com/photo-1507842217121-9e962835bf6e?q=80&w=2670&auto=format&fit=crop"
+                            alt="Screenshot">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cyber Style -->
+    <div class="template-container">
+        <div class="template-label">🤖 Cyber Tech</div>
+        <div class="card-wrapper">
+            <div class="share-card card-cyber">
+                <div class="card-inner">
+                    <div class="cyber-border"></div>
+                    <div class="corner-tl"></div>
+                    <div class="corner-br"></div>
+
+                    <h1 class="card-title">NEURAL LINK UPDATE V4.0</h1>
+                    <div class="card-status">[STATUS: ANALYSIS_COMPLETE] // CATEGORY: TECH</div>
+
+                    <div class="card-screenshot">
+                        <img class="screenshot-img"
+                            src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2670&auto=format&fit=crop"
+                            alt="Screenshot">
+                        <div class="scanlines"></div>
+                    </div>
+
+                    <div class="summary-text">> The latest firmware update for the Neural Link interface promises 50%
+                        faster transmission speeds and reduced latency. Early adopters report enhanced cognitive
+                        processing and seamless integration with cloud storage.</div>
+
+                    <div class="card-footer">
+                        <span>ID: 17684920192 // LOC: neural-net.io</span>
+                        <span>DECODING... 100%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,10 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(agent-foreman *)",
-      "Bash(agent-foreman done:*)",
+      "Bash(agent-foreman:*)",
       "Bash(zip:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(grep:*)",
+      "Bash(curl:*)"
     ]
   }
 }

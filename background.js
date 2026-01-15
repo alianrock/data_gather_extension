@@ -1,165 +1,261 @@
 // 后台服务脚本 (Service Worker)
+// 支持后台执行AI请求，状态持久化，队列处理
 
-// 扩展安装或更新时
-chrome.runtime.onInstalled.addListener((details) => {
-  if (details.reason === 'install') {
-    console.log('网页信息收集助手已安装');
-    // 打开选项页面进行初始配置
-    chrome.runtime.openOptionsPage();
-  } else if (details.reason === 'update') {
-    console.log('网页信息收集助手已更新到版本', chrome.runtime.getManifest().version);
-  }
-});
+// ========== 队列管理 ==========
 
-// 监听来自popup和content script的消息
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'captureScreenshot') {
-    // 截取当前可见区域
-    captureScreenshot(request.tabId)
-      .then(screenshot => sendResponse({ success: true, data: screenshot }))
-      .catch(error => sendResponse({ success: false, error: error.message }));
-    return true; // 表示异步响应
+// 收集队列
+let collectionQueue = [];
+let isProcessing = false;
+
+// 添加到队列
+async function addToQueue(tabId, pageInfo) {
+  const url = pageInfo.url;
+
+  // 检查是否已在队列中
+  const exists = collectionQueue.some(item => item.url === url);
+  if (exists) {
+    return { queued: true, position: collectionQueue.findIndex(i => i.url === url) + 1 };
   }
 
-  if (request.action === 'sendToAPI') {
-    // 发送数据到配置的API
-    sendDataToAPI(request.data)
-      .then(result => sendResponse({ success: true, data: result }))
-      .catch(error => sendResponse({ success: false, error: error.message }));
-    return true;
+  // 添加到队列
+  collectionQueue.push({ tabId, pageInfo, url, addedAt: Date.now() });
+
+  // 保存队列状态
+  await saveQueueState();
+
+  // 通知popup队列状态
+  broadcastQueueStatus();
+
+  // 如果没有在处理，开始处理
+  if (!isProcessing) {
+    processQueue();
   }
 
-  if (request.action === 'generateAISummary') {
-    // 生成AI摘要
-    generateAISummary(request.pageInfo)
-      .then(summary => sendResponse({ success: true, data: summary }))
-      .catch(error => sendResponse({ success: false, error: error.message }));
-    return true;
-  }
-});
+  return { queued: true, position: collectionQueue.length };
+}
 
-// 截取网页截图
-async function captureScreenshot(tabId) {
-  try {
-    // 如果提供了tabId，激活该标签页
-    if (tabId) {
-      await chrome.tabs.update(tabId, { active: true });
+// 处理队列
+async function processQueue() {
+  if (isProcessing || collectionQueue.length === 0) {
+    return;
+  }
+
+  isProcessing = true;
+
+  while (collectionQueue.length > 0) {
+    const item = collectionQueue[0];
+
+    try {
+      await collectPageInBackground(item.tabId, item.pageInfo);
+    } catch (error) {
+      console.error('[Queue] 处理失败:', error);
     }
 
-    // 截取可见区域
-    const screenshot = await chrome.tabs.captureVisibleTab(null, {
-      format: 'png',
-      quality: 90
+    // 移除已处理的项
+    collectionQueue.shift();
+    await saveQueueState();
+    broadcastQueueStatus();
+  }
+
+  isProcessing = false;
+}
+
+// 保存队列状态
+async function saveQueueState() {
+  await chrome.storage.local.set({
+    collectionQueue: collectionQueue.map(item => ({
+      url: item.url,
+      tabId: item.tabId,
+      pageInfo: item.pageInfo,
+      addedAt: item.addedAt
+    }))
+  });
+}
+
+// 恢复队列状态（Service Worker重启时）
+async function restoreQueueState() {
+  const data = await chrome.storage.local.get('collectionQueue');
+  if (data.collectionQueue && data.collectionQueue.length > 0) {
+    collectionQueue = data.collectionQueue;
+    // 继续处理
+    if (!isProcessing) {
+      processQueue();
+    }
+  }
+}
+
+// 广播队列状态给所有popup
+function broadcastQueueStatus() {
+  chrome.runtime.sendMessage({
+    action: 'queueStatus',
+    queue: collectionQueue.map((item, index) => ({
+      url: item.url,
+      position: index + 1,
+      isProcessing: index === 0 && isProcessing
+    })),
+    total: collectionQueue.length,
+    isProcessing
+  }).catch(() => {});
+}
+
+// 获取队列中的位置
+function getQueuePosition(url) {
+  const index = collectionQueue.findIndex(item => item.url === url);
+  return index === -1 ? null : {
+    position: index + 1,
+    total: collectionQueue.length,
+    isProcessing: index === 0 && isProcessing
+  };
+}
+
+// ========== 图标状态管理 ==========
+
+// 设置图标为loading状态
+function setIconLoading(tabId) {
+  chrome.action.setBadgeText({ text: '...', tabId });
+  chrome.action.setBadgeBackgroundColor({ color: '#6366f1', tabId });
+}
+
+// 设置图标为完成状态
+function setIconDone(tabId) {
+  chrome.action.setBadgeText({ text: '✓', tabId });
+  chrome.action.setBadgeBackgroundColor({ color: '#10b981', tabId });
+  // 3秒后清除badge
+  setTimeout(() => {
+    chrome.action.setBadgeText({ text: '', tabId });
+  }, 3000);
+}
+
+// 设置图标为错误状态
+function setIconError(tabId) {
+  chrome.action.setBadgeText({ text: '!', tabId });
+  chrome.action.setBadgeBackgroundColor({ color: '#ef4444', tabId });
+}
+
+// 清除图标状态
+function clearIconBadge(tabId) {
+  chrome.action.setBadgeText({ text: '', tabId });
+}
+
+// ========== 状态存储 ==========
+
+// 获取页面收集状态的key
+function getStateKey(url) {
+  return `pageState_${btoa(url).substring(0, 50)}`;
+}
+
+// 保存页面状态
+async function savePageState(url, state) {
+  const key = getStateKey(url);
+  await chrome.storage.local.set({ [key]: state });
+}
+
+// 获取页面状态
+async function getPageState(url) {
+  const key = getStateKey(url);
+  const result = await chrome.storage.local.get(key);
+  return result[key] || null;
+}
+
+// 清除页面状态
+async function clearPageState(url) {
+  const key = getStateKey(url);
+  await chrome.storage.local.remove(key);
+}
+
+// ========== AI请求（后台执行） ==========
+
+// 后台执行收集任务
+async function collectPageInBackground(tabId, pageInfo) {
+  const url = pageInfo.url;
+
+  // 设置loading状态
+  setIconLoading(tabId);
+  await savePageState(url, {
+    status: 'loading',
+    pageInfo,
+    timestamp: Date.now()
+  });
+
+  try {
+    // 截图
+    const screenshot = await captureScreenshot(tabId);
+
+    // 生成AI摘要（流式）
+    const summary = await generateAISummaryStream(pageInfo, tabId, url);
+
+    // 提取分类
+    const category = extractCategoryFromSummary(summary);
+
+    // 保存完成状态
+    const collectedData = {
+      pageInfo,
+      screenshot,
+      summary,
+      category,
+      timestamp: new Date().toISOString()
+    };
+
+    await savePageState(url, {
+      status: 'done',
+      data: collectedData,
+      timestamp: Date.now()
     });
 
-    return screenshot;
+    setIconDone(tabId);
+
+    // 通知popup更新（如果打开的话）
+    chrome.runtime.sendMessage({
+      action: 'collectionComplete',
+      url,
+      data: collectedData
+    }).catch(() => {}); // popup可能没打开，忽略错误
+
+    return collectedData;
+
   } catch (error) {
-    console.error('截图失败:', error);
+    console.error('[BG] 收集失败:', error);
+    setIconError(tabId);
+
+    await savePageState(url, {
+      status: 'error',
+      error: error.message,
+      pageInfo,
+      timestamp: Date.now()
+    });
+
+    // 通知popup
+    chrome.runtime.sendMessage({
+      action: 'collectionError',
+      url,
+      error: error.message
+    }).catch(() => {});
+
     throw error;
   }
 }
 
-// 清理并安全解析JSON响应
-function safeParseJSON(text) {
-  if (!text || typeof text !== 'string') {
-    throw new Error('无效的响应数据');
+// 流式AI摘要生成
+async function generateAISummaryStream(pageInfo, tabId, url) {
+  const settings = await chrome.storage.sync.get([
+    'aiApiUrl', 'aiApiKey', 'aiModel', 'aiProvider',
+    'summaryLanguage', 'summaryStyle'
+  ]);
+
+  if (!settings.aiApiUrl || !settings.aiApiKey) {
+    throw new Error('请先在设置中配置AI API');
   }
 
-  // 移除BOM (Byte Order Mark) 字符
-  let cleanText = text.replace(/^\uFEFF/, '');
+  const prompt = buildPrompt(pageInfo, settings.summaryLanguage, settings.summaryStyle);
 
-  // 移除前导空白字符
-  cleanText = cleanText.trimStart();
-
-  // 尝试找到JSON的起始位置（{ 或 [）
-  const jsonStartIndex = cleanText.search(/[\[{]/);
-  if (jsonStartIndex === -1) {
-    throw new Error('响应中未找到有效的JSON数据');
-  }
-
-  // 从JSON起始位置开始
-  cleanText = cleanText.substring(jsonStartIndex);
-
-  // 尝试找到JSON的结束位置
-  // 通过匹配括号来找到完整的JSON
-  let depth = 0;
-  let inString = false;
-  let escaped = false;
-  let jsonEndIndex = -1;
-  const startChar = cleanText[0];
-  const endChar = startChar === '{' ? '}' : ']';
-
-  for (let i = 0; i < cleanText.length; i++) {
-    const char = cleanText[i];
-
-    if (escaped) {
-      escaped = false;
-      continue;
-    }
-
-    if (char === '\\' && inString) {
-      escaped = true;
-      continue;
-    }
-
-    if (char === '"' && !escaped) {
-      inString = !inString;
-      continue;
-    }
-
-    if (!inString) {
-      if (char === startChar) {
-        depth++;
-      } else if (char === endChar) {
-        depth--;
-        if (depth === 0) {
-          jsonEndIndex = i + 1;
-          break;
-        }
-      }
-    }
-  }
-
-  if (jsonEndIndex > 0) {
-    cleanText = cleanText.substring(0, jsonEndIndex);
-  }
-
-  // 移除尾部空白
-  cleanText = cleanText.trimEnd();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000);
 
   try {
-    return JSON.parse(cleanText);
-  } catch (parseError) {
-    console.error('JSON解析失败，原始文本:', text.substring(0, 200));
-    console.error('清理后文本:', cleanText.substring(0, 200));
-    throw new Error(`JSON解析失败: ${parseError.message}`);
-  }
-}
-
-// 生成AI摘要
-async function generateAISummary(pageInfo) {
-  try {
-    // 获取AI API配置
-    const settings = await chrome.storage.sync.get([
-      'aiApiUrl',
-      'aiApiKey',
-      'aiModel',
-      'aiProvider'
-    ]);
-
-    if (!settings.aiApiUrl || !settings.aiApiKey) {
-      throw new Error('请先在设置中配置AI API');
-    }
-
-    // 构建提示词
-    const prompt = buildPrompt(pageInfo);
-
     let response;
-    let responseText;
-    let summary;
+    const useStream = true;
 
     if (settings.aiProvider === 'anthropic') {
-      // Anthropic API
       response = await fetch(settings.aiApiUrl, {
         method: 'POST',
         headers: {
@@ -169,37 +265,13 @@ async function generateAISummary(pageInfo) {
         },
         body: JSON.stringify({
           model: settings.aiModel || 'claude-3-5-sonnet-20241022',
-          max_tokens: 1024,
-          messages: [{
-            role: 'user',
-            content: prompt
-          }]
-        })
+          max_tokens: 600,
+          stream: useStream,
+          messages: [{ role: 'user', content: prompt }]
+        }),
+        signal: controller.signal
       });
-
-      if (!response.ok) {
-        responseText = await response.text();
-        let errorData;
-        try {
-          errorData = safeParseJSON(responseText);
-        } catch {
-          throw new Error(`AI API错误: ${response.statusText} - ${responseText.substring(0, 100)}`);
-        }
-        throw new Error(`AI API错误: ${errorData.error?.message || response.statusText}`);
-      }
-
-      responseText = await response.text();
-      const data = safeParseJSON(responseText);
-
-      if (!data.content || !data.content[0] || !data.content[0].text) {
-        console.error('Anthropic响应格式异常:', data);
-        throw new Error('AI响应格式异常');
-      }
-
-      summary = data.content[0].text;
-
     } else {
-      // OpenAI或兼容API
       response = await fetch(settings.aiApiUrl, {
         method: 'POST',
         headers: {
@@ -208,136 +280,230 @@ async function generateAISummary(pageInfo) {
         },
         body: JSON.stringify({
           model: settings.aiModel || 'gpt-4o-mini',
-          messages: [{
-            role: 'user',
-            content: prompt
-          }],
+          messages: [{ role: 'user', content: prompt }],
           temperature: 0.7,
-          max_tokens: 1000
-        })
+          max_tokens: 600,
+          stream: useStream
+        }),
+        signal: controller.signal
       });
-
-      if (!response.ok) {
-        responseText = await response.text();
-        let errorData;
-        try {
-          errorData = safeParseJSON(responseText);
-        } catch {
-          throw new Error(`AI API错误: ${response.statusText} - ${responseText.substring(0, 100)}`);
-        }
-        throw new Error(`AI API错误: ${errorData.error?.message || response.statusText}`);
-      }
-
-      responseText = await response.text();
-      const data = safeParseJSON(responseText);
-
-      if (!data.choices || !data.choices[0] || !data.choices[0].message || !data.choices[0].message.content) {
-        console.error('OpenAI响应格式异常:', data);
-        throw new Error('AI响应格式异常');
-      }
-
-      summary = data.choices[0].message.content;
     }
-
-    return summary;
-
-  } catch (error) {
-    console.error('生成AI摘要失败:', error);
-    throw error;
-  }
-}
-
-// 构建AI提示词
-function buildPrompt(pageInfo) {
-  return `请为以下网页生成一个简洁的摘要（200字以内）和详细介绍（500字以内）：
-
-网页标题: ${pageInfo.title || '未知'}
-网页URL: ${pageInfo.url || '未知'}
-网页描述: ${pageInfo.description || '无'}
-关键词: ${pageInfo.keywords || '无'}
-主要标题: ${pageInfo.headings?.map(h => h.text || h).join(', ') || '无'}
-网页内容片段: ${pageInfo.bodyText?.substring(0, 1000) || '无内容'}
-
-请以以下格式输出：
-【简介】
-（一段简洁的描述，突出网页的核心内容和价值）
-
-【详细介绍】
-（详细的介绍内容，包括网页的主要功能、特点、适用场景等）`;
-}
-
-// 发送数据到API
-async function sendDataToAPI(data) {
-  try {
-    // 获取数据API配置
-    const settings = await chrome.storage.sync.get([
-      'dataApiUrl',
-      'dataApiKey',
-      'dataApiMethod'
-    ]);
-
-    if (!settings.dataApiUrl) {
-      throw new Error('请先在设置中配置数据API URL');
-    }
-
-    // 构建请求头
-    const headers = {
-      'Content-Type': 'application/json'
-    };
-
-    if (settings.dataApiKey) {
-      headers['Authorization'] = `Bearer ${settings.dataApiKey}`;
-    }
-
-    // 发送请求
-    const response = await fetch(settings.dataApiUrl, {
-      method: settings.dataApiMethod || 'POST',
-      headers: headers,
-      body: JSON.stringify(data)
-    });
 
     if (!response.ok) {
+      clearTimeout(timeoutId);
       const errorText = await response.text();
-      throw new Error(`API错误 (${response.status}): ${errorText}`);
+      throw new Error(`AI API错误: ${response.statusText}`);
     }
 
-    // 尝试解析JSON响应
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      return await response.json();
-    } else {
-      return { message: 'Data sent successfully', status: response.status };
+    // 流式读取
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let fullContent = '';
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+        if (!trimmedLine || trimmedLine === 'data: [DONE]') continue;
+
+        if (trimmedLine.startsWith('data: ')) {
+          try {
+            const jsonStr = trimmedLine.slice(6);
+            if (!jsonStr || jsonStr === '[DONE]') continue;
+
+            const data = JSON.parse(jsonStr);
+            let chunk = '';
+
+            if (settings.aiProvider === 'anthropic') {
+              if (data.type === 'content_block_delta' && data.delta?.text) {
+                chunk = data.delta.text;
+              }
+            } else {
+              if (data.choices?.[0]?.delta?.content) {
+                chunk = data.choices[0].delta.content;
+              }
+            }
+
+            if (chunk) {
+              fullContent += chunk;
+              // 更新进度状态
+              await savePageState(url, {
+                status: 'loading',
+                pageInfo,
+                streamingContent: fullContent,
+                timestamp: Date.now()
+              });
+              // 通知popup更新
+              chrome.runtime.sendMessage({
+                action: 'streamUpdate',
+                url,
+                content: fullContent
+              }).catch(() => {});
+            }
+          } catch (e) {
+            // 忽略解析错误
+          }
+        }
+      }
     }
+
+    clearTimeout(timeoutId);
+    return fullContent;
 
   } catch (error) {
-    console.error('发送数据到API失败:', error);
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error('AI请求超时，请检查网络连接');
+    }
     throw error;
   }
 }
 
-// 右键菜单（可选功能）
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'collectPageInfo',
-    title: '收集当前网页信息',
-    contexts: ['page']
+// 构建提示词（精简版）
+function buildPrompt(pageInfo, language, style) {
+  const lang = language || 'zh-CN';
+  const bodyText = pageInfo.bodyText?.substring(0, 800) || '';
+  const desc = pageInfo.description?.substring(0, 200) || '';
+
+  const langPrefix = lang === 'zh-CN' ? '请用简体中文回复。' :
+                     lang === 'zh-TW' ? '請用繁體中文回覆。' :
+                     'Reply in English.';
+
+  const stylePrompt = style === 'brief' ?
+    '极简：⚡ 一句话 + 📌 3个要点 + 🏷️ 关键词（共50字内）' :
+    style === 'professional' ?
+    '专业摘要，格式：📋 概述（2句）、🎯 功能（3点）、👥 适用人群' :
+    style === 'casual' ?
+    '像朋友推荐一样介绍：😍 开场、💬 介绍（80字）、🌟 亮点（3个）' :
+    '为网页写分享文案，格式：🎯 一句话总结、📝 介绍（100字）、✨ 亮点（3个，带emoji）、🏷️ 标签（5个#标签）';
+
+  return `${langPrefix}
+
+${stylePrompt}
+
+【网页信息】
+标题: ${pageInfo.title || '无标题'}
+描述: ${desc}
+正文: ${bodyText}
+
+分类选项：技术工具、学习资源、新闻资讯、娱乐休闲、商业服务、设计创意、生活服务、其他
+请在末尾标注"📂 分类：[分类名]"`;
+}
+
+// 从摘要中提取分类
+function extractCategoryFromSummary(summary) {
+  const categories = ['技术工具', '学习资源', '新闻资讯', '娱乐休闲', '商业服务', '设计创意', '生活服务'];
+  const match = summary.match(/📂\s*分类[：:]\s*([^\n\r]+)/);
+  if (match) {
+    const cat = match[1].trim();
+    if (categories.includes(cat)) return cat;
+  }
+  return '其他';
+}
+
+// ========== 截图 ==========
+
+async function captureScreenshot(tabId) {
+  try {
+    if (tabId) {
+      await chrome.tabs.update(tabId, { active: true });
+    }
+    const screenshot = await chrome.tabs.captureVisibleTab(null, {
+      format: 'jpeg',
+      quality: 80
+    });
+    return screenshot;
+  } catch (error) {
+    console.error('截图失败:', error);
+    throw error;
+  }
+}
+
+// ========== 消息处理 ==========
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  // 启动后台收集（加入队列）
+  if (request.action === 'startBackgroundCollection') {
+    addToQueue(request.tabId, request.pageInfo)
+      .then(result => sendResponse({ success: true, ...result }))
+      .catch(error => sendResponse({ success: false, error: error.message }));
+    return true;
+  }
+
+  // 获取页面状态
+  if (request.action === 'getPageState') {
+    (async () => {
+      const state = await getPageState(request.url);
+      const queuePosition = getQueuePosition(request.url);
+      sendResponse({ success: true, state, queuePosition });
+    })();
+    return true;
+  }
+
+  // 获取队列状态
+  if (request.action === 'getQueueStatus') {
+    sendResponse({
+      success: true,
+      queue: collectionQueue.map((item, index) => ({
+        url: item.url,
+        position: index + 1,
+        isProcessing: index === 0 && isProcessing
+      })),
+      total: collectionQueue.length,
+      isProcessing
+    });
+    return true;
+  }
+
+  // 清除页面状态
+  if (request.action === 'clearPageState') {
+    clearPageState(request.url)
+      .then(() => sendResponse({ success: true }))
+      .catch(error => sendResponse({ success: false, error: error.message }));
+    return true;
+  }
+
+  // 截图
+  if (request.action === 'captureScreenshot') {
+    captureScreenshot(request.tabId)
+      .then(screenshot => sendResponse({ success: true, data: screenshot }))
+      .catch(error => sendResponse({ success: false, error: error.message }));
+    return true;
+  }
+});
+
+// ========== 扩展安装 ==========
+
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    chrome.runtime.openOptionsPage();
+  }
+
+  // 创建右键菜单
+  if (chrome.contextMenus) {
+    chrome.contextMenus.create({
+      id: 'collectPageInfo',
+      title: '收集当前网页信息',
+      contexts: ['page']
+    });
+  }
+});
+
+// 右键菜单点击
+if (chrome.contextMenus && chrome.contextMenus.onClicked) {
+  chrome.contextMenus.onClicked.addListener((info, tab) => {
+    if (info.menuItemId === 'collectPageInfo') {
+      chrome.action.openPopup();
+    }
   });
-});
+}
 
-// 右键菜单点击事件
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === 'collectPageInfo') {
-    // 打开popup或执行收集操作
-    chrome.action.openPopup();
-  }
-});
-
-// 监听标签页更新（可选：自动检测特定网页）
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url) {
-    // 可以在这里添加自动收集逻辑
-    console.log('页面加载完成:', tab.url);
-  }
-});
-
-console.log('网页信息收集助手后台服务已启动');
+// 启动时恢复队列
+restoreQueueState();
