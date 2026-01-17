@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "网页信息收集助手",
+  "name": "Kawa - 智能网页助手",
   "version": "1.1.0",
   "description": "收集网页信息，通过AI生成简介，并可配置API接口",
   "permissions": [
