@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToastMark Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Primary Colors */
+      --toast-crust: #d4a574;
+      --toast-crust-dark: #c4956a;
+      --toast-bread: #f5e6d3;
+      --toast-bread-light: #faf5f0;
+      
+      /* Toaster Colors */
+      --toaster-body: #f5c9a0;
+      --toaster-body-dark: #e8b88a;
+      --toaster-slot: #a07850;
+      
+      /* Accent Colors */
+      --bookmark-brown: #8b5a2b;
+      --bookmark-dark: #6b4423;
+      --text-primary: #5d4023;
+      --text-secondary: #8b7355;
+      --outline: #8b6914;
+      
+      /* Neutral Colors */
+      --white: #ffffff;
+      --bg-cream: #faf5f0;
+      --bg-warm: #f5efe8;
+      --gray-100: #f7f4f1;
+      --gray-200: #e8e2db;
+      --gray-300: #d4ccc3;
+      --gray-500: #9a8d80;
+      --gray-700: #5c5347;
+      --gray-900: #2d2822;
+      
+      /* Semantic Colors */
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --error: #f87171;
+      --info: #60a5fa;
+      
+      /* Spacing */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-16: 64px;
+      
+      /* Border Radius */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-2xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(93, 64, 35, 0.05);
+      --shadow-md: 0 4px 6px rgba(93, 64, 35, 0.07);
+      --shadow-lg: 0 10px 15px rgba(93, 64, 35, 0.1);
+      --shadow-xl: 0 20px 25px rgba(93, 64, 35, 0.15);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-cream);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--toaster-body) 0%, var(--toast-crust) 100%);
+      padding: var(--space-16) var(--space-8);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    }
+    
+    .header h1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: 2px;
+      position: relative;
+    }
+    
+    .header p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-top: var(--space-3);
+      position: relative;
+    }
+    
+    .version {
+      display: inline-block;
+      background: var(--bookmark-brown);
+      color: white;
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: var(--space-4);
+      position: relative;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-8);
+    }
+    
+    /* Section */
+    .section {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: var(--space-8);
+      margin-bottom: var(--space-8);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .section-title {
+      font-family: 'Nunito', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-3);
+      border-bottom: 3px solid var(--toast-crust);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    
+    .section-title::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--bookmark-brown);
+      border-radius: 2px;
+      transform: rotate(45deg);
+    }
+    
+    .subsection {
+      margin-bottom: var(--space-8);
+    }
+    
+    .subsection:last-child {
+      margin-bottom: 0;
+    }
+    
+    .subsection-title {
+      font-family: 'Nunito', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    /* Logo Display */
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-6);
+    }
+    
+    .logo-card {
+      background: var(--bg-cream);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      text-align: center;
+      border: 2px solid var(--gray-200);
+    }
+    
+    .logo-card.dark {
+      background: var(--gray-900);
+    }
+    
+    .logo-card img, .logo-card svg {
+      max-width: 120px;
+      height: auto;
+      margin-bottom: var(--space-3);
+    }
+    
+    .logo-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .logo-card.dark p {
+      color: var(--gray-300);
+    }
+    
+    /* Color Palette */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--space-4);
+    }
+    
+    .color-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+    }
+    
+    .color-swatch {
+      height: 80px;
+      position: relative;
+    }
+    
+    .color-info {
+      padding: var(--space-3);
+      background: white;
+    }
+    
+    .color-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    
+    .color-hex {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    
+    /* Typography */
+    .type-sample {
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-6);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .type-sample:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .type-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: var(--space-2);
+    }
+    
+    .type-specs {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: var(--space-2);
+    }
+    
+    .display-1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+    
+    .display-2 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+    
+    .heading-1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    
+    .heading-2 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    
+    .heading-3 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    
+    .body-large {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    
+    .body-regular {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    
+    .body-small {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    
+    .caption {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.4;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Spacing Demo */
+    .spacing-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: flex-end;
+    }
+    
+    .spacing-item {
+      text-align: center;
+    }
+    
+    .spacing-box {
+      background: linear-gradient(135deg, var(--toast-crust) 0%, var(--toaster-body) 100%);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-2);
+    }
+    
+    .spacing-label {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    
+    /* Radius Demo */
+    .radius-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+      align-items: center;
+    }
+    
+    .radius-item {
+      text-align: center;
+    }
+    
+    .radius-box {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--toaster-body) 0%, var(--toast-crust) 100%);
+      margin-bottom: var(--space-2);
+      border: 2px solid var(--bookmark-brown);
+    }
+    
+    .radius-label {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    
+    /* Shadow Demo */
+    .shadow-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-6);
+      align-items: center;
+    }
+    
+    .shadow-item {
+      text-align: center;
+    }
+    
+    .shadow-box {
+      width: 100px;
+      height: 80px;
+      background: white;
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-2);
+    }
+    
+    .shadow-label {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    
+    /* Button Styles */
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: center;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-5);
+      border-radius: var(--radius-lg);
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--toast-crust) 0%, var(--bookmark-brown) 100%);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .btn-secondary {
+      background: var(--toaster-body);
+      color: var(--text-primary);
+      border-color: var(--toast-crust);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--toast-crust);
+      color: white;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      color: var(--bookmark-brown);
+      border-color: var(--bookmark-brown);
+    }
+    
+    .btn-outline:hover {
+      background: var(--bookmark-brown);
+      color: white;
+    }
+    
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+    }
+    
+    .btn-ghost:hover {
+      background: var(--bg-warm);
+      color: var(--text-primary);
+    }
+    
+    .btn-sm {
+      padding: var(--space-2) var(--space-3);
+      font-size: 13px;
+    }
+    
+    .btn-lg {
+      padding: var(--space-4) var(--space-6);
+      font-size: 17px;
+    }
+    
+    /* Card Styles */
+    .card-demo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-6);
+    }
+    
+    .card {
+      background: white;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
+    }
+    
+    .card-image {
+      height: 160px;
+      background: linear-gradient(135deg, var(--bg-cream) 0%, var(--toaster-body) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .card-content {
+      padding: var(--space-5);
+    }
+    
+    .card-title {
+      font-family: 'Nunito', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+    
+    .card-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-4);
+    }
+    
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+    
+    .tag {
+      display: inline-block;
+      padding: var(--space-1) var(--space-2);
+      background: var(--bg-cream);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+    }
+    
+    /* Input Styles */
+    .input-demo {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      max-width: 400px;
+    }
+    
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    
+    .input-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .input {
+      padding: var(--space-3) var(--space-4);
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--text-primary);
+      background: white;
+      transition: all 0.2s ease;
+    }
+    
+    .input:focus {
+      outline: none;
+      border-color: var(--toast-crust);
+      box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2);
+    }
+    
+    .input::placeholder {
+      color: var(--gray-500);
+    }
+    
+    /* Toast Notification */
+    .toast-demo {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+    
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: white;
+      box-shadow: var(--shadow-lg);
+      border-left: 4px solid;
+      max-width: 400px;
+    }
+    
+    .toast-success {
+      border-color: var(--success);
+    }
+    
+    .toast-warning {
+      border-color: var(--warning);
+    }
+    
+    .toast-error {
+      border-color: var(--error);
+    }
+    
+    .toast-info {
+      border-color: var(--info);
+    }
+    
+    .toast-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    
+    .toast-success .toast-icon {
+      background: rgba(74, 222, 128, 0.2);
+      color: #16a34a;
+    }
+    
+    .toast-warning .toast-icon {
+      background: rgba(251, 191, 36, 0.2);
+      color: #d97706;
+    }
+    
+    .toast-error .toast-icon {
+      background: rgba(248, 113, 113, 0.2);
+      color: #dc2626;
+    }
+    
+    .toast-info .toast-icon {
+      background: rgba(96, 165, 250, 0.2);
+      color: #2563eb;
+    }
+    
+    .toast-content {
+      flex: 1;
+    }
+    
+    .toast-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    
+    .toast-message {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    
+    /* Code Block */
+    .code-block {
+      background: var(--gray-900);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      overflow-x: auto;
+    }
+    
+    .code-block code {
+      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+      font-size: 13px;
+      color: #e5e5e5;
+      line-height: 1.6;
+    }
+    
+    .code-block .comment {
+      color: #6b7280;
+    }
+    
+    .code-block .property {
+      color: #93c5fd;
+    }
+    
+    .code-block .value {
+      color: #fcd34d;
+    }
+    
+    /* Grid Demo */
+    .grid-demo {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+    
+    .grid-col {
+      background: var(--toaster-body);
+      border-radius: var(--radius-sm);
+      padding: var(--space-3);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    /* Icon Grid */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: var(--space-4);
+    }
+    
+    .icon-item {
+      text-align: center;
+      padding: var(--space-4);
+      background: var(--bg-cream);
+      border-radius: var(--radius-lg);
+    }
+    
+    .icon-item svg {
+      width: 32px;
+      height: 32px;
+      margin-bottom: var(--space-2);
+    }
+    
+    .icon-item p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    /* Inline Logo SVG */
+    .inline-logo {
+      display: inline-block;
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: var(--space-8);
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    
+    .footer a {
+      color: var(--bookmark-brown);
+      text-decoration: none;
+    }
+    
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 32px;
+      }
+      
+      .section {
+        padding: var(--space-5);
+      }
+      
+      .container {
+        padding: var(--space-4);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <h1>🍞 TOASTMARK</h1>
+    <p>Design System & Brand Guidelines</p>
+    <span class="version">v1.0.0</span>
+  </header>
+  
+  <div class="container">
+    
+    <!-- Brand Overview -->
+    <section class="section">
+      <h2 class="section-title">Brand Overview</h2>
+      <div class="subsection">
+        <p class="body-large" style="margin-bottom: var(--space-4);">
+          <strong>ToastMark</strong> 是一款 AI 驱动的书签管理工具，让收藏网页像烤吐司一样简单轻松。
+        </p>
+        <p class="body-regular" style="color: var(--text-secondary);">
+          品牌调性：<strong>温暖</strong> · <strong>亲切</strong> · <strong>轻松</strong> · <strong>智能</strong>
+        </p>
+      </div>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">品牌关键词</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-2);">
+          <span class="tag" style="background: var(--toaster-body);">一键收藏</span>
+          <span class="tag" style="background: var(--toaster-body);">AI 分类</span>
+          <span class="tag" style="background: var(--toaster-body);">自动标签</span>
+          <span class="tag" style="background: var(--toaster-body);">智能摘要</span>
+          <span class="tag" style="background: var(--toaster-body);">截图快照</span>
+          <span class="tag" style="background: var(--toaster-body);">轻松整理</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Logo -->
+    <section class="section">
+      <h2 class="section-title">Logo</h2>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">主要 Logo</h3>
+        <div class="logo-grid">
+          <div class="logo-card">
+            <svg width="120" height="120" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="toastGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#f5e6d3;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#e8d4bc;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="crustGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#d4a574;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#c4956a;stop-opacity:1" />
+                </linearGradient>
+                <linearGradient id="toasterGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#f5c9a0;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#e8b88a;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <path d="M55 45 C55 32, 72 25, 100 25 C128 25, 145 32, 145 45 L145 85 L55 85 Z" fill="url(#crustGrad2)" stroke="#8b6914" stroke-width="3"/>
+              <path d="M63 50 C63 40, 78 33, 100 33 C122 33, 137 40, 137 50 L137 85 L63 85 Z" fill="url(#toastGrad2)"/>
+              <path d="M78 55 Q90 62 102 55" stroke="#c4956a" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M80 66 Q95 73 110 66" stroke="#c4956a" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M82 77 Q97 84 112 77" stroke="#c4956a" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <circle cx="85" cy="45" r="2.5" fill="#c4956a"/>
+              <circle cx="108" cy="42" r="2.5" fill="#c4956a"/>
+              <circle cx="120" cy="52" r="2.5" fill="#c4956a"/>
+              <circle cx="125" cy="68" r="2.5" fill="#c4956a"/>
+              <circle cx="72" cy="72" r="2.5" fill="#c4956a"/>
+              <rect x="45" y="82" width="110" height="72" rx="10" ry="10" fill="url(#toasterGrad2)" stroke="#c4956a" stroke-width="3"/>
+              <rect x="52" y="82" width="96" height="6" rx="3" fill="#a07850"/>
+              <path d="M125 92 L125 130 L133 120 L141 130 L141 92 Z" fill="#8b5a2b" stroke="#6b4423" stroke-width="2"/>
+              <rect x="155" y="108" width="15" height="10" rx="3" fill="#c4956a" stroke="#a07850" stroke-width="2"/>
+              <rect x="152" y="111" width="6" height="4" rx="1.5" fill="url(#toasterGrad2)"/>
+              <rect x="55" y="154" width="10" height="8" rx="2" fill="#a07850"/>
+              <rect x="78" y="154" width="10" height="8" rx="2" fill="#a07850"/>
+              <rect x="112" y="154" width="10" height="8" rx="2" fill="#a07850"/>
+              <rect x="135" y="154" width="10" height="8" rx="2" fill="#a07850"/>
+            </svg>
+            <p>彩色版本</p>
+          </div>
+          
+          <div class="logo-card dark">
+            <svg width="120" height="120" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <path d="M55 45 C55 32, 72 25, 100 25 C128 25, 145 32, 145 45 L145 85 L55 85 Z" fill="#ffffff" stroke="#ffffff" stroke-width="3"/>
+              <path d="M63 50 C63 40, 78 33, 100 33 C122 33, 137 40, 137 50 L137 85 L63 85 Z" fill="#2d2822"/>
+              <path d="M78 55 Q90 62 102 55" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M80 66 Q95 73 110 66" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M82 77 Q97 84 112 77" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <circle cx="85" cy="45" r="2.5" fill="#ffffff"/>
+              <circle cx="108" cy="42" r="2.5" fill="#ffffff"/>
+              <circle cx="120" cy="52" r="2.5" fill="#ffffff"/>
+              <circle cx="125" cy="68" r="2.5" fill="#ffffff"/>
+              <circle cx="72" cy="72" r="2.5" fill="#ffffff"/>
+              <rect x="45" y="82" width="110" height="72" rx="10" ry="10" fill="#ffffff" stroke="#ffffff" stroke-width="3"/>
+              <rect x="52" y="82" width="96" height="6" rx="3" fill="#2d2822"/>
+              <path d="M125 92 L125 130 L133 120 L141 130 L141 92 Z" fill="#2d2822"/>
+              <rect x="155" y="108" width="15" height="10" rx="3" fill="#ffffff" stroke="#ffffff" stroke-width="2"/>
+              <rect x="152" y="111" width="6" height="4" rx="1.5" fill="#2d2822"/>
+              <rect x="55" y="154" width="10" height="8" rx="2" fill="#2d2822"/>
+              <rect x="78" y="154" width="10" height="8" rx="2" fill="#2d2822"/>
+              <rect x="112" y="154" width="10" height="8" rx="2" fill="#2d2822"/>
+              <rect x="135" y="154" width="10" height="8" rx="2" fill="#2d2822"/>
+            </svg>
+            <p>深色背景</p>
+          </div>
+          
+          <div class="logo-card">
+            <svg width="120" height="120" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <path d="M55 45 C55 32, 72 25, 100 25 C128 25, 145 32, 145 45 L145 85 L55 85 Z" fill="none" stroke="#5d4023" stroke-width="3"/>
+              <path d="M63 50 C63 40, 78 33, 100 33 C122 33, 137 40, 137 50 L137 85 L63 85 Z" fill="none" stroke="#5d4023" stroke-width="2"/>
+              <path d="M78 55 Q90 62 102 55" stroke="#5d4023" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M80 66 Q95 73 110 66" stroke="#5d4023" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M82 77 Q97 84 112 77" stroke="#5d4023" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <circle cx="85" cy="45" r="2.5" fill="#5d4023"/>
+              <circle cx="108" cy="42" r="2.5" fill="#5d4023"/>
+              <circle cx="120" cy="52" r="2.5" fill="#5d4023"/>
+              <circle cx="125" cy="68" r="2.5" fill="#5d4023"/>
+              <circle cx="72" cy="72" r="2.5" fill="#5d4023"/>
+              <rect x="45" y="82" width="110" height="72" rx="10" ry="10" fill="none" stroke="#5d4023" stroke-width="3"/>
+              <rect x="52" y="82" width="96" height="6" rx="3" fill="#5d4023"/>
+              <path d="M125 92 L125 130 L133 120 L141 130 L141 92 Z" fill="#5d4023"/>
+              <rect x="155" y="108" width="15" height="10" rx="3" fill="none" stroke="#5d4023" stroke-width="2"/>
+              <rect x="55" y="154" width="10" height="8" rx="2" fill="#5d4023"/>
+              <rect x="78" y="154" width="10" height="8" rx="2" fill="#5d4023"/>
+              <rect x="112" y="154" width="10" height="8" rx="2" fill="#5d4023"/>
+              <rect x="135" y="154" width="10" height="8" rx="2" fill="#5d4023"/>
+            </svg>
+            <p>线框版本</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">Logo 安全区域</h3>
+        <p class="body-small" style="color: var(--text-secondary); margin-bottom: var(--space-4);">
+          Logo 周围应保持至少 Logo 高度 1/4 的空白区域，确保视觉清晰。
+        </p>
+      </div>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">最小尺寸</h3>
+        <p class="body-small" style="color: var(--text-secondary);">
+          数字媒体：最小 32px × 32px<br>
+          印刷品：最小 12mm × 12mm
+        </p>
+      </div>
+    </section>
+    
+    <!-- Colors -->
+    <section class="section">
+      <h2 class="section-title">Color Palette</h2>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">主色调 - Toast Colors</h3>
+        <div class="color-grid">
+          <div class="color-card">
+            <div class="color-swatch" style="background: #d4a574;"></div>
+            <div class="color-info">
+              <div class="color-name">Toast Crust</div>
+              <div class="color-hex">#D4A574</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #c4956a;"></div>
+            <div class="color-info">
+              <div class="color-name">Toast Crust Dark</div>
+              <div class="color-hex">#C4956A</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #f5e6d3;"></div>
+            <div class="color-info">
+              <div class="color-name">Toast Bread</div>
+              <div class="color-hex">#F5E6D3</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #faf5f0;"></div>
+            <div class="color-info">
+              <div class="color-name">Toast Bread Light</div>
+              <div class="color-hex">#FAF5F0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">辅助色 - Toaster Colors</h3>
+        <div class="color-grid">
+          <div class="color-card">
+            <div class="color-swatch" style="background: #f5c9a0;"></div>
+            <div class="color-info">
+              <div class="color-name">Toaster Body</div>
+              <div class="color-hex">#F5C9A0</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #e8b88a;"></div>
+            <div class="color-info">
+              <div class="color-name">Toaster Body Dark</div>
+              <div class="color-hex">#E8B88A</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #a07850;"></div>
+            <div class="color-info">
+              <div class="color-name">Toaster Slot</div>
+              <div class="color-hex">#A07850</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">强调色 - Accent Colors</h3>
+        <div class="color-grid">
+          <div class="color-card">
+            <div class="color-swatch" style="background: #8b5a2b;"></div>
+            <div class="color-info">
+              <div class="color-name">Bookmark Brown</div>
+              <div class="color-hex">#8B5A2B</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #6b4423;"></div>
+            <div class="color-info">
+              <div class="color-name">Bookmark Dark</div>
+              <div class="color-hex">#6B4423</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #5d4023;"></div>
+            <div class="color-info">
+              <div class="color-name">Text Primary</div>
+              <div class="color-hex">#5D4023</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #8b7355;"></div>
+            <div class="color-info">
+              <div class="color-name">Text Secondary</div>
+              <div class="color-hex">#8B7355</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">语义色 - Semantic Colors</h3>
+        <div class="color-grid">
+          <div class="color-card">
+            <div class="color-swatch" style="background: #4ade80;"></div>
+            <div class="color-info">
+              <div class="color-name">Success</div>
+              <div class="color-hex">#4ADE80</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #fbbf24;"></div>
+            <div class="color-info">
+              <div class="color-name">Warning</div>
+              <div class="color-hex">#FBBF24</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #f87171;"></div>
+            <div class="color-info">
+              <div class="color-name">Error</div>
+              <div class="color-hex">#F87171</div>
+            </div>
+          </div>
+          <div class="color-card">
+            <div class="color-swatch" style="background: #60a5fa;"></div>
+            <div class="color-info">
+              <div class="color-name">Info</div>
+              <div class="color-hex">#60A5FA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Typography -->
+    <section class="section">
+      <h2 class="section-title">Typography</h2>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">字体家族</h3>
+        <p class="body-regular" style="margin-bottom: var(--space-4);">
+          <strong>标题字体：</strong> Nunito (Google Fonts)<br>
+          <strong>正文字体：</strong> Inter (Google Fonts)<br>
+          <strong>代码字体：</strong> SF Mono / Monaco
+        </p>
+      </div>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">字体层级</h3>
+        
+        <div class="type-sample">
+          <div class="type-label">Display 1</div>
+          <div class="display-1">ToastMark Design</div>
+          <div class="type-specs">Nunito 48px / Bold 800 / -1px tracking</div>
+        </div>
+        
+        <div class="type-sample">
+          <div class="type-label">Display 2</div>
+          <div class="display-2">Save Your Bookmarks</div>
+          <div class="type-specs">Nunito 36px / Bold 700 / -0.5px tracking</div>
+        </div>
+        
+        <div class="type-sample">
+          <div class="type-label">Heading 1</div>
+          <div class="heading-1">AI-Powered Organization</div>
+          <div class="type-specs">Nunito 28px / Bold 700</div>
+        </div>
+        
+        <div class="type-sample">
+          <div class="type-label">Heading 2</div>
+          <div class="heading-2">Smart Tagging System</div>
+          <div class="type-specs">Nunito 24px / SemiBold 600</div>
+        </div>
+        
+        <div class="type-sample">
+          <div class="type-label">Heading 3</div>
+          <div class="heading-3">Automatic Screenshots</div>
+          <div class="type-specs">Nunito 20px / SemiBold 600</div>
+        </div>
+        
+        <div class="type-sample">
+          <div class="type-label">Body Large</div>
+          <div class="body-large">ToastMark 让书签管理变得简单有趣，一键保存，AI 自动分类整理。</div>
+          <div class="type-specs">Inter 18px / Regular 400 / 1.6 line-height</div>
+        </div>
+        
+        <div class="type-sample">
+          <div class="type-label">Body Regular</div>
+          <div class="body-regular">每个书签都会自动生成摘要和标签，让你快速找到需要的内容。</div>
+          <div class="type-specs">Inter 16px / Regular 400 / 1.6 line-height</div>
+        </div>
+        
+        <div class="type-sample">
+          <div class="type-label">Body Small</div>
+          <div class="body-small">支持批量导入、云端同步、多设备访问。</div>
+          <div class="type-specs">Inter 14px / Regular 400 / 1.5 line-height</div>
+        </div>
+        
+        <div class="type-sample">
+          <div class="type-label">Caption</div>
+          <div class="caption">LAST UPDATED 2 HOURS AGO</div>
+          <div class="type-specs">Inter 12px / Medium 500 / Uppercase / 0.5px tracking</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Spacing -->
+    <section class="section">
+      <h2 class="section-title">Spacing System</h2>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">间距规范 (4px 基准)</h3>
+        <div class="spacing-demo">
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 4px; height: 4px;"></div>
+            <div class="spacing-label">4px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 8px; height: 8px;"></div>
+            <div class="spacing-label">8px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 12px; height: 12px;"></div>
+            <div class="spacing-label">12px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 16px; height: 16px;"></div>
+            <div class="spacing-label">16px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 20px; height: 20px;"></div>
+            <div class="spacing-label">20px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 24px; height: 24px;"></div>
+            <div class="spacing-label">24px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 32px; height: 32px;"></div>
+            <div class="spacing-label">32px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 40px; height: 40px;"></div>
+            <div class="spacing-label">40px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 48px; height: 48px;"></div>
+            <div class="spacing-label">48px</div>
+          </div>
+          <div class="spacing-item">
+            <div class="spacing-box" style="width: 64px; height: 64px;"></div>
+            <div class="spacing-label">64px</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Border Radius -->
+    <section class="section">
+      <h2 class="section-title">Border Radius</h2>
+      
+      <div class="radius-demo">
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius: 4px;"></div>
+          <div class="radius-label">4px (sm)</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius: 8px;"></div>
+          <div class="radius-label">8px (md)</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius: 12px;"></div>
+          <div class="radius-label">12px (lg)</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius: 16px;"></div>
+          <div class="radius-label">16px (xl)</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius: 24px;"></div>
+          <div class="radius-label">24px (2xl)</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius: 9999px;"></div>
+          <div class="radius-label">full</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Shadows -->
+    <section class="section">
+      <h2 class="section-title">Shadows</h2>
+      
+      <div class="shadow-demo">
+        <div class="shadow-item">
+          <div class="shadow-box" style="box-shadow: var(--shadow-sm);"></div>
+          <div class="shadow-label">shadow-sm</div>
+        </div>
+        <div class="shadow-item">
+          <div class="shadow-box" style="box-shadow: var(--shadow-md);"></div>
+          <div class="shadow-label">shadow-md</div>
+        </div>
+        <div class="shadow-item">
+          <div class="shadow-box" style="box-shadow: var(--shadow-lg);"></div>
+          <div class="shadow-label">shadow-lg</div>
+        </div>
+        <div class="shadow-item">
+          <div class="shadow-box" style="box-shadow: var(--shadow-xl);"></div>
+          <div class="shadow-label">shadow-xl</div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Components -->
+    <section class="section">
+      <h2 class="section-title">Components</h2>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">按钮 Buttons</h3>
+        <div class="button-grid">
+          <button class="btn btn-primary">Primary Button</button>
+          <button class="btn btn-secondary">Secondary</button>
+          <button class="btn btn-outline">Outline</button>
+          <button class="btn btn-ghost">Ghost</button>
+        </div>
+        <div class="button-grid" style="margin-top: var(--space-4);">
+          <button class="btn btn-primary btn-sm">Small</button>
+          <button class="btn btn-primary">Default</button>
+          <button class="btn btn-primary btn-lg">Large</button>
+        </div>
+      </div>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">输入框 Inputs</h3>
+        <div class="input-demo">
+          <div class="input-group">
+            <label class="input-label">搜索书签</label>
+            <input type="text" class="input" placeholder="输入关键词搜索...">
+          </div>
+          <div class="input-group">
+            <label class="input-label">添加标签</label>
+            <input type="text" class="input" placeholder="例如：设计、开发、灵感">
+          </div>
+        </div>
+      </div>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">卡片 Cards</h3>
+        <div class="card-demo">
+          <div class="card">
+            <div class="card-image">
+              <svg width="60" height="60" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="cg1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#d4a574"/>
+                    <stop offset="100%" style="stop-color:#c4956a"/>
+                  </linearGradient>
+                </defs>
+                <path d="M55 45 C55 32, 72 25, 100 25 C128 25, 145 32, 145 45 L145 85 L55 85 Z" fill="url(#cg1)" stroke="#8b6914" stroke-width="3"/>
+              </svg>
+            </div>
+            <div class="card-content">
+              <div class="card-title">设计灵感收藏</div>
+              <div class="card-description">收集整理优秀的 UI/UX 设计案例和灵感素材</div>
+              <div class="card-tags">
+                <span class="tag">设计</span>
+                <span class="tag">灵感</span>
+                <span class="tag">UI</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-image">
+              <svg width="60" height="60" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <rect x="45" y="82" width="110" height="72" rx="10" ry="10" fill="#f5c9a0" stroke="#c4956a" stroke-width="3"/>
+                <rect x="52" y="82" width="96" height="6" rx="3" fill="#a07850"/>
+              </svg>
+            </div>
+            <div class="card-content">
+              <div class="card-title">开发文档</div>
+              <div class="card-description">常用的 API 文档、技术博客和教程资源</div>
+              <div class="card-tags">
+                <span class="tag">开发</span>
+                <span class="tag">文档</span>
+                <span class="tag">教程</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="subsection">
+        <h3 class="subsection-title">提示通知 Toast Notifications</h3>
+        <div class="toast-demo">
+          <div class="toast toast-success">
+            <div class="toast-icon">✓</div>
+            <div class="toast-content">
+              <div class="toast-title">保存成功</div>
+              <div class="toast-message">书签已添加到「设计灵感」收藏夹</div>
+            </div>
+          </div>
+          
+          <div class="toast toast-warning">
+            <div class="toast-icon">!</div>
+            <div class="toast-content">
+              <div class="toast-title">重复书签</div>
+              <div class="toast-message">这个链接已经存在于你的收藏中</div>
+            </div>
+          </div>
+          
+          <div class="toast toast-error">
+            <div class="toast-icon">✕</div>
+            <div class="toast-content">
+              <div class="toast-title">保存失败</div>
+              <div class="toast-message">网络连接异常，请稍后重试</div>
+            </div>
+          </div>
+          
+          <div class="toast toast-info">
+            <div class="toast-icon">i</div>
+            <div class="toast-content">
+              <div class="toast-title">同步中</div>
+              <div class="toast-message">正在同步你的书签到云端...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CSS Variables -->
+    <section class="section">
+      <h2 class="section-title">CSS Variables</h2>
+      
+      <div class="code-block">
+        <code>
+<span class="comment">/* ToastMark Design Tokens */</span>
+:root {
+  <span class="comment">/* Primary Colors */</span>
+  <span class="property">--toast-crust</span>: <span class="value">#d4a574</span>;
+  <span class="property">--toast-crust-dark</span>: <span class="value">#c4956a</span>;
+  <span class="property">--toast-bread</span>: <span class="value">#f5e6d3</span>;
+  <span class="property">--toast-bread-light</span>: <span class="value">#faf5f0</span>;
+
+  <span class="comment">/* Toaster Colors */</span>
+  <span class="property">--toaster-body</span>: <span class="value">#f5c9a0</span>;
+  <span class="property">--toaster-body-dark</span>: <span class="value">#e8b88a</span>;
+  <span class="property">--toaster-slot</span>: <span class="value">#a07850</span>;
+
+  <span class="comment">/* Accent Colors */</span>
+  <span class="property">--bookmark-brown</span>: <span class="value">#8b5a2b</span>;
+  <span class="property">--bookmark-dark</span>: <span class="value">#6b4423</span>;
+  <span class="property">--text-primary</span>: <span class="value">#5d4023</span>;
+  <span class="property">--text-secondary</span>: <span class="value">#8b7355</span>;
+
+  <span class="comment">/* Spacing */</span>
+  <span class="property">--space-1</span>: <span class="value">4px</span>;
+  <span class="property">--space-2</span>: <span class="value">8px</span>;
+  <span class="property">--space-3</span>: <span class="value">12px</span>;
+  <span class="property">--space-4</span>: <span class="value">16px</span>;
+  <span class="property">--space-6</span>: <span class="value">24px</span>;
+  <span class="property">--space-8</span>: <span class="value">32px</span>;
+
+  <span class="comment">/* Border Radius */</span>
+  <span class="property">--radius-sm</span>: <span class="value">4px</span>;
+  <span class="property">--radius-md</span>: <span class="value">8px</span>;
+  <span class="property">--radius-lg</span>: <span class="value">12px</span>;
+  <span class="property">--radius-xl</span>: <span class="value">16px</span>;
+}
+        </code>
+      </div>
+    </section>
+    
+  </div>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <p>🍞 ToastMark Design System v1.0.0</p>
+    <p style="margin-top: var(--space-2);">Built with ❤️ for better bookmark management</p>
+  </footer>
+</body>
+</html>

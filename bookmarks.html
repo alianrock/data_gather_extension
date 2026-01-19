@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的库 - Web Collector</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <title>我的库 - ToastMark</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@700&family=Space+Grotesk:wght@700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
     * {
@@ -31,7 +34,8 @@
 
     /* 左侧分类导航 */
     .sidebar {
-      background: var(--bg-card);
+      background: var(--white);
+      /* Changed to white for contrast */
       border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
@@ -54,6 +58,7 @@
       align-items: center;
       gap: 12px;
       letter-spacing: -0.02em;
+      font-family: var(--font-brand);
     }
 
     .sidebar-brand p {
@@ -171,8 +176,15 @@
     }
 
     @keyframes pulse-border {
-      0%, 100% { border-top-color: var(--primary); }
-      50% { border-top-color: var(--primary-hover); }
+
+      0%,
+      100% {
+        border-top-color: var(--primary);
+      }
+
+      50% {
+        border-top-color: var(--primary-hover);
+      }
     }
 
     .drag-handle {
@@ -205,9 +217,12 @@
     }
 
     .nav-item.active {
-      background: var(--primary-light);
-      color: var(--primary);
+      background: var(--toast-bread);
+      /* Toast Bread color */
+      color: var(--toast-crust);
+      /* Toast Crust color */
       box-shadow: none;
+      font-weight: 700;
     }
 
     .nav-item.active::before {
@@ -417,20 +432,22 @@
       width: 100%;
       height: 100%;
       padding: 0 16px 0 40px;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-full);
+      /* Pill shape */
       font-size: 14px;
       font-weight: 500;
       color: var(--text-main);
-      background: var(--bg-main) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z' /%3E%3C/svg%3E") 12px center / 18px no-repeat;
+      background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z' /%3E%3C/svg%3E") 12px center / 18px no-repeat;
       transition: var(--transition);
+      box-shadow: var(--shadow-sm);
     }
 
     .search-box:focus {
       outline: none;
-      border-color: var(--primary);
-      background-color: var(--bg-card);
-      box-shadow: 0 0 0 4px var(--primary-light);
+      border-color: var(--toast-crust);
+      background-color: var(--white);
+      box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.2);
     }
 
     .search-wrapper:focus-within {
@@ -438,7 +455,8 @@
     }
 
     .action-btn {
-      width: auto; /* 确保按钮宽度由内容决定 */
+      width: auto;
+      /* 确保按钮宽度由内容决定 */
       padding: 0 16px;
       border: 1px solid var(--border-color);
       background: var(--bg-card);
@@ -552,6 +570,7 @@
       flex: 1;
       margin-bottom: 0;
       -webkit-line-clamp: 1;
+      line-clamp: 1;
       font-size: 15px;
     }
 
@@ -570,20 +589,24 @@
 
     .bookmark-card {
       background: var(--bg-card);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-xl);
+      /* Larger radius (16px) */
       border: 1px solid var(--border-color);
       overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       display: flex;
       flex-direction: column;
-      transition: var(--transition);
-      backdrop-filter: var(--backdrop);
+      position: relative;
       height: 100%;
+      box-shadow: var(--shadow-sm);
+      /* Softer shadow */
     }
 
     .bookmark-card:hover {
-      transform: translateY(-6px);
+      transform: translateY(-4px);
       box-shadow: var(--shadow-lg);
-      border-color: var(--primary);
+      /* Lift effect */
+      border-color: var(--toast-crust);
     }
 
     .card-image {
@@ -616,7 +639,7 @@
       color: var(--primary);
       cursor: pointer;
       transition: var(--transition);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       z-index: 2;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -642,6 +665,7 @@
       margin-bottom: 8px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
       line-height: 1.4;
@@ -668,6 +692,7 @@
       color: var(--text-muted);
       display: -webkit-box;
       -webkit-line-clamp: 3;
+      line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
       line-height: 1.6;
@@ -703,7 +728,8 @@
       transform: scale(1.05);
     }
 
-    .card-tag-edit, .card-tag-add {
+    .card-tag-edit,
+    .card-tag-add {
       display: inline-flex;
       align-items: center;
       padding: 4px 8px;
@@ -717,7 +743,8 @@
       transition: var(--transition);
     }
 
-    .card-tag-edit:hover, .card-tag-add:hover {
+    .card-tag-edit:hover,
+    .card-tag-add:hover {
       border-color: var(--primary);
       color: var(--primary);
       background: var(--primary-light);
@@ -801,7 +828,7 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0, 0, 0, 0.4);
       z-index: 1000;
       display: none;
       align-items: center;
@@ -959,7 +986,7 @@
       background: var(--primary);
       color: white;
       border-color: var(--primary);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     /* 侧边预览抽屉 */
@@ -978,7 +1005,7 @@
     .drawer-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(4px);
       opacity: 0;
       transition: opacity 0.3s ease;
@@ -995,7 +1022,7 @@
       width: 600px;
       height: 100%;
       background: var(--bg-card);
-      box-shadow: -10px 0 40px rgba(0,0,0,0.2);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.2);
       transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       flex-direction: column;
@@ -1147,11 +1174,11 @@
     }
 
     .nav-action:hover {
-      background: rgba(0,0,0,0.1);
+      background: rgba(0, 0, 0, 0.1);
     }
 
     .nav-item.active .nav-action:hover {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
     }
 
     /* 分类编辑选项 */
@@ -1204,13 +1231,25 @@
     }
 
     @keyframes pulse-scale {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
     }
 
     @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     /* 通用loading spinner */
@@ -1356,21 +1395,38 @@
     }
 
     @keyframes slideInRight {
-      from { transform: translateX(400px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
 
     @keyframes slideOutRight {
-      from { transform: translateX(0); opacity: 1; }
-      to { transform: translateX(400px); opacity: 0; }
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
     }
   </style>
 </head>
+
 <body>
   <!-- 全局加载遮罩 -->
   <div id="globalLoading" class="global-loading">
     <div class="global-loading-content">
-      <div class="loading-spinner loading-spinner-lg" style="width: 48px; height: 48px; border-width: 4px; border-color: var(--primary); border-top-color: transparent;"></div>
+      <div class="loading-spinner loading-spinner-lg"
+        style="width: 48px; height: 48px; border-width: 4px; border-color: var(--primary); border-top-color: transparent;">
+      </div>
       <p style="margin-top: 20px; font-size: 16px; font-weight: 600; color: var(--text-main);">正在加载知识库...</p>
       <p style="margin-top: 8px; font-size: 13px; color: var(--text-muted);" id="loadingProgress">初始化中</p>
     </div>
@@ -1380,7 +1436,9 @@
     <!-- 左侧分类导航 -->
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <h1><span>📦</span> 知识库</h1>
+        <h1><img src="icons/logo-animated-bold.svg" alt="ToastMark"
+            style="width: 28px; height: 28px; border-radius: 0;">
+          ToastMark</h1>
         <p>Your Digital Library</p>
       </div>
 
@@ -1424,7 +1482,8 @@
             <!-- 动态生成分类导航 -->
           </div>
           <button class="add-nav-btn" id="addCategoryBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" style="width: 14px; height: 14px;">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
             <span>创建新分类</span>
@@ -1436,20 +1495,26 @@
         <div class="sync-status" id="syncStatus">同步状态加载中</div>
         <div class="sync-buttons">
           <button class="sync-btn" id="syncFromCloudBtn" title="从云端拉取">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" style="width: 14px; height: 14px;">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
             <span>拉取</span>
           </button>
           <button class="sync-btn" id="syncToCloudBtn" title="推送至云端">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" style="width: 14px; height: 14px;">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
             </svg>
             <span>推送</span>
           </button>
           <button class="sync-btn sync-btn-primary" id="syncCategoriesBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" style="width: 14px; height: 14px;">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
             </svg>
             <span>同步分类架构</span>
           </button>
@@ -1467,18 +1532,23 @@
         <div class="header-actions">
           <div class="view-controls">
             <button class="view-btn active" id="gridViewBtn" title="网格视图">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" style="width: 18px; height: 18px;">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" />
               </svg>
             </button>
             <button class="view-btn" id="listViewBtn" title="列表视图">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" style="width: 18px; height: 18px;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
               </svg>
             </button>
             <button class="view-btn" id="timelineViewBtn" title="时间线视图">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" style="width: 18px; height: 18px;">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
               </svg>
             </button>
           </div>
@@ -1491,8 +1561,10 @@
             <input type="text" id="searchBox" class="search-box" placeholder="搜索标题、域名、AI 摘要...">
           </div>
           <button class="action-btn" id="reclassifyBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" style="width: 16px; height: 16px;">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
             </svg>
             <span>重新分类</span>
           </button>
@@ -1507,7 +1579,7 @@
         </div>
 
         <div id="bookmarksContainer">
-        <!-- 书签列表 -->
+          <!-- 书签列表 -->
         </div>
       </div>
     </main>
@@ -1548,11 +1620,14 @@
       <div class="modal-body">
         <div class="form-group">
           <label class="form-label">当前书签</label>
-          <div id="editCategoryBookmarkTitle" style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 16px; padding: 12px; background: var(--bg-main); border-radius: var(--radius-sm); border: 1px solid var(--border-color);"></div>
+          <div id="editCategoryBookmarkTitle"
+            style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 16px; padding: 12px; background: var(--bg-main); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">选择新分类</label>
-          <div id="editCategoryList" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-height: 400px; overflow-y: auto;">
+          <div id="editCategoryList"
+            style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-height: 400px; overflow-y: auto;">
             <!-- 动态生成 -->
           </div>
         </div>
@@ -1599,4 +1674,5 @@
   <script src="turso.js"></script>
   <script src="bookmarks.js"></script>
 </body>
+
 </html>

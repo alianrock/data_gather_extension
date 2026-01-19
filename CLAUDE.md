@@ -6,7 +6,7 @@ This project uses the **agent-foreman** harness for feature-driven development w
 
 ### Project Goal
 
-Kawa - 智能网页助手 Chrome 扩展
+ToastMark - 智能网页助手 Chrome 扩展
 
 ### Core Files
 

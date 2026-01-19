@@ -2019,6 +2019,229 @@ async function drawCyberCard(ctx, data, config) {
   ctx.fillText('DECODING... 100%', width - margin - innerPadding, footerY);
 }
 
+// --- 风格 5: 吐司面包 (ToastMark) ---
+async function drawToastCard(ctx, data, config) {
+  const { width, height, margin, innerPadding, themeColor } = config;
+
+  // 1. 绘制背景 - 焦糖吐司风格
+  const gradient = ctx.createLinearGradient(0, 0, width, height);
+  gradient.addColorStop(0, '#faf5f0'); // Toast Bread Light
+  gradient.addColorStop(1, '#f5e6d3'); // Toast Bread
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, width, height);
+
+  // 绘制装饰性面包屑/斑点
+  drawNoise(ctx, width, height, 0.03);
+
+  // 顶部装饰条
+  const topBarHeight = 12;
+  const topGradient = ctx.createLinearGradient(0, 0, width, 0);
+  topGradient.addColorStop(0, '#d4a574'); // Toast Crust
+  topGradient.addColorStop(1, '#c4956a'); // Toast Crust Dark
+  ctx.fillStyle = topGradient;
+  ctx.fillRect(0, 0, width, topBarHeight);
+
+  // 2. 绘制卡片容器
+  const cardX = margin;
+  const cardY = margin + 40;
+  const cardW = width - margin * 2;
+  const cardH = height - margin * 2 - 40;
+  const radius = 24; // ToastMark uses larger radius
+
+  ctx.save();
+  // 吐司风格卡片
+  ctx.shadowColor = 'rgba(93, 64, 35, 0.15)'; // Shadow XL color
+  ctx.shadowBlur = 25;
+  ctx.shadowOffsetY = 10;
+  ctx.fillStyle = '#ffffff';
+  roundRect(ctx, cardX, cardY, cardW, cardH, radius);
+  ctx.fill();
+
+  // 边框
+  ctx.strokeStyle = '#e8d4bc'; // Light crust color
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.restore(); // Restore to remove shadow for subsequent elements
+
+  // 3. 顶部区域
+  const topY = cardY + innerPadding;
+
+  // 品牌 & 图标
+  ctx.fillStyle = '#5d4023'; // Darker brown for text
+  ctx.font = `bold 28px ${CANVAS_FONTS.main}`;
+  ctx.fillText('Web Collector', cardX + innerPadding, topY + 24);
+
+  // 分类标签
+  const tagText = data.category.toUpperCase();
+  ctx.font = `600 18px ${CANVAS_FONTS.main}`;
+  const tagW = ctx.measureText(tagText).width + 50;
+  ctx.fillStyle = '#d4a574'; // Crust color for tag background
+  roundRect(ctx, cardX + cardW - innerPadding - tagW, topY - 10, tagW, 45, 22);
+  ctx.fill();
+  ctx.fillStyle = '#ffffff'; // White text on crust
+  ctx.fillText(tagText, cardX + cardW - innerPadding - tagW + 25, topY + 20);
+
+  // 4. 截图区域 - 缩小以容纳更多摘要内容
+  const screenshotY = topY + 60;
+  const screenshotW = cardW - innerPadding * 2;
+  const screenshotH = 220; // 缩小截图区域
+
+  if (data.screenshot) {
+    try {
+      const img = await loadImage(data.screenshot);
+      ctx.save();
+
+      // 模拟照片边框
+      ctx.shadowColor = 'rgba(0,0,0,0.1)';
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetY = 8;
+      ctx.fillStyle = '#f0f0f0';
+      roundRect(ctx, cardX + innerPadding, screenshotY, screenshotW, screenshotH, 10);
+      ctx.fill();
+      ctx.shadowColor = 'transparent';
+
+      // 图片裁剪绘制
+      ctx.beginPath();
+      roundRect(ctx, cardX + innerPadding, screenshotY, screenshotW, screenshotH, 10);
+      ctx.clip();
+      const scale = screenshotW / img.width;
+      ctx.drawImage(img, cardX + innerPadding, screenshotY, screenshotW, img.height * scale);
+      ctx.restore();
+    } catch (e) { }
+  }
+
+  // 5. 标题 & 详情
+  const titleY = screenshotY + screenshotH + 50;
+  ctx.fillStyle = '#5d4023'; // Darker brown for title
+  ctx.font = `bold 56px ${CANVAS_FONTS.main}`;
+  const titleLines = wrapTextToLines(ctx, data.pageInfo.title || '无标题', cardW - innerPadding * 2, 2);
+  titleLines.forEach((line, i) => {
+    ctx.fillText(line, cardX + innerPadding, titleY + i * 65);
+  });
+
+  const domainY = titleY + (titleLines.length * 65) + 15;
+  ctx.fillStyle = '#8c7a6b'; // Lighter brown for domain
+  ctx.font = `600 28px ${CANVAS_FONTS.main}`;
+  ctx.fillText('🔗 ' + (data.pageInfo.domain || 'unknown.com'), cardX + innerPadding, domainY + 25);
+
+  // 6. 摘要内容 - 增加行数显示更多内容
+  const summaryY = domainY + 55;
+  ctx.fillStyle = '#8c7a6b'; // Lighter brown for summary
+  ctx.font = `500 28px ${CANVAS_FONTS.main}`;
+  const summaryText = (data.summary || '暂无内容').trim();
+  const lineHeight = 40; // 减小行高
+  const actualLines = wrapText(ctx, summaryText, cardX + innerPadding + 35, summaryY + 10, cardW - innerPadding * 2 - 50, lineHeight, 12);
+
+  // 装饰侧线 (模拟果酱/黄油涂抹)
+  if (actualLines > 0) {
+    const grad = ctx.createLinearGradient(0, summaryY, 0, summaryY + (actualLines * lineHeight));
+    grad.addColorStop(0, '#f59e0b'); // Orange/Jam color
+    grad.addColorStop(1, '#fbbf24'); // Yellow/Butter color
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(cardX + innerPadding, summaryY);
+    ctx.lineTo(cardX + innerPadding, summaryY + (actualLines * lineHeight) - 10);
+    ctx.stroke();
+  }
+
+  // 7. 底部版权
+  const footerY = cardY + cardH - innerPadding;
+  ctx.fillStyle = '#a1a1aa'; // Gray for footer
+  ctx.font = `500 22px ${CANVAS_FONTS.main}`;
+  const dateStr = new Date(data.timestamp).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+  ctx.fillText(dateStr + ' • Web Collector AI', cardX + innerPadding, footerY);
+
+  ctx.textAlign = 'right';
+  ctx.fillText('长按识别精彩内容', cardX + cardW - innerPadding, footerY);
+  ctx.textAlign = 'left';
+}
+
+// --- 风格 6: Claude 风格 ---
+async function drawClaudeCard(ctx, data, config) {
+  const { width, height, margin, innerPadding } = config;
+
+  // 背景已在主函数绘制 (#f0eee6)
+
+  const contentX = margin + 20;
+  const contentY = margin + 40;
+  const contentW = width - (margin + 20) * 2;
+
+  // 1. 来源/品牌 (顶部居中)
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#706d68'; // Muted text
+  ctx.font = `600 16px ${CANVAS_FONTS.main}`;
+  ctx.fillText('COLLECTED WITH TOASTMARK', width / 2, contentY);
+
+  // 2. 标题 (Serif, 大号, 居中)
+  const titleY = contentY + 50;
+  ctx.fillStyle = '#2d2926'; // Charcoal
+  ctx.font = `bold 48px ${CANVAS_FONTS.serif}`; // 使用衬线体
+  const titleLines = wrapTextToLines(ctx, data.pageInfo.title || '无标题', contentW, 3);
+
+  let currentY = titleY;
+  titleLines.forEach((line, i) => {
+    ctx.fillText(line, width / 2, currentY);
+    currentY += 60;
+  });
+
+  // 3. 装饰线
+  currentY += 20;
+  ctx.strokeStyle = '#d1d1cd';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(width / 2 - 40, currentY);
+  ctx.lineTo(width / 2 + 40, currentY);
+  ctx.stroke();
+
+  // 4. 摘要 (Sans-serif, 优雅, 居中)
+  currentY += 40;
+  ctx.fillStyle = '#4a4540';
+  ctx.font = `400 24px ${CANVAS_FONTS.main}`;
+  const summaryText = (data.summary || '暂无内容').trim();
+  const summaryLines = wrapText(ctx, summaryText, width / 2, currentY, contentW - 40, 36, 8, true); // true for center align
+
+  // 5. 截图 (如果有，放在底部，带圆角)
+  if (data.screenshot) {
+    try {
+      const img = await loadImage(data.screenshot);
+      const imgY = currentY + (summaryLines * 36) + 40;
+      const imgH = height - imgY - margin - 40; // 留出底部空间
+
+      if (imgH > 100) { // 只有空间足够才画
+        const imgW = contentW;
+        const scale = imgW / img.width;
+        const drawH = Math.min(imgH, img.height * scale);
+
+        ctx.save();
+        // 柔和阴影
+        ctx.shadowColor = 'rgba(0,0,0,0.08)';
+        ctx.shadowBlur = 20;
+        ctx.shadowOffsetY = 10;
+
+        roundRect(ctx, contentX, imgY, imgW, drawH, 12);
+        ctx.fill();
+
+        ctx.shadowColor = 'transparent';
+        ctx.beginPath();
+        roundRect(ctx, contentX, imgY, imgW, drawH, 12);
+        ctx.clip();
+        ctx.drawImage(img, contentX, imgY, imgW, img.height * scale);
+        ctx.restore();
+      }
+    } catch (e) { }
+  }
+
+  // 6. 底部信息 (域名)
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#8a8780';
+  ctx.font = `500 16px ${CANVAS_FONTS.main}`;
+  ctx.fillText(data.pageInfo.domain || 'unknown.com', width / 2, height - margin - 15);
+
+  ctx.textAlign = 'left'; // Reset
+}
+
 // 辅助：绘制杂色/纹理 (用于质感)
 function drawNoise(ctx, width, height, opacity) {
   ctx.save();
@@ -2334,7 +2557,7 @@ ${summary}
 🔗 ${url}
 
 ---
-由 Kawa 生成`;
+由 ToastMark 生成`;
 
   try {
     await navigator.clipboard.writeText(shareText);

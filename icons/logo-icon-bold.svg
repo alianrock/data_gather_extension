@@ -1,0 +1,78 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Toast bread gradient -->
+    <linearGradient id="toastGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5e6d3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e8d4bc;stop-opacity:1" />
+    </linearGradient>
+    <!-- Toast crust gradient -->
+    <linearGradient id="crustGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a574;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c4956a;stop-opacity:1" />
+    </linearGradient>
+    <!-- Toaster body gradient -->
+    <linearGradient id="toasterGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5c9a0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e8b88a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Toast (bread) - outer crust -->
+  <path d="M55 45 
+           C55 32, 72 25, 100 25 
+           C128 25, 145 32, 145 45
+           L145 85
+           L55 85
+           Z" 
+        fill="url(#crustGrad2)" 
+        stroke="#8b6914" 
+        stroke-width="3"/>
+  
+  <!-- Toast inner (white part) -->
+  <path d="M63 50 
+           C63 40, 78 33, 100 33 
+           C122 33, 137 40, 137 50
+           L137 85
+           L63 85
+           Z" 
+        fill="url(#toastGrad2)"/>
+  
+  <!-- Toast lines (grill marks) - thicker -->
+  <path d="M78 55 Q90 62 102 55" stroke="#c4956a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M80 66 Q95 73 110 66" stroke="#c4956a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M82 77 Q97 84 112 77" stroke="#c4956a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Toast dots - slightly larger -->
+  <circle cx="85" cy="45" r="2.5" fill="#c4956a"/>
+  <circle cx="108" cy="42" r="2.5" fill="#c4956a"/>
+  <circle cx="120" cy="52" r="2.5" fill="#c4956a"/>
+  <circle cx="125" cy="68" r="2.5" fill="#c4956a"/>
+  <circle cx="72" cy="72" r="2.5" fill="#c4956a"/>
+  
+  <!-- Toaster body -->
+  <rect x="45" y="82" width="110" height="72" rx="10" ry="10" fill="url(#toasterGrad2)" stroke="#c4956a" stroke-width="3"/>
+  
+  <!-- Toaster slot (dark line at top) -->
+  <rect x="52" y="82" width="96" height="6" rx="3" fill="#a07850"/>
+  
+  <!-- Bookmark ribbon -->
+  <path d="M125 92 
+           L125 130 
+           L133 120 
+           L141 130 
+           L141 92
+           Z" 
+        fill="#8b5a2b" 
+        stroke="#6b4423" 
+        stroke-width="2"/>
+  
+  <!-- Toaster handle -->
+  <rect x="155" y="108" width="15" height="10" rx="3" fill="#c4956a" stroke="#a07850" stroke-width="2"/>
+  <rect x="152" y="111" width="6" height="4" rx="1.5" fill="url(#toasterGrad2)"/>
+  
+  <!-- Toaster feet -->
+  <rect x="55" y="154" width="10" height="8" rx="2" fill="#a07850"/>
+  <rect x="78" y="154" width="10" height="8" rx="2" fill="#a07850"/>
+  <rect x="112" y="154" width="10" height="8" rx="2" fill="#a07850"/>
+  <rect x="135" y="154" width="10" height="8" rx="2" fill="#a07850"/>
+</svg>

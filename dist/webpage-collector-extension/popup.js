@@ -2334,7 +2334,7 @@ ${summary}
 🔗 ${url}
 
 ---
-由 Kawa 生成`;
+由 ToastMark 生成`;
 
   try {
     await navigator.clipboard.writeText(shareText);
