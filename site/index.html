@@ -427,8 +427,10 @@
     }
 
     @keyframes floatToast {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-15px) rotate(3deg); }
+      50% { transform: translateY(-5px) rotate(-2deg); }
+      75% { transform: translateY(-20px) rotate(2deg); }
     }
 
     /* Decorative shapes - subtle geometric accents */
@@ -638,18 +640,18 @@
     /* Product Mockup - Warm Minimal */
     .hero-mockup {
       position: relative;
-      max-width: 1100px;
+      max-width: 900px;
       margin: 0 auto;
     }
 
     .mockup-container {
       position: relative;
       display: flex;
-      gap: 32px;
+      gap: 24px;
       align-items: flex-start;
       background: var(--bg-card);
       border-radius: var(--radius-2xl);
-      padding: 32px;
+      padding: 24px;
       box-shadow: 0 20px 50px rgba(45, 41, 38, 0.15), 0 0 0 1px var(--border-color);
       transition: transform var(--transition-normal), box-shadow var(--transition-normal);
     }
@@ -724,7 +726,7 @@
       background: var(--bg-main);
       border-radius: var(--radius-xl);
       overflow: hidden;
-      width: 440px;
+      width: 380px;
       box-shadow: var(--shadow-lg);
     }
 
@@ -958,7 +960,7 @@
       background: var(--bg-main);
       border-radius: var(--radius-xl);
       overflow: hidden;
-      width: 380px;
+      width: 340px;
       box-shadow: var(--shadow-lg);
     }
 
@@ -1222,8 +1224,10 @@
     }
 
     @keyframes floatBadge {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-8px) rotate(1deg); }
+      50% { transform: translateY(-12px) rotate(-1deg); }
+      75% { transform: translateY(-5px) rotate(0.5deg); }
     }
 
     @keyframes slideInBookmark {
