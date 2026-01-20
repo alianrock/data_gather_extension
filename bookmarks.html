@@ -430,10 +430,16 @@
       width: 140px;
       height: 100%;
       padding: 0;
-      border: none;
+      margin: 0;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
       font-size: 13px;
       color: var(--text-main);
       background: transparent;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
     }
 
     .search-box::placeholder {
@@ -442,7 +448,9 @@
     }
 
     .search-box:focus {
-      outline: none;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
     }
 
     .search-box:focus::placeholder {
