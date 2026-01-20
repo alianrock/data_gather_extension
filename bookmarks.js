@@ -1645,26 +1645,17 @@ function renderBookmarks() {
     `;
   }
 
-  // 平滑过渡：先淡出，更新内容，再淡入
-  const existingGrid = container.querySelector('.bookmarks-grid');
+  // 直接更新内容
+  container.innerHTML = newContent;
+  bindBookmarkEvents();
 
-  if (existingGrid && !isFirstRender) {
-    existingGrid.classList.add('fade-out');
+  // 首次渲染后移除动画类
+  if (isFirstRender) {
+    isFirstRender = false;
     setTimeout(() => {
-      container.innerHTML = newContent;
-      bindBookmarkEvents();
-    }, 150);
-  } else {
-    container.innerHTML = newContent;
-    bindBookmarkEvents();
-
-    if (isFirstRender) {
-      isFirstRender = false;
-      setTimeout(() => {
-        const grid = container.querySelector('.bookmarks-grid');
-        if (grid) grid.classList.remove('animate-in');
-      }, 400);
-    }
+      const grid = container.querySelector('.bookmarks-grid');
+      if (grid) grid.classList.remove('animate-in');
+    }, 400);
   }
 
 }
