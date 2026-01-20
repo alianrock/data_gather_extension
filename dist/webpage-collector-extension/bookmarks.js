@@ -2072,6 +2072,12 @@ function createBookmarkCard(bookmark) {
       </div>
       <div class="card-info">
         <h3 class="card-title" title="${escapeHtml(title)}">${escapeHtml(title)}</h3>
+        <a class="card-url" href="${escapeHtml(url)}" target="_blank" title="${escapeHtml(url)}" onclick="event.stopPropagation()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+          </svg>
+          ${escapeHtml(domain)}
+        </a>
         <p class="card-summary">${escapeHtml(summary)}</p>
         ${tagsHtml}
         <div class="card-meta">

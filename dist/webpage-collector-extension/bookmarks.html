@@ -686,17 +686,30 @@
 
     .card-url {
       font-size: 11px;
-      color: var(--primary);
+      color: var(--text-muted);
       text-decoration: none;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-url svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      opacity: 0.6;
     }
 
     .card-url:hover {
-      text-decoration: underline;
+      color: var(--primary);
+    }
+
+    .card-url:hover svg {
+      opacity: 1;
     }
 
     /* 元信息栏 */
