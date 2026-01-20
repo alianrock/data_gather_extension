@@ -1601,12 +1601,15 @@ function updateStats() {
 function renderBookmarks() {
   const container = document.getElementById('bookmarksContainer');
   if (!container) return;
-  
+
   // 渲染标签云
   renderTagCloud();
-  
+
+  // 生成新内容
+  let newContent = '';
+
   if (filteredBookmarks.length === 0) {
-    container.innerHTML = `
+    newContent = `
       <div class="empty-state">
         <div class="empty-icon" style="opacity: 0.15;">
           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
@@ -1615,46 +1618,60 @@ function renderBookmarks() {
         <p class="empty-desc">${allBookmarks.length === 0 ? '开始收集感兴趣的网页吧' : '尝试其他筛选条件'}</p>
       </div>
     `;
-    return;
-  }
-
-  if (currentView === 'timeline') {
+  } else if (currentView === 'timeline') {
+    // 时间线视图单独处理
     renderTimeline(container);
+    return;
   } else {
-    // 默认列表视图，grid-view 为网格视图
     const viewClass = currentView === 'grid' ? 'grid-view' : '';
     const animateClass = isFirstRender ? 'animate-in' : '';
-    container.innerHTML = `
+    newContent = `
       <div class="bookmarks-grid ${viewClass} ${animateClass}">
         ${filteredBookmarks.map(b => createBookmarkCard(b)).join('')}
       </div>
     `;
+  }
 
-    // 首次渲染后移除动画类
+  // 平滑过渡：先淡出，更新内容，再淡入
+  const existingGrid = container.querySelector('.bookmarks-grid');
+
+  if (existingGrid && !isFirstRender) {
+    existingGrid.classList.add('fade-out');
+    setTimeout(() => {
+      container.innerHTML = newContent;
+      bindBookmarkEvents();
+    }, 150);
+  } else {
+    container.innerHTML = newContent;
+    bindBookmarkEvents();
+
     if (isFirstRender) {
       isFirstRender = false;
       setTimeout(() => {
         const grid = container.querySelector('.bookmarks-grid');
         if (grid) grid.classList.remove('animate-in');
-      }, 500);
+      }, 400);
     }
   }
 
-  // 绑定事件
+}
+
+// 绑定书签事件
+function bindBookmarkEvents() {
   filteredBookmarks.forEach(bookmark => {
     const deleteBtn = document.getElementById(`delete-${bookmark.id}`);
     const openBtn = document.getElementById(`open-${bookmark.id}`);
     const previewBtn = document.getElementById(`preview-${bookmark.id}`);
     const editCatBtn = document.getElementById(`editcat-${bookmark.id}`);
     const editTagBtn = document.getElementById(`edittag-${bookmark.id}`);
-    
+
     if (deleteBtn) {
       deleteBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         deleteBookmark(bookmark.id);
       });
     }
-    
+
     if (openBtn) {
       openBtn.addEventListener('click', (e) => {
         e.stopPropagation();
