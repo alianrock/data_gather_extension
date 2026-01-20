@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>隐私政策 - ToastMark</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icon16.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/images/icon-48.png">
+  <link rel="icon" type="image/png" sizes="128x128" href="assets/images/icon128.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+
+  <style>
+    :root {
+      --primary-color: #4a90d9;
+      --text-color: #333;
+      --bg-color: #fff;
+      --border-color: #e0e0e0;
+      --code-bg: #f5f5f5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.8;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 0;
+      border-bottom: 2px solid var(--primary-color);
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2.2em;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: #666;
+      font-size: 0.95em;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #e8f4fd 0%, #d4e8f9 100%);
+      border-left: 4px solid var(--primary-color);
+      padding: 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+    }
+
+    .highlight-box strong {
+      color: var(--primary-color);
+    }
+
+    h2 {
+      font-size: 1.5em;
+      color: var(--primary-color);
+      margin-top: 40px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    h3 {
+      font-size: 1.2em;
+      color: #555;
+      margin-top: 25px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.95em;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border: 1px solid var(--border-color);
+    }
+
+    th {
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    ul, ol {
+      margin: 15px 0;
+      padding-left: 30px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .no-collect {
+      color: #d32f2f;
+    }
+
+    .yes-collect {
+      color: #388e3c;
+    }
+
+    code {
+      background-color: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: "SF Mono", Monaco, monospace;
+      font-size: 0.9em;
+    }
+
+    .permission-table td:first-child {
+      font-family: "SF Mono", Monaco, monospace;
+      font-size: 0.9em;
+      background-color: var(--code-bg);
+    }
+
+    .warning-box {
+      background-color: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 15px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+    }
+
+    .info-box {
+      background-color: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 15px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+
+      header h1 {
+        font-size: 1.8em;
+      }
+
+      table {
+        font-size: 0.85em;
+      }
+
+      th, td {
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>隐私政策</h1>
+    <p><strong>ToastMark</strong> - 智能网页助手</p>
+    <p>最后更新：2025年1月17日</p>
+  </header>
+
+  <main>
+    <div class="highlight-box">
+      <strong>核心原则：</strong>本扩展采用隐私优先设计，所有敏感数据均存储在您的本地设备上，不会上传到我们的服务器。
+    </div>
+
+    <h2>1. 数据收集</h2>
+
+    <h3>1.1 我们收集什么数据</h3>
+    <p>本扩展<strong>仅在您主动点击"收集"按钮时</strong>收集以下网页信息：</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>数据类型</th>
+          <th>说明</th>
+          <th>用途</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>网页标题</td>
+          <td>当前页面的标题</td>
+          <td>显示和存储</td>
+        </tr>
+        <tr>
+          <td>网页URL</td>
+          <td>当前页面的网址</td>
+          <td>显示和存储</td>
+        </tr>
+        <tr>
+          <td>网页描述</td>
+          <td>页面的meta描述</td>
+          <td>显示和AI摘要</td>
+        </tr>
+        <tr>
+          <td>网页内容</td>
+          <td>页面主要文本内容</td>
+          <td>AI摘要生成</td>
+        </tr>
+        <tr>
+          <td>网页截图</td>
+          <td>可见区域的截图</td>
+          <td>显示和分享</td>
+        </tr>
+        <tr>
+          <td>页面元数据</td>
+          <td>关键词、作者等</td>
+          <td>信息补充</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>1.2 我们不收集的数据</h3>
+    <ul>
+      <li><span class="no-collect">&#10007;</span> 浏览历史记录</li>
+      <li><span class="no-collect">&#10007;</span> 个人身份信息</li>
+      <li><span class="no-collect">&#10007;</span> 登录凭据或密码</li>
+      <li><span class="no-collect">&#10007;</span> 表单输入内容</li>
+      <li><span class="no-collect">&#10007;</span> Cookie或会话数据</li>
+      <li><span class="no-collect">&#10007;</span> 后台自动收集的任何数据</li>
+    </ul>
+
+    <h3>1.3 用户配置数据</h3>
+    <p>您在设置中配置的以下信息存储在Chrome浏览器的本地存储中：</p>
+    <ul>
+      <li>AI服务API密钥（OpenAI、Anthropic等）</li>
+      <li>数据API配置</li>
+      <li>Turso数据库配置（如启用）</li>
+      <li>界面偏好设置（主题、语言等）</li>
+    </ul>
+
+    <h2>2. 数据存储</h2>
+
+    <h3>2.1 本地存储</h3>
+    <p>所有数据均使用Chrome浏览器提供的安全存储机制：</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>存储类型</th>
+          <th>内容</th>
+          <th>安全性</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>chrome.storage.sync</code></td>
+          <td>API配置、用户偏好</td>
+          <td>Chrome加密，可跨设备同步</td>
+        </tr>
+        <tr>
+          <td><code>chrome.storage.local</code></td>
+          <td>书签数据、队列状态</td>
+          <td>本地加密存储</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>2.2 云端存储（可选）</h3>
+    <p>如果您选择启用Turso数据库同步功能：</p>
+    <ul>
+      <li>书签数据将同步到您配置的Turso数据库</li>
+      <li>您完全控制数据库的访问凭据</li>
+      <li>您可以随时在设置中禁用此功能</li>
+      <li>禁用后，数据仅保存在本地</li>
+    </ul>
+
+    <h3>2.3 我们不存储的位置</h3>
+    <ul>
+      <li><span class="no-collect">&#10007;</span> 本扩展开发者的服务器</li>
+      <li><span class="no-collect">&#10007;</span> 第三方分析服务</li>
+      <li><span class="no-collect">&#10007;</span> 广告网络</li>
+      <li><span class="no-collect">&#10007;</span> 任何未经您授权的位置</li>
+    </ul>
+
+    <h2>3. 数据使用</h2>
+
+    <h3>3.1 数据用途</h3>
+    <p>收集的数据仅用于以下目的：</p>
+    <ol>
+      <li><strong>显示信息</strong> - 在扩展界面中展示收集的网页信息</li>
+      <li><strong>AI摘要生成</strong> - 发送内容到您配置的AI服务生成摘要</li>
+      <li><strong>书签管理</strong> - 保存和管理您收藏的网页</li>
+      <li><strong>数据导出</strong> - 发送到您配置的自定义API</li>
+      <li><strong>分享功能</strong> - 生成可分享的卡片图片</li>
+    </ol>
+
+    <h3>3.2 第三方服务</h3>
+    <p>本扩展可能与以下第三方服务交互（均由您主动配置）：</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>服务</th>
+          <th>用途</th>
+          <th>数据传输</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OpenAI API</td>
+          <td>AI摘要生成</td>
+          <td>网页内容文本</td>
+        </tr>
+        <tr>
+          <td>Anthropic API</td>
+          <td>AI摘要生成</td>
+          <td>网页内容文本</td>
+        </tr>
+        <tr>
+          <td>自定义API</td>
+          <td>数据导出</td>
+          <td>您选择的完整数据</td>
+        </tr>
+        <tr>
+          <td>Turso数据库</td>
+          <td>书签同步</td>
+          <td>书签数据</td>
+        </tr>
+        <tr>
+          <td>社交媒体平台</td>
+          <td>分享功能</td>
+          <td>网页URL和标题</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="warning-box">
+      <strong>重要说明：</strong>
+      <ul>
+        <li>只有在您配置并使用这些服务时，数据才会被发送</li>
+        <li>您的API密钥直接发送到相应服务，不经过我们的服务器</li>
+        <li>第三方服务的隐私政策由其各自管理</li>
+      </ul>
+    </div>
+
+    <h2>4. 数据传输</h2>
+
+    <h3>4.1 传输安全</h3>
+    <ul>
+      <li>所有API调用均使用HTTPS加密传输</li>
+      <li>API密钥通过安全的认证头传输</li>
+      <li>不使用任何不安全的HTTP连接</li>
+    </ul>
+
+    <h3>4.2 传输目的地</h3>
+    <p>数据仅传输到您明确配置的端点：</p>
+    <ul>
+      <li>您配置的AI API服务器</li>
+      <li>您配置的数据接收API</li>
+      <li>您配置的Turso数据库</li>
+      <li>您选择分享的社交媒体平台</li>
+    </ul>
+
+    <h2>5. 权限说明</h2>
+    <p>本扩展请求以下Chrome权限，每项权限的用途如下：</p>
+
+    <table class="permission-table">
+      <thead>
+        <tr>
+          <th>权限</th>
+          <th>用途</th>
+          <th>必要性</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>activeTab</td>
+          <td>截取当前标签页的截图</td>
+          <td>必需</td>
+        </tr>
+        <tr>
+          <td>scripting</td>
+          <td>注入脚本以提取网页信息</td>
+          <td>必需</td>
+        </tr>
+        <tr>
+          <td>storage</td>
+          <td>存储用户配置和书签</td>
+          <td>必需</td>
+        </tr>
+        <tr>
+          <td>tabs</td>
+          <td>获取当前标签页的URL和标题</td>
+          <td>必需</td>
+        </tr>
+        <tr>
+          <td>contextMenus</td>
+          <td>提供右键菜单快捷操作</td>
+          <td>必需</td>
+        </tr>
+        <tr>
+          <td>unlimitedStorage</td>
+          <td>存储大量书签数据</td>
+          <td>必需</td>
+        </tr>
+        <tr>
+          <td>&lt;all_urls&gt;</td>
+          <td>在任意网页上工作</td>
+          <td>必需</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="info-box">
+      <strong>关于 <code>&lt;all_urls&gt;</code> 权限：</strong>此权限允许扩展在任何网站上运行内容脚本。这是必需的，因为用户可能需要在任意网页上使用信息收集功能。本扩展不会自动收集任何网站的数据，仅在您主动触发时才会执行。
+    </div>
+
+    <h2>6. 用户权利</h2>
+    <p>您对自己的数据拥有完全控制权：</p>
+
+    <h3>6.1 查看数据</h3>
+    <ul>
+      <li>在扩展的书签页面查看所有保存的书签</li>
+      <li>在设置页面查看所有配置信息</li>
+    </ul>
+
+    <h3>6.2 删除数据</h3>
+    <ul>
+      <li>随时删除任何保存的书签</li>
+      <li>清除所有API配置</li>
+      <li>卸载扩展将删除所有本地数据</li>
+    </ul>
+
+    <h3>6.3 导出数据</h3>
+    <ul>
+      <li>书签数据可通过Turso数据库导出</li>
+      <li>收集的信息可发送到您的自定义API</li>
+    </ul>
+
+    <h3>6.4 禁用功能</h3>
+    <ul>
+      <li>可单独禁用AI摘要功能</li>
+      <li>可禁用云端同步</li>
+      <li>可禁用任何不需要的功能</li>
+    </ul>
+
+    <h2>7. 数据安全</h2>
+
+    <h3>7.1 安全措施</h3>
+    <ul>
+      <li>API密钥使用Chrome的安全存储机制加密</li>
+      <li>不在代码中硬编码任何密钥或凭据</li>
+      <li>使用HTTPS进行所有网络通信</li>
+      <li>实施超时控制防止长时间连接</li>
+    </ul>
+
+    <h3>7.2 安全建议</h3>
+    <p>为保护您的数据安全，我们建议：</p>
+    <ol>
+      <li>定期更新您的API密钥</li>
+      <li>不在公共设备上保存API配置</li>
+      <li>在敏感网页（如银行）上谨慎使用截图功能</li>
+      <li>定期检查并清理不需要的书签数据</li>
+    </ol>
+
+    <h2>8. 儿童隐私</h2>
+    <p>本扩展不面向13岁以下儿童，我们不会故意收集儿童的个人信息。如果您是家长或监护人，发现您的孩子在使用本扩展，请联系我们。</p>
+
+    <h2>9. 隐私政策更新</h2>
+    <p>我们可能会不时更新本隐私政策。更新后的政策将在扩展更新时通知用户。建议您定期查看本政策以了解最新的隐私保护措施。</p>
+    <p>重大变更将通过以下方式通知：</p>
+    <ul>
+      <li>扩展更新说明</li>
+      <li>GitHub仓库公告</li>
+    </ul>
+
+    <h2>10. 开源声明</h2>
+    <p>本扩展完全开源，源代码可在GitHub上查看。您可以审查代码以验证我们的隐私承诺。</p>
+    <p><strong>许可证：</strong> MIT License</p>
+
+    <h2>11. 联系方式</h2>
+    <p>如果您对本隐私政策有任何疑问或建议，请通过以下方式联系我们：</p>
+    <ul>
+      <li><strong>GitHub Issues：</strong> 项目Issues页面</li>
+    </ul>
+
+    <h2>12. 适用法律</h2>
+    <p>本隐私政策受中华人民共和国法律管辖。如有争议，应提交至开发者所在地有管辖权的法院解决。</p>
+  </main>
+
+  <footer>
+    <p>感谢您使用 ToastMark！我们承诺保护您的隐私安全。</p>
+    <p>&copy; 2025 ToastMark | <a href="https://github.com/alianrock/data_gather_extension">GitHub</a></p>
+  </footer>
+</body>
+</html>
