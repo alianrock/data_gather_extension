@@ -1475,18 +1475,31 @@ async function loadBookmarks() {
               const cloudCount = result.bookmarks.length;
               const uploadedCount = result.uploaded || 0;
 
-              allBookmarks = result.bookmarks;
-              filteredBookmarks = [...allBookmarks];
-              updateStats();
-              renderBookmarks();
-              renderSidebarNav();
+              // 检查数据是否真的有变化，避免不必要的重新渲染
+              const localIds = new Set(allBookmarks.map(b => b.id));
+              const cloudIds = new Set(result.bookmarks.map(b => b.id));
+              const hasNewData = result.bookmarks.some(b => !localIds.has(b.id)) ||
+                                 allBookmarks.some(b => !cloudIds.has(b.id)) ||
+                                 cloudCount !== localCount;
+
+              if (hasNewData) {
+                allBookmarks = result.bookmarks;
+                filteredBookmarks = [...allBookmarks];
+                updateStats();
+                renderBookmarks();
+                renderSidebarNav();
+              } else {
+                // 数据相同，只更新内存中的数据，不重新渲染
+                allBookmarks = result.bookmarks;
+                filteredBookmarks = [...allBookmarks];
+              }
 
               if (syncStatus) syncStatus.textContent = '☁️ 已同步';
 
               // 显示详细的同步信息
               if (uploadedCount > 0) {
                 showBackgroundStatus(`✅ 已同步 ${cloudCount} 个，↑${uploadedCount} 条`, 'success');
-              } else if (cloudCount !== localCount) {
+              } else if (hasNewData) {
                 showBackgroundStatus(`✅ 已同步 ${cloudCount} 个书签`, 'success');
               } else {
                 hideBackgroundStatus();
@@ -2090,7 +2103,7 @@ function createBookmarkCard(bookmark) {
     <article class="bookmark-card${isNew ? ' bookmark-new' : ''}">
       <div class="card-thumb" style="background: ${thumbBg};">
         ${screenshot
-          ? `<img src="${screenshot}" alt="${escapeHtml(title)}" loading="lazy">`
+          ? `<img src="${screenshot}" alt="${escapeHtml(title)}" loading="lazy" onload="this.classList.add('loaded')">`
           : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <rect x="3" y="3" width="18" height="18" rx="2"/>
               <circle cx="8.5" cy="8.5" r="1.5"/>
