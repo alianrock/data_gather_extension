@@ -389,39 +389,40 @@
 
     .decor-toast {
       position: absolute;
-      opacity: 0.12;
+      opacity: 0.18;
       animation: floatToast 20s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(212, 165, 116, 0.2));
     }
 
     .decor-toast-1 {
-      width: 80px;
-      height: 80px;
-      top: 15%;
-      left: 8%;
+      width: 90px;
+      height: 90px;
+      top: 12%;
+      left: 6%;
       animation-delay: 0s;
     }
 
     .decor-toast-2 {
-      width: 60px;
-      height: 60px;
-      top: 25%;
-      right: 10%;
+      width: 70px;
+      height: 70px;
+      top: 22%;
+      right: 8%;
       animation-delay: -5s;
     }
 
     .decor-toast-3 {
-      width: 50px;
-      height: 50px;
-      bottom: 30%;
-      left: 5%;
+      width: 55px;
+      height: 55px;
+      bottom: 35%;
+      left: 4%;
       animation-delay: -10s;
     }
 
     .decor-toast-4 {
-      width: 70px;
-      height: 70px;
-      bottom: 20%;
-      right: 8%;
+      width: 80px;
+      height: 80px;
+      bottom: 18%;
+      right: 6%;
       animation-delay: -15s;
     }
 
@@ -671,96 +672,195 @@
       opacity: 1;
     }
 
+    /* Extension Popup Mockup - Matches actual product */
+    .mockup-popup {
+      background: var(--bg-main);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      width: 340px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .popup-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .popup-logo {
+      width: 36px;
+      height: 36px;
+    }
+
+    .popup-brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .popup-brand-name {
+      font-family: 'Arial Rounded MT Bold', 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #5d4023;
+      letter-spacing: 0.02em;
+    }
+
+    .popup-brand-desc {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .popup-nav {
+      display: flex;
+      gap: 4px;
+    }
+
+    .popup-nav-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .popup-nav-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .popup-nav-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .popup-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .popup-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(45, 41, 38, 0.04);
+    }
+
+    .popup-screenshot {
+      padding: 6px;
+    }
+
+    .popup-section-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .popup-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .popup-page-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    .popup-url-tag {
+      font-size: 10px;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 3px 8px;
+      border-radius: 5px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .popup-page-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .popup-category-badge {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 3px 8px;
+      border-radius: 5px;
+    }
+
+    .popup-ai-summary {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .popup-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(201, 136, 90, 0.25);
+      transition: all 0.15s ease;
+    }
+
+    .popup-action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(201, 136, 90, 0.35);
+    }
+
+    @media (max-width: 900px) {
+      .mockup-popup { width: 300px; }
+    }
+
+    @media (max-width: 600px) {
+      .mockup-popup { width: 280px; }
+    }
+
+    /* Legacy mockup styles - kept for compatibility */
     .mockup-browser {
       background: var(--bg-card);
       border-radius: var(--radius-xl);
       overflow: hidden;
-    }
-
-    .mockup-header {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: var(--space-3) var(--space-4);
-      background: var(--bg-main);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .mockup-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: var(--radius-full);
-      background: var(--gray-300);
-    }
-
-    .mockup-dot:nth-child(1) { background: #ff5f56; }
-    .mockup-dot:nth-child(2) { background: #ffbd2e; }
-    .mockup-dot:nth-child(3) { background: #27ca40; }
-
-    .mockup-url {
-      flex: 1;
-      margin-left: var(--space-4);
-      padding: var(--space-2) var(--space-4);
-      background: var(--bg-card);
-      border-radius: var(--radius-sm);
-      font-size: 12px;
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
-    }
-
-    .mockup-content {
-      padding: var(--space-5);
-      min-height: 300px;
-      background: var(--bg-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .mockup-preview {
-      display: grid;
-      grid-template-columns: 1fr 280px;
-      gap: var(--space-4);
-      width: 100%;
-    }
-
-    .mockup-main {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: var(--space-5);
-      box-shadow: var(--shadow-md);
-    }
-
-    .mockup-title {
-      font-family: 'Nunito', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: var(--space-2);
-    }
-
-    .mockup-text {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-
-    .mockup-skeleton {
-      height: 12px;
-      background: var(--gray-200);
-      border-radius: var(--radius-sm);
-      margin-top: var(--space-2);
-    }
-
-    .mockup-skeleton.w-80 { width: 80%; }
-    .mockup-skeleton.w-60 { width: 60%; }
-    .mockup-skeleton.w-90 { width: 90%; }
-
-    .mockup-sidebar {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4);
-      box-shadow: var(--shadow-md);
+      display: none;
     }
 
     .mockup-ai-badge {
@@ -1644,6 +1744,24 @@
       box-shadow: var(--shadow-lg);
     }
 
+    .cta-logo-decor {
+      position: absolute;
+      right: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .cta-logo-decor svg {
+      width: 180px;
+      height: 180px;
+    }
+
+    @media (max-width: 768px) {
+      .cta-logo-decor { display: none; }
+    }
+
     /* ========================================
        Footer - Warm Minimal
        ======================================== */
@@ -1861,39 +1979,103 @@
           </div>
 
           <div class="mockup-container">
-            <div class="mockup-browser">
-              <div class="mockup-header">
-                <span class="mockup-dot"></span>
-                <span class="mockup-dot"></span>
-                <span class="mockup-dot"></span>
-                <div class="mockup-url">toastmark.app</div>
-              </div>
-              <div class="mockup-content">
-                <div class="mockup-preview">
-                  <div class="mockup-main">
-                    <div class="mockup-title">网页信息已收集</div>
-                    <div class="mockup-text">标题、描述、关键词已自动提取</div>
-                    <div class="mockup-skeleton w-90"></div>
-                    <div class="mockup-skeleton w-80"></div>
-                    <div class="mockup-skeleton w-60"></div>
-                    <div style="margin-top: 16px;">
-                      <div class="mockup-title" style="font-size: 0.85rem;">截图预览</div>
-                      <div style="height: 80px; background: linear-gradient(135deg, var(--gray-200), var(--gray-100)); border-radius: 8px; margin-top: 8px;"></div>
-                    </div>
-                  </div>
-                  <div class="mockup-sidebar">
-                    <div class="mockup-ai-badge">
-                      <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M12 2v4m0 12v4" fill="none" stroke="currentColor" stroke-width="2"/>
-                      </svg>
-                      AI 摘要
-                    </div>
-                    <div class="mockup-ai-text">
-                      这是一篇关于现代网页开发最佳实践的技术文章，涵盖了性能优化、用户体验设计和可访问性等关键主题...<span class="typing-cursor"></span>
-                    </div>
+            <!-- Extension Popup Mockup -->
+            <div class="mockup-popup">
+              <!-- Popup Header -->
+              <div class="popup-header">
+                <div class="popup-brand">
+                  <svg class="popup-logo" viewBox="38 18 140 150" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="mockupToastGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#f5e6d3"/>
+                        <stop offset="100%" style="stop-color:#e8d4bc"/>
+                      </linearGradient>
+                      <linearGradient id="mockupCrustGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#d4a574"/>
+                        <stop offset="100%" style="stop-color:#c4956a"/>
+                      </linearGradient>
+                      <linearGradient id="mockupToasterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#f5c9a0"/>
+                        <stop offset="100%" style="stop-color:#e8b88a"/>
+                      </linearGradient>
+                    </defs>
+                    <path d="M55 45 C55 32, 72 25, 100 25 C128 25, 145 32, 145 45 L145 85 L55 85 Z" fill="url(#mockupCrustGrad)" stroke="#8b6914" stroke-width="3"/>
+                    <path d="M63 50 C63 40, 78 33, 100 33 C122 33, 137 40, 137 50 L137 85 L63 85 Z" fill="url(#mockupToastGrad)"/>
+                    <path d="M78 55 Q90 62 102 55" stroke="#c4956a" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <path d="M80 66 Q95 73 110 66" stroke="#c4956a" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <rect x="45" y="82" width="110" height="72" rx="10" fill="url(#mockupToasterGrad)" stroke="#c4956a" stroke-width="3"/>
+                    <rect x="52" y="82" width="96" height="6" rx="3" fill="#a07850"/>
+                    <path d="M125 92 L125 130 L133 120 L141 130 L141 92 Z" fill="#8b5a2b" stroke="#6b4423" stroke-width="2"/>
+                  </svg>
+                  <div class="popup-brand-text">
+                    <span class="popup-brand-name">TOASTMARK</span>
+                    <span class="popup-brand-desc">温暖的网页收藏助手</span>
                   </div>
                 </div>
+                <div class="popup-nav">
+                  <div class="popup-nav-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/>
+                    </svg>
+                  </div>
+                  <div class="popup-nav-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.59c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.127c-.332.183-.582.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.59c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.127.332-.183.582-.495.644-.869l.214-1.281Z"/>
+                      <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Popup Content -->
+              <div class="popup-content">
+                <!-- Screenshot Card -->
+                <div class="popup-card popup-screenshot">
+                  <div style="height: 100px; background: linear-gradient(135deg, #e8e4e0 0%, #f5f3f0 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--text-muted)" stroke-width="1.5" opacity="0.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <path d="M21 15l-5-5L5 21"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Page Info Card -->
+                <div class="popup-card">
+                  <div class="popup-section-title">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+                    </svg>
+                    网页元数据
+                  </div>
+                  <div class="popup-page-title">ToastMark - 智能网页助手</div>
+                  <div class="popup-url-tag">toastmark.app</div>
+                  <div class="popup-page-desc">一键收集页面信息、AI生成摘要、高清截图...</div>
+                </div>
+
+                <!-- AI Summary Card -->
+                <div class="popup-card popup-ai-card">
+                  <div class="popup-section-header">
+                    <div class="popup-section-title">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/>
+                      </svg>
+                      AI 智能洞察
+                    </div>
+                    <span class="popup-category-badge">工具</span>
+                  </div>
+                  <div class="popup-ai-summary">
+                    ToastMark 是一款智能网页收藏助手，支持一键提取页面信息、AI生成摘要和高清截图...<span class="typing-cursor"></span>
+                  </div>
+                </div>
+
+                <!-- Action Button -->
+                <button class="popup-action-btn">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"/>
+                  </svg>
+                  存入收藏
+                </button>
               </div>
             </div>
           </div>
@@ -2115,28 +2297,49 @@
         </div>
 
         <div class="ai-visual fade-in">
+          <!-- Floating Toast Icon -->
           <div class="ai-float ai-float-1">
-            <svg viewBox="0 0 24 24" fill="#10a37f">
-              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+            <svg viewBox="35 20 145 145" width="32" height="32">
+              <path d="M55 45 C55 32, 72 25, 100 25 C128 25, 145 32, 145 45 L145 85 L55 85 Z" fill="#d4a574"/>
+              <rect x="45" y="82" width="110" height="72" rx="10" fill="#f5c9a0"/>
+              <path d="M125 92 L125 120 L133 112 L141 120 L141 92 Z" fill="#8b5a2b"/>
             </svg>
           </div>
+          <!-- Floating Bookmark Icon -->
           <div class="ai-float ai-float-2">
-            <svg viewBox="0 0 24 24" fill="#f59e0b">
-              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24A2.5 2.5 0 0 1 9.5 2z"/>
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#8b5a2b" stroke-width="2">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
             </svg>
           </div>
 
           <div class="ai-demo-card">
             <div class="ai-demo-header">
-              <div class="ai-demo-avatar">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="3"/>
-                  <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83"/>
+              <div class="ai-demo-avatar" style="background: var(--primary-light); padding: 6px;">
+                <!-- ToastMark Logo in AI Demo -->
+                <svg viewBox="38 18 140 150" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="aiDemoToast" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#f5e6d3"/>
+                      <stop offset="100%" style="stop-color:#e8d4bc"/>
+                    </linearGradient>
+                    <linearGradient id="aiDemoCrust" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#d4a574"/>
+                      <stop offset="100%" style="stop-color:#c4956a"/>
+                    </linearGradient>
+                    <linearGradient id="aiDemoToaster" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style="stop-color:#f5c9a0"/>
+                      <stop offset="100%" style="stop-color:#e8b88a"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M55 45 C55 32, 72 25, 100 25 C128 25, 145 32, 145 45 L145 85 L55 85 Z" fill="url(#aiDemoCrust)" stroke="#8b6914" stroke-width="2"/>
+                  <path d="M63 50 C63 40, 78 33, 100 33 C122 33, 137 40, 137 50 L137 85 L63 85 Z" fill="url(#aiDemoToast)"/>
+                  <rect x="45" y="82" width="110" height="72" rx="10" fill="url(#aiDemoToaster)" stroke="#c4956a" stroke-width="2"/>
+                  <path d="M125 92 L125 130 L133 120 L141 130 L141 92 Z" fill="#8b5a2b"/>
                 </svg>
               </div>
               <div class="ai-demo-info">
-                <h4>AI 摘要助手</h4>
-                <p>正在分析网页内容...</p>
+                <h4>ToastMark AI</h4>
+                <p>正在智能分析网页...</p>
               </div>
             </div>
             <div class="ai-demo-content">
@@ -2322,6 +2525,14 @@
   <section class="cta">
     <div class="container">
       <div class="cta-container fade-in">
+        <!-- Decorative Logo -->
+        <div class="cta-logo-decor">
+          <svg viewBox="35 20 145 145" xmlns="http://www.w3.org/2000/svg">
+            <path d="M55 45 C55 32, 72 25, 100 25 C128 25, 145 32, 145 45 L145 85 L55 85 Z" fill="rgba(255,255,255,0.15)"/>
+            <rect x="45" y="82" width="110" height="72" rx="10" fill="rgba(255,255,255,0.1)"/>
+            <path d="M125 92 L125 130 L133 120 L141 130 L141 92 Z" fill="rgba(255,255,255,0.2)"/>
+          </svg>
+        </div>
         <div class="cta-content">
           <h2>准备好提升效率了吗？</h2>
           <p>免费安装 ToastMark，让网页收藏变得轻松愉快</p>
