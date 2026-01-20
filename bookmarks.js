@@ -679,6 +679,9 @@ function renderSidebarNav() {
   bindNavEvents();
   bindToggleEvents();
   initDragAndDrop();
+
+  // 同步更新 Header 分类标签
+  renderHeaderCategories();
 }
 
 // 绑定展开/折叠事件
@@ -876,19 +879,25 @@ function bindNavEvents() {
 // 更新内容标题
 function updateContentTitle() {
   const titleEl = document.getElementById('currentCategoryTitle');
-  if (!titleEl) return;
-
-  if (currentCategory === 'all') {
-    titleEl.textContent = '全部收藏';
-  } else if (currentCategory === 'starred') {
-    titleEl.textContent = '⭐ 特别关注';
-  } else if (currentCategory === 'recent') {
-    titleEl.textContent = '🕒 最近更新';
-  } else {
-    const cat = findCategoryById(currentCategory);
-    if (cat) {
-      titleEl.textContent = `${cat.icon || '📁'} ${cat.name}`;
+  if (titleEl) {
+    if (currentCategory === 'all') {
+      titleEl.textContent = '我的收藏';
+    } else if (currentCategory === 'starred') {
+      titleEl.textContent = '特别关注';
+    } else if (currentCategory === 'recent') {
+      titleEl.textContent = '最近更新';
+    } else {
+      const cat = findCategoryById(currentCategory);
+      titleEl.textContent = cat ? cat.name : '我的收藏';
     }
+  }
+
+  // 同步更新 header 分类标签激活状态
+  const headerCats = document.getElementById('headerCategories');
+  if (headerCats) {
+    headerCats.querySelectorAll('.category-filter-tag').forEach(tag => {
+      tag.classList.toggle('active', tag.dataset.category === currentCategory);
+    });
   }
 }
 
@@ -1591,8 +1600,56 @@ function updateStats() {
   const totalEl = document.getElementById('totalCount');
   const filteredEl = document.getElementById('filteredCount');
   if (totalEl) totalEl.textContent = allBookmarks.length;
-  if (filteredEl) filteredEl.textContent = `${filteredBookmarks.length} 条结果`;
+  if (filteredEl) filteredEl.textContent = `${filteredBookmarks.length} 条`;
 }
+
+// 渲染 Header 分类标签
+function renderHeaderCategories() {
+  const container = document.getElementById('headerCategories');
+  if (!container) return;
+
+  // 获取有书签的分类（前8个）
+  const categoriesWithCount = categories
+    .map(cat => ({
+      id: cat.id,
+      name: cat.name,
+      count: countBookmarksInCategory(cat.id)
+    }))
+    .filter(c => c.count > 0)
+    .slice(0, 7);
+
+  let html = `<span class="category-filter-tag ${currentCategory === 'all' ? 'active' : ''}" data-category="all">全部</span>`;
+
+  categoriesWithCount.forEach(cat => {
+    html += `<span class="category-filter-tag ${currentCategory === cat.id ? 'active' : ''}" data-category="${cat.id}">${cat.name}</span>`;
+  });
+
+  container.innerHTML = html;
+
+  // 绑定点击事件
+  container.querySelectorAll('.category-filter-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      const category = tag.dataset.category;
+      currentCategory = category;
+
+      // 更新左侧导航激活状态
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.category === category);
+      });
+
+      // 更新 header 标签激活状态
+      container.querySelectorAll('.category-filter-tag').forEach(t => {
+        t.classList.toggle('active', t.dataset.category === category);
+      });
+
+      // 更新标题
+      updateContentTitle();
+
+      filterBookmarks();
+    });
+  });
+}
+
 
 // 渲染书签
 function renderBookmarks() {
