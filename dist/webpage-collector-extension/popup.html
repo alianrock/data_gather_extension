@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>网页收集助手</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <title>ToastMark 助手</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@700&family=Space+Grotesk:wght@700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
     body {
@@ -24,7 +27,7 @@
       justify-content: space-between;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: var(--z-sticky, 20);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
@@ -41,7 +44,7 @@
       gap: 6px;
       padding: 8px 12px;
       border-radius: var(--radius-sm);
-      color: var(--text-muted);
+      color: var(--text-primary);
       text-decoration: none;
       font-size: 13px;
       font-weight: 600;
@@ -82,7 +85,7 @@
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      background: linear-gradient(rgba(255,255,255,0.2), transparent);
+      background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
     }
 
     .brand-text h1 {
@@ -92,13 +95,14 @@
       line-height: 1;
       letter-spacing: -0.03em;
       margin-bottom: 2px;
+      font-family: var(--font-brand);
     }
 
     .brand-text p {
       font-size: 11px;
-      color: var(--text-muted);
+      color: var(--text-primary);
       font-weight: 500;
-      opacity: 0.7;
+      opacity: 0.8;
     }
 
     .main-container {
@@ -118,9 +122,20 @@
       font-weight: 500;
     }
 
-    .status-msg.info { background: var(--primary-light); color: var(--primary); }
-    .status-msg.success { background: #ecfdf5; color: #059669; }
-    .status-msg.error { background: #fef2f2; color: #dc2626; }
+    .status-msg.info {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .status-msg.success {
+      background: #ecfdf5;
+      color: #059669;
+    }
+
+    .status-msg.error {
+      background: #fef2f2;
+      color: #dc2626;
+    }
 
     .summary-content {
       max-height: 300px;
@@ -181,13 +196,25 @@
     }
 
     @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
     }
 
     /* 通用loading spinner */
@@ -254,7 +281,7 @@
       inset: 0;
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(4px);
-      z-index: 1000;
+      z-index: var(--z-modal, 50);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -282,13 +309,25 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     /* 分类选项按钮 */
@@ -311,8 +350,7 @@
     .category-option:hover {
       border-color: var(--primary);
       background: var(--primary-light);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
+      box-shadow: var(--shadow-md);
     }
 
     .category-option.active {
@@ -352,7 +390,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
+      z-index: var(--z-tooltip, 70);
       opacity: 1;
       transition: opacity 0.3s ease;
     }
@@ -363,35 +401,39 @@
     }
   </style>
 </head>
+
 <body>
   <!-- 初始加载动画 -->
   <div id="popupLoading" class="popup-loading">
-    <div class="loading-spinner loading-spinner-lg" style="border-color: var(--primary); border-top-color: transparent;"></div>
+    <div class="loading-spinner loading-spinner-lg"
+      style="border-color: var(--primary); border-top-color: transparent;"></div>
     <p style="margin-top: 16px; font-size: 13px; font-weight: 600; color: var(--text-main);">加载中...</p>
   </div>
 
   <div class="app-header">
     <div class="brand">
-      <div class="logo-box">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-        </svg>
+      <div class="logo-box" style="background: transparent; box-shadow: none;">
+        <img src="icons/logo-animated-bold.svg" alt="ToastMark" style="width: 38px; height: 38px;">
       </div>
       <div class="brand-text">
-        <h1>Web Collector</h1>
+        <h1>ToastMark</h1>
         <p>每一份灵感触手可及</p>
       </div>
     </div>
     <div class="header-nav">
       <a href="#" id="bookmarksLink" class="header-nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18c-2.305 0-4.408.867-6 2.292m0-14.25v14.25" />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          style="width: 18px; height: 18px;">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18c-2.305 0-4.408.867-6 2.292m0-14.25v14.25" />
         </svg>
         <span>我的库</span>
       </a>
       <a href="#" id="settingsLink" class="header-nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.59c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.127c-.332.183-.582.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.59c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.127.332-.183.582-.495.644-.869l.214-1.281Z" />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          style="width: 18px; height: 18px;">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.59c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.127c-.332.183-.582.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.59c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.127.332-.183.582-.495.644-.869l.214-1.281Z" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
         </svg>
         <span>设置</span>
@@ -405,8 +447,10 @@
     <!-- 初始触发按钮 -->
     <div id="collectArea" class="animate-fade-in hidden">
       <button id="collectBtn" class="btn btn-primary">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px; margin-right: 8px;">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          style="width: 20px; height: 20px; margin-right: 8px;">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
         </svg>
         <span>智能提取网页内容</span>
       </button>
@@ -414,15 +458,22 @@
 
     <!-- 截图预览 -->
     <div id="screenshotCard" class="card hidden animate-fade-in" style="padding: 6px;">
-      <img id="screenshotImg" src="" style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: block;">
+      <img id="screenshotImg" src=""
+        style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: block;">
     </div>
 
     <!-- 网页信息卡片 -->
     <div id="pageInfo" class="card hidden animate-fade-in">
       <div class="section-header">
-        <h3 class="section-title">📄 网页元数据</h3>
+        <h3 class="section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 14px; height: 14px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+          </svg>
+          网页元数据
+        </h3>
       </div>
-      <div style="font-size: 14px; font-weight: 700; color: var(--text-main); line-height: 1.4; margin-bottom: 4px;" id="pageTitle"></div>
+      <div style="font-size: 14px; font-weight: 700; color: var(--text-main); line-height: 1.4; margin-bottom: 4px;"
+        id="pageTitle"></div>
       <div id="pageUrl" class="url-tag"></div>
       <div style="font-size: 12.5px; color: var(--text-muted); line-height: 1.6;" id="pageDesc"></div>
     </div>
@@ -436,12 +487,19 @@
     <!-- AI 摘要卡片 -->
     <div id="summaryCard" class="card hidden animate-fade-in">
       <div class="section-header">
-        <h3 class="section-title">🤖 AI 智能洞察</h3>
+        <h3 class="section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 14px; height: 14px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+          </svg>
+          AI 智能洞察
+        </h3>
         <div style="display: flex; align-items: center; gap: 6px;">
           <span id="pageCategory" class="badge badge-primary" style="cursor: pointer;" title="点击修改分类">其他</span>
           <button id="editCategoryBtn" class="btn-icon-small" title="修改分类">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" style="width: 14px; height: 14px;">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
             </svg>
           </button>
         </div>
@@ -452,27 +510,34 @@
     <!-- 操作区 -->
     <div id="actionArea" class="hidden animate-fade-in">
       <div class="action-grid">
-        <button id="bookmarkBtn" class="btn btn-primary" style="grid-column: span 2; background: var(--danger); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15); padding: 14px 20px; font-size: 16px; font-weight: 700;">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px; margin-right: 6px;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+        <button id="bookmarkBtn" class="btn btn-primary"
+          style="grid-column: span 2; background: var(--danger); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15); padding: 14px 20px; font-size: 16px; font-weight: 700;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" style="width: 20px; height: 20px; margin-right: 6px;">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
           </svg>
           存入收藏
         </button>
       </div>
-      
+
       <div style="margin-top: 10px;">
         <button id="generateCardBtn" class="btn btn-card">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px; margin-right: 4px;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" style="width: 18px; height: 18px; margin-right: 4px;">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
           </svg>
           生成分享卡片
         </button>
       </div>
-      
+
       <div style="margin-top: 10px;">
         <button id="sendDataBtn" class="btn btn-api">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px; margin-right: 4px;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" style="width: 18px; height: 18px; margin-right: 4px;">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
           </svg>
           发送至 API
         </button>
@@ -482,7 +547,12 @@
 
       <!-- 分享区 -->
       <div id="shareSection" class="hidden">
-        <h3 class="section-title" style="margin-bottom: 10px;">📢 快速分享</h3>
+        <h3 class="section-title" style="margin-bottom: 10px;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 14px; height: 14px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+          </svg>
+          快速分享
+        </h3>
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
           <button id="shareTwitterBtn" class="btn btn-share-twitter" style="padding: 8px;">𝕏</button>
           <button id="shareWechatBtn" class="btn btn-share-wechat" style="padding: 8px;">微信</button>
@@ -494,13 +564,22 @@
     <!-- 卡片预览 -->
     <div id="cardPreviewSection" class="card hidden animate-fade-in">
       <div class="section-header">
-        <h3 class="section-title">✨ 卡片预览</h3>
+        <h3 class="section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 14px; height: 14px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          </svg>
+          卡片预览
+        </h3>
       </div>
 
       <!-- 风格选择区（生成后显示） -->
       <div id="styleSelectorArea" class="hidden" style="margin-bottom: 16px;">
         <div id="cardStyleSelector" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
-          <button class="style-btn active" data-style="modern" title="现代玻璃">
+          <button class="style-btn active" data-style="toast" title="焦糖吐司">
+            <div class="style-preview" style="background: linear-gradient(135deg, #f5e6d3 0%, #d4a574 100%);"></div>
+            <span>吐司</span>
+          </button>
+          <button class="style-btn" data-style="modern" title="现代玻璃">
             <div class="style-preview modern"></div>
             <span>现代</span>
           </button>
@@ -520,11 +599,16 @@
             <div class="style-preview cyber"></div>
             <span>赛博</span>
           </button>
+          <button class="style-btn" data-style="claude" title="Claude风格">
+            <div class="style-preview" style="background: #f0eee6; border: 1px solid #d1d1cd;"></div>
+            <span>Claude</span>
+          </button>
         </div>
       </div>
 
       <canvas id="cardCanvas" style="display: none;"></canvas>
-      <img id="cardPreviewImg" src="" style="width: 100%; border-radius: var(--radius-md); margin-bottom: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-md);">
+      <img id="cardPreviewImg" src=""
+        style="width: 100%; border-radius: var(--radius-md); margin-bottom: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow-md);">
       <div style="display: flex; gap: 8px;">
         <button id="downloadCardBtn" class="btn btn-download" style="flex: 1;">下载</button>
         <button id="copyCardBtn" class="btn btn-copy" style="flex: 1;">复制</button>
@@ -543,8 +627,17 @@
   <div id="categoryModal" class="modal-overlay" style="display: none;">
     <div class="modal-content" style="width: 340px; max-width: 90%;">
       <div class="modal-header">
-        <h3 style="font-size: 14px; font-weight: 700; color: var(--text-main);">📂 选择分类</h3>
-        <button id="closeCategoryModal" class="btn-icon-small">✕</button>
+        <h3 style="font-size: 14px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+          </svg>
+          选择分类
+        </h3>
+        <button id="closeCategoryModal" class="btn-icon-small" aria-label="关闭">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
       <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
         <div id="categoryList" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
@@ -558,22 +651,34 @@
   <div id="addCategoryModal" class="modal-overlay" style="display: none;">
     <div class="modal-content" style="width: 320px; max-width: 90%;">
       <div class="modal-header">
-        <h3 style="font-size: 14px; font-weight: 700; color: var(--text-main);">➕ 添加新分类</h3>
-        <button id="closeAddCategoryModal" class="btn-icon-small">✕</button>
+        <h3 style="font-size: 14px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          添加新分类
+        </h3>
+        <button id="closeAddCategoryModal" class="btn-icon-small" aria-label="关闭">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
       <div class="modal-body">
         <div style="margin-bottom: 16px;">
-          <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 6px;">分类名称</label>
-          <input type="text" id="newCategoryName" placeholder="例如：工作资料" 
-                 style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 14px;">
+          <label
+            style="display: block; font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 6px;">分类名称</label>
+          <input type="text" id="newCategoryName" placeholder="例如：工作资料"
+            style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 14px;">
         </div>
         <div style="margin-bottom: 16px;">
-          <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 6px;">分类图标（emoji）</label>
+          <label
+            style="display: block; font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 6px;">分类图标（emoji）</label>
           <input type="text" id="newCategoryIcon" placeholder="📁" maxlength="2"
-                 style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 24px; text-align: center;">
+            style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 24px; text-align: center;">
         </div>
         <div style="display: flex; gap: 8px;">
-          <button id="cancelAddCategory" class="btn" style="flex: 1; background: var(--bg-main); color: var(--text-muted); border: 1px solid var(--border-color);">取消</button>
+          <button id="cancelAddCategory" class="btn"
+            style="flex: 1; background: var(--bg-main); color: var(--text-muted); border: 1px solid var(--border-color);">取消</button>
           <button id="confirmAddCategory" class="btn btn-primary" style="flex: 1;">确定</button>
         </div>
       </div>
@@ -584,4 +689,5 @@
   <script src="turso.js"></script>
   <script src="popup.js"></script>
 </body>
+
 </html>

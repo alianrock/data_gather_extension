@@ -420,6 +420,29 @@ body.theme-clay {
   --btn-share-link: #f87171;
 }
 
+/* z-index scale */
+:root {
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-tooltip: 70;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* 基础重置 */
 * {
   margin: 0;
@@ -459,7 +482,6 @@ h4 {
 }
 
 .card:hover {
-  transform: translateY(-4px);
   box-shadow: var(--shadow-xl);
 }
 
@@ -497,6 +519,17 @@ h4 {
 
 .btn-primary:active {
   transform: translateY(0);
+}
+
+/* Focus states for accessibility */
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.btn-primary:focus-visible {
+  outline-color: var(--text-on-primary);
+  box-shadow: 0 0 0 4px var(--primary-light);
   filter: brightness(0.95);
 }
 
