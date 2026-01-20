@@ -2081,24 +2081,24 @@ function createBookmarkCard(bookmark) {
   // 获取网站 favicon
   const faviconUrl = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=64` : '';
 
+  // 生成缩略图内容
+  let thumbContent = '';
+  if (screenshot) {
+    thumbContent = `<img src="${screenshot}" alt="${escapeHtml(title)}" loading="lazy">`;
+  } else if (faviconUrl) {
+    thumbContent = `<img src="${faviconUrl}" alt="${escapeHtml(domain)}" class="favicon">`;
+  } else {
+    thumbContent = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <circle cx="8.5" cy="8.5" r="1.5"/>
+      <path d="M21 15l-5-5L5 21"/>
+    </svg>`;
+  }
+
   return `
     <article class="bookmark-card${isNew ? ' bookmark-new' : ''}">
       <div class="card-thumb" style="background: ${thumbBg};">
-        ${screenshot
-          ? `<img src="${screenshot}" alt="${escapeHtml(title)}" loading="lazy">`
-          : (faviconUrl
-              ? `<img src="${faviconUrl}" alt="${escapeHtml(domain)}" class="favicon" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:none;">
-                   <rect x="3" y="3" width="18" height="18" rx="2"/>
-                   <circle cx="8.5" cy="8.5" r="1.5"/>
-                   <path d="M21 15l-5-5L5 21"/>
-                 </svg>`
-              : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                   <rect x="3" y="3" width="18" height="18" rx="2"/>
-                   <circle cx="8.5" cy="8.5" r="1.5"/>
-                   <path d="M21 15l-5-5L5 21"/>
-                 </svg>`)
-        }
+        ${thumbContent}
       </div>
       <div class="card-info">
         <h3 class="card-title" title="${escapeHtml(title)}">${escapeHtml(title)}</h3>
