@@ -27,6 +27,7 @@ let categories = [];
 let currentView = 'grid';
 let currentSort = 'newest';
 let selectedTags = new Set();
+let isFirstRender = true;
 
 // 更新加载进度
 function updateLoadingProgress(message) {
@@ -1622,11 +1623,21 @@ function renderBookmarks() {
   } else {
     // 默认列表视图，grid-view 为网格视图
     const viewClass = currentView === 'grid' ? 'grid-view' : '';
+    const animateClass = isFirstRender ? 'animate-in' : '';
     container.innerHTML = `
-      <div class="bookmarks-grid ${viewClass}">
+      <div class="bookmarks-grid ${viewClass} ${animateClass}">
         ${filteredBookmarks.map(b => createBookmarkCard(b)).join('')}
       </div>
     `;
+
+    // 首次渲染后移除动画类
+    if (isFirstRender) {
+      isFirstRender = false;
+      setTimeout(() => {
+        const grid = container.querySelector('.bookmarks-grid');
+        if (grid) grid.classList.remove('animate-in');
+      }, 500);
+    }
   }
 
   // 绑定事件

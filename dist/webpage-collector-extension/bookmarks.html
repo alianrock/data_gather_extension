@@ -854,6 +854,29 @@
       margin-bottom: 12px;
     }
 
+    /* 动画效果 - 只在首次加载时触发 */
+    @keyframes slideInBookmark {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bookmarks-grid.animate-in .bookmark-card {
+      animation: slideInBookmark 0.25s ease forwards;
+    }
+
+    .bookmarks-grid.animate-in .bookmark-card:nth-child(1) { animation-delay: 0s; }
+    .bookmarks-grid.animate-in .bookmark-card:nth-child(2) { animation-delay: 0.03s; }
+    .bookmarks-grid.animate-in .bookmark-card:nth-child(3) { animation-delay: 0.06s; }
+    .bookmarks-grid.animate-in .bookmark-card:nth-child(4) { animation-delay: 0.09s; }
+    .bookmarks-grid.animate-in .bookmark-card:nth-child(5) { animation-delay: 0.12s; }
+    .bookmarks-grid.animate-in .bookmark-card:nth-child(6) { animation-delay: 0.15s; }
+
     /* 空状态 */
     .empty-state {
       padding: 80px 40px;
