@@ -317,14 +317,10 @@ function renderTagCloud() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 15);
 
-  // 标签颜色类 - 与列表卡片一致
-  const tagColors = ['tag-tool', 'tag-dev', 'tag-design', 'tag-read', 'tag-news', 'tag-video', 'tag-other'];
-  const getTagColor = (index) => tagColors[index % tagColors.length];
-
   headerTags.innerHTML = labelHtml + `
-    <span class="smart-tag tag-other ${selectedTags.size === 0 ? 'active' : ''}" id="allTagsBtn">全部</span>
-    ${sortedTags.map(([tag], index) => `
-      <span class="smart-tag ${getTagColor(index)} ${selectedTags.has(tag) ? 'active' : ''}" data-tag="${tag}">#${tag}</span>
+    <span class="smart-tag ${selectedTags.size === 0 ? 'active' : ''}" id="allTagsBtn">全部</span>
+    ${sortedTags.map(([tag]) => `
+      <span class="smart-tag ${selectedTags.has(tag) ? 'active' : ''}" data-tag="${tag}">#${tag}</span>
     `).join('')}
   `;
 

@@ -461,9 +461,8 @@
       display: flex;
       gap: 8px;
       padding: 12px 24px;
-      background: var(--bg-card);
+      background: var(--bg-main);
       border-top: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
       overflow-x: auto;
       scrollbar-width: none;
       align-items: center;
@@ -495,33 +494,25 @@
       font-size: 12px;
       padding: 5px 12px;
       border-radius: 14px;
-      background: #f0ebe6;
-      color: #6b5c4d;
+      background: var(--bg-card);
+      color: var(--text-muted);
       white-space: nowrap;
-      border: none;
+      border: 1px solid var(--border-color);
       cursor: pointer;
       transition: all 0.15s ease;
       font-weight: 500;
     }
 
     .smart-tag:hover {
-      filter: brightness(0.95);
-      transform: translateY(-1px);
+      border-color: var(--primary-light);
+      color: var(--text-main);
     }
 
     .smart-tag.active {
       background: var(--primary);
       color: white;
+      border-color: var(--primary);
     }
-
-    /* 标签颜色 - 与列表卡片一致 */
-    .smart-tag.tag-tool { background: rgba(201, 136, 90, 0.2); color: #8b5a2b; }
-    .smart-tag.tag-dev { background: #fef3c7; color: #92400e; }
-    .smart-tag.tag-design { background: #dbeafe; color: #1e40af; }
-    .smart-tag.tag-read { background: #dcfce7; color: #166534; }
-    .smart-tag.tag-news { background: #fce7f3; color: #9d174d; }
-    .smart-tag.tag-video { background: #fee2e2; color: #991b1b; }
-    .smart-tag.tag-other { background: #f0ebe6; color: #6b5c4d; }
 
     .header-tags-empty {
       font-size: 12px;
