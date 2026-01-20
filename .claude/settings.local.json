@@ -5,7 +5,14 @@
       "Bash(zip:*)",
       "Bash(rm:*)",
       "Bash(grep:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(agent-browser open:*)",
+      "Bash(agent-browser screenshot:*)",
+      "Bash(agent-browser eval:*)",
+      "Bash(agent-browser scroll:*)",
+      "Bash(agent-browser hover:*)",
+      "Bash(agent-browser close:*)",
+      "Bash(pkill:*)"
     ]
   }
 }
