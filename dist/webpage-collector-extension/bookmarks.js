@@ -268,14 +268,13 @@ function openReader(bookmarkId) {
   document.body.style.overflow = 'hidden';
 }
 
-// 提取并渲染标签云
+// 提取并渲染智能标签到 Header
 function renderTagCloud() {
-  const tagCloud = document.getElementById('tagCloud');
-  const tagList = document.getElementById('tagList');
-  if (!tagCloud || !tagList) return;
+  const headerTags = document.getElementById('headerTags');
+  if (!headerTags) return;
 
   const tags = new Map(); // tag -> count
-  
+
   allBookmarks.forEach(b => {
     // 优先从 tags 字段读取，如果没有（旧数据）则从摘要中提取
     if (Array.isArray(b.tags) && b.tags.length > 0) {
@@ -297,26 +296,31 @@ function renderTagCloud() {
     }
   });
 
+  // 标签标签部分
+  const labelHtml = `
+    <span class="header-tags-label">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+      </svg>
+      智能标签
+    </span>
+  `;
+
   if (tags.size === 0) {
-    tagCloud.classList.add('hidden');
+    headerTags.innerHTML = labelHtml + `<span class="header-tags-empty">暂无标签</span>`;
     return;
   }
 
-  tagCloud.classList.remove('hidden');
-  
-  // 按频率排序并取前 20 个
+  // 按频率排序并取前 15 个
   const sortedTags = Array.from(tags.entries())
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 20);
+    .slice(0, 15);
 
-  tagList.innerHTML = `
-    <div class="tag-item ${selectedTags.size === 0 ? 'active' : ''}" id="allTagsBtn">
-      全部标签
-    </div>
-    ${sortedTags.map(([tag, count]) => `
-      <div class="tag-item ${selectedTags.has(tag) ? 'active' : ''}" data-tag="${tag}">
-        ${tag} <span style="opacity:0.5;font-size:10px;">${count}</span>
-      </div>
+  headerTags.innerHTML = labelHtml + `
+    <span class="smart-tag ${selectedTags.size === 0 ? 'active' : ''}" id="allTagsBtn">全部</span>
+    ${sortedTags.map(([tag]) => `
+      <span class="smart-tag ${selectedTags.has(tag) ? 'active' : ''}" data-tag="${tag}">#${tag}</span>
     `).join('')}
   `;
 
@@ -327,7 +331,7 @@ function renderTagCloud() {
     filterBookmarks();
   });
 
-  tagList.querySelectorAll('.tag-item[data-tag]').forEach(el => {
+  headerTags.querySelectorAll('.smart-tag[data-tag]').forEach(el => {
     el.addEventListener('click', () => {
       const tag = el.dataset.tag;
       if (selectedTags.has(tag)) {
@@ -679,9 +683,6 @@ function renderSidebarNav() {
   bindNavEvents();
   bindToggleEvents();
   initDragAndDrop();
-
-  // 同步更新 Header 分类标签
-  renderHeaderCategories();
 }
 
 // 绑定展开/折叠事件
@@ -890,14 +891,6 @@ function updateContentTitle() {
       const cat = findCategoryById(currentCategory);
       titleEl.textContent = cat ? cat.name : '我的收藏';
     }
-  }
-
-  // 同步更新 header 分类标签激活状态
-  const headerCats = document.getElementById('headerCategories');
-  if (headerCats) {
-    headerCats.querySelectorAll('.category-filter-tag').forEach(tag => {
-      tag.classList.toggle('active', tag.dataset.category === currentCategory);
-    });
   }
 }
 
@@ -1602,54 +1595,6 @@ function updateStats() {
   if (totalEl) totalEl.textContent = allBookmarks.length;
   if (filteredEl) filteredEl.textContent = `${filteredBookmarks.length} 条`;
 }
-
-// 渲染 Header 分类标签
-function renderHeaderCategories() {
-  const container = document.getElementById('headerCategories');
-  if (!container) return;
-
-  // 获取有书签的分类（前8个）
-  const categoriesWithCount = categories
-    .map(cat => ({
-      id: cat.id,
-      name: cat.name,
-      count: countBookmarksInCategory(cat.id)
-    }))
-    .filter(c => c.count > 0)
-    .slice(0, 7);
-
-  let html = `<span class="category-filter-tag ${currentCategory === 'all' ? 'active' : ''}" data-category="all">全部</span>`;
-
-  categoriesWithCount.forEach(cat => {
-    html += `<span class="category-filter-tag ${currentCategory === cat.id ? 'active' : ''}" data-category="${cat.id}">${cat.name}</span>`;
-  });
-
-  container.innerHTML = html;
-
-  // 绑定点击事件
-  container.querySelectorAll('.category-filter-tag').forEach(tag => {
-    tag.addEventListener('click', () => {
-      const category = tag.dataset.category;
-      currentCategory = category;
-
-      // 更新左侧导航激活状态
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.category === category);
-      });
-
-      // 更新 header 标签激活状态
-      container.querySelectorAll('.category-filter-tag').forEach(t => {
-        t.classList.toggle('active', t.dataset.category === category);
-      });
-
-      // 更新标题
-      updateContentTitle();
-
-      filterBookmarks();
-    });
-  });
-}
-
 
 // 渲染书签
 function renderBookmarks() {
