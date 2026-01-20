@@ -640,14 +640,18 @@
     /* Product Mockup - Warm Minimal */
     .hero-mockup {
       position: relative;
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
     }
 
     .mockup-container {
       position: relative;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
       background: var(--bg-card);
       border-radius: var(--radius-2xl);
+      padding: 24px;
       box-shadow: 0 20px 50px rgba(45, 41, 38, 0.15), 0 0 0 1px var(--border-color);
       transition: transform var(--transition-normal), box-shadow var(--transition-normal);
     }
@@ -670,6 +674,285 @@
 
     .mockup-container:hover::before {
       opacity: 1;
+    }
+
+    /* Connection Line between popup and bookmarks */
+    .mockup-connection {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px 0;
+    }
+
+    .connection-line {
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 1px;
+      position: relative;
+    }
+
+    .connection-line::before {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 4px solid transparent;
+      border-left: 6px solid var(--primary-light);
+    }
+
+    .connection-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--bg-main);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+      color: var(--primary);
+    }
+
+    .connection-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Bookmarks Panel Mockup */
+    .mockup-bookmarks {
+      background: var(--bg-main);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      width: 380px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .bookmarks-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .bookmarks-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bookmarks-title svg {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+    }
+
+    .bookmarks-title h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .bookmarks-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--bg-main);
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    .bookmarks-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .bookmarks-search svg {
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+    }
+
+    .bookmarks-search span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .bookmarks-categories {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      overflow-x: auto;
+    }
+
+    .category-tag {
+      font-size: 11px;
+      padding: 5px 12px;
+      border-radius: 16px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      white-space: nowrap;
+      border: 1px solid var(--border-color);
+      transition: all var(--transition-fast);
+    }
+
+    .category-tag.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .bookmarks-list {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .bookmark-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      transition: all var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .bookmark-item:hover {
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .bookmark-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #f0ebe6 0%, #e8e4df 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .bookmark-thumb svg {
+      width: 24px;
+      height: 24px;
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .bookmark-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .bookmark-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .bookmark-info h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bookmark-info p {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin: 0 0 6px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bookmark-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bookmark-category {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(201, 136, 90, 0.1);
+      color: var(--primary);
+    }
+
+    .bookmark-date {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .bookmark-item.bookmark-new {
+      border-color: var(--primary-light);
+      background: rgba(201, 136, 90, 0.03);
+      box-shadow: 0 0 0 2px rgba(201, 136, 90, 0.1);
+    }
+
+    .bookmark-new-badge {
+      color: var(--primary) !important;
+      font-weight: 600;
+    }
+
+    .bookmark-new-badge::before {
+      content: '✓ ';
+    }
+
+    @media (max-width: 900px) {
+      .mockup-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+      }
+
+      .mockup-connection {
+        flex-direction: row;
+        padding: 0 20px;
+      }
+
+      .connection-line {
+        width: 2px;
+        height: 30px;
+      }
+
+      .connection-line::before {
+        right: auto;
+        bottom: -4px;
+        top: auto;
+        transform: translateX(-50%);
+        left: 50%;
+        border: 4px solid transparent;
+        border-top: 6px solid var(--primary-light);
+        border-left: 4px solid transparent;
+      }
+
+      .mockup-popup,
+      .mockup-bookmarks {
+        width: 100%;
+        max-width: 340px;
+      }
     }
 
     /* Extension Popup Mockup - Matches actual product */
@@ -945,6 +1228,35 @@
       25% { transform: translateY(-8px) rotate(1deg); }
       50% { transform: translateY(-12px) rotate(-1deg); }
       75% { transform: translateY(-5px) rotate(0.5deg); }
+    }
+
+    @keyframes slideInBookmark {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .bookmark-item {
+      animation: slideInBookmark 0.4s ease forwards;
+    }
+
+    .bookmark-item:nth-child(1) { animation-delay: 0.1s; }
+    .bookmark-item:nth-child(2) { animation-delay: 0.2s; }
+    .bookmark-item:nth-child(3) { animation-delay: 0.3s; }
+    .bookmark-item:nth-child(4) { animation-delay: 0.4s; }
+
+    .connection-icon {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: var(--shadow-sm); }
+      50% { box-shadow: 0 0 0 6px rgba(201, 136, 90, 0.15); }
     }
 
     @media (max-width: 900px) {
@@ -1980,7 +2292,7 @@
 
           <div class="mockup-container">
             <!-- Extension Popup Mockup -->
-            <div class="mockup-popup">
+            <div class="mockup-popup mockup-popup-left">
               <!-- Popup Header -->
               <div class="popup-header">
                 <div class="popup-brand">
@@ -2076,6 +2388,122 @@
                   </svg>
                   存入收藏
                 </button>
+              </div>
+            </div>
+
+            <!-- Connection Arrow -->
+            <div class="mockup-connection">
+              <div class="connection-line"></div>
+              <div class="connection-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div class="connection-line"></div>
+            </div>
+
+            <!-- Bookmarks Library Mockup -->
+            <div class="mockup-bookmarks">
+              <!-- Bookmarks Header -->
+              <div class="bookmarks-header">
+                <div class="bookmarks-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/>
+                  </svg>
+                  <h3>我的收藏</h3>
+                </div>
+                <span class="bookmarks-count">128 条</span>
+              </div>
+
+              <!-- Search Bar -->
+              <div class="bookmarks-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35"/>
+                </svg>
+                <span>搜索收藏...</span>
+              </div>
+
+              <!-- Categories -->
+              <div class="bookmarks-categories">
+                <span class="category-tag active">全部</span>
+                <span class="category-tag">工具</span>
+                <span class="category-tag">设计</span>
+                <span class="category-tag">开发</span>
+                <span class="category-tag">阅读</span>
+              </div>
+
+              <!-- Bookmarks List -->
+              <div class="bookmarks-list">
+                <!-- Bookmark Item 1 - Just added (highlighted) -->
+                <div class="bookmark-item bookmark-new">
+                  <div class="bookmark-thumb" style="background: linear-gradient(135deg, rgba(201, 136, 90, 0.15) 0%, rgba(212, 165, 116, 0.2) 100%);">
+                    <svg class="popup-logo" viewBox="38 18 140 150" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M55 45 C55 32, 72 25, 100 25 C128 25, 145 32, 145 45 L145 85 L55 85 Z" fill="#d4a574"/>
+                      <rect x="45" y="82" width="110" height="72" rx="10" fill="#f5c9a0"/>
+                      <path d="M125 92 L125 130 L133 120 L141 130 L141 92 Z" fill="#8b5a2b"/>
+                    </svg>
+                  </div>
+                  <div class="bookmark-info">
+                    <h4>ToastMark - 智能网页助手</h4>
+                    <p>一键收集页面信息、AI生成摘要...</p>
+                    <div class="bookmark-meta">
+                      <span class="bookmark-category">工具</span>
+                      <span class="bookmark-date bookmark-new-badge">刚刚添加</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bookmark Item 2 -->
+                <div class="bookmark-item">
+                  <div class="bookmark-thumb" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="1.5">
+                      <path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/>
+                    </svg>
+                  </div>
+                  <div class="bookmark-info">
+                    <h4>Claude AI 官方文档</h4>
+                    <p>Anthropic 最新 AI 模型使用指南</p>
+                    <div class="bookmark-meta">
+                      <span class="bookmark-category">开发</span>
+                      <span class="bookmark-date">2小时前</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bookmark Item 3 -->
+                <div class="bookmark-item">
+                  <div class="bookmark-thumb" style="background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.5">
+                      <path d="M4 16l4.586-4.586a2 2 0 0 1 2.828 0L16 16m-2-2 1.586-1.586a2 2 0 0 1 2.828 0L20 14m-6-6h.01M6 20h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z"/>
+                    </svg>
+                  </div>
+                  <div class="bookmark-info">
+                    <h4>Figma 设计系统模板</h4>
+                    <p>免费 UI 组件库和设计规范</p>
+                    <div class="bookmark-meta">
+                      <span class="bookmark-category">设计</span>
+                      <span class="bookmark-date">昨天</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bookmark Item 4 -->
+                <div class="bookmark-item">
+                  <div class="bookmark-thumb" style="background: linear-gradient(135deg, #dcfce7 0%, #86efac 100%);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.5">
+                      <path d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292"/>
+                    </svg>
+                  </div>
+                  <div class="bookmark-info">
+                    <h4>阮一峰的网络日志</h4>
+                    <p>科技与互联网周刊分享</p>
+                    <div class="bookmark-meta">
+                      <span class="bookmark-category">阅读</span>
+                      <span class="bookmark-date">3天前</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
