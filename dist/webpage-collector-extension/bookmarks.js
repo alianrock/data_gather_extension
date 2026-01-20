@@ -27,7 +27,6 @@ let categories = [];
 let currentView = 'grid';
 let currentSort = 'newest';
 let selectedTags = new Set();
-let isFirstRender = true;
 
 // 更新加载进度
 function updateLoadingProgress(message) {
@@ -1637,9 +1636,8 @@ function renderBookmarks() {
     return;
   } else {
     const viewClass = currentView === 'grid' ? 'grid-view' : '';
-    const animateClass = isFirstRender ? 'animate-in' : '';
     newContent = `
-      <div class="bookmarks-grid ${viewClass} ${animateClass}">
+      <div class="bookmarks-grid ${viewClass}">
         ${filteredBookmarks.map(b => createBookmarkCard(b)).join('')}
       </div>
     `;
@@ -1648,16 +1646,6 @@ function renderBookmarks() {
   // 直接更新内容
   container.innerHTML = newContent;
   bindBookmarkEvents();
-
-  // 首次渲染后移除动画类
-  if (isFirstRender) {
-    isFirstRender = false;
-    setTimeout(() => {
-      const grid = container.querySelector('.bookmarks-grid');
-      if (grid) grid.classList.remove('animate-in');
-    }, 400);
-  }
-
 }
 
 // 绑定书签事件
