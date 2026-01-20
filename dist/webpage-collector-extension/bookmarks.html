@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的库 - Web Collector</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+  <title>我的库 - ToastMark</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
+    /* ===== Bookmarks Page - Using CSS Variables for Theming ===== */
+
     * {
       margin: 0;
       padding: 0;
@@ -14,224 +17,151 @@
     }
 
     body {
-      background-color: var(--bg-main);
+      background: var(--bg-main);
       height: 100vh;
       overflow: hidden;
-      font-family: var(--font-main);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif;
       color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* 左右布局容器 */
+    /* 布局 */
     .app-layout {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 240px 1fr;
       height: 100vh;
-      background: var(--bg-main);
     }
 
-    /* 左侧分类导航 */
+    /* 侧边栏 */
     .sidebar {
       background: var(--bg-card);
       border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       height: 100vh;
-      overflow: hidden;
-      backdrop-filter: var(--backdrop);
-      z-index: 10;
-      width: 260px;
     }
 
     .sidebar-brand {
-      padding: 32px 24px 24px;
-    }
-
-    .sidebar-brand h1 {
-      font-size: 20px;
-      font-weight: 850;
-      color: var(--text-main);
+      padding: 20px 16px 16px;
       display: flex;
       align-items: center;
       gap: 12px;
-      letter-spacing: -0.02em;
     }
 
-    .sidebar-brand p {
+    .sidebar-brand .logo-box {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand .logo-box img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .sidebar-brand .brand-text h1 {
+      font-family: 'Arial Rounded MT Bold', 'Nunito', Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--brand-color);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    .sidebar-brand .brand-text p {
       font-size: 11px;
       color: var(--text-muted);
-      margin-top: 8px;
-      font-weight: 600;
-      opacity: 0.6;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      margin-top: 3px;
+      letter-spacing: 0.01em;
     }
 
     .sidebar-stats {
       display: flex;
-      padding: 0 24px;
-      margin-bottom: 24px;
-      gap: 16px;
+      padding: 0 12px;
+      margin-bottom: 16px;
+      gap: 8px;
     }
 
     .mini-stat {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      background: transparent;
-      padding: 0;
-      text-align: left;
-      transition: var(--transition);
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      background: var(--bg-main);
+      border-radius: var(--radius-md);
     }
 
     .mini-stat-value {
       font-size: 20px;
-      font-weight: 850;
+      font-weight: 600;
       color: var(--text-main);
-      line-height: 1;
-      margin-bottom: 4px;
+      line-height: 1.2;
     }
 
     .mini-stat-label {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--text-muted);
-      text-transform: uppercase;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      opacity: 0.5;
+      margin-top: 2px;
     }
 
     .sidebar-nav {
       flex: 1;
       overflow-y: auto;
-      padding: 0 16px 20px;
+      padding: 0 12px 16px;
     }
 
     .sidebar-nav::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .sidebar-nav::-webkit-scrollbar-thumb {
-      background: transparent;
-      border-radius: 10px;
-    }
-
-    .sidebar-nav:hover::-webkit-scrollbar-thumb {
-      background: var(--border-color);
+      width: 0;
     }
 
     .nav-section {
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
 
     .nav-section-title {
-      font-size: 10px;
-      font-weight: 850;
+      font-size: 11px;
+      font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      padding: 12px 8px 8px;
-      opacity: 0.4;
+      letter-spacing: 0.04em;
+      padding: 8px 8px 6px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
     }
 
-    /* 分类导航项 */
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 9px 12px;
-      border-radius: var(--radius-md);
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.15s ease;
       margin-bottom: 2px;
-      font-size: 14px;
-      color: var(--text-muted);
-      font-weight: 600;
-      position: relative;
-    }
-
-    .nav-item[draggable="true"] {
-      cursor: move;
-    }
-
-    .nav-item.dragging {
-      opacity: 0.5;
-      transform: scale(0.98);
-      background: var(--primary-light);
-      border: 2px dashed var(--primary);
-    }
-
-    .nav-item.drag-over {
-      border-top: 3px solid var(--primary);
-      margin-top: 6px;
-      background: var(--primary-light);
-      animation: pulse-border 0.6s ease-in-out infinite;
-    }
-
-    @keyframes pulse-border {
-      0%, 100% { border-top-color: var(--primary); }
-      50% { border-top-color: var(--primary-hover); }
-    }
-
-    .drag-handle {
-      opacity: 0;
-      transition: var(--transition);
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      cursor: grab;
-      padding: 2px;
-    }
-
-    .drag-handle:active {
-      cursor: grabbing;
-    }
-
-    .nav-item:hover .drag-handle {
-      opacity: 1;
-      color: var(--primary);
-    }
-
-    .nav-item.dragging .drag-handle {
-      opacity: 1;
-      cursor: grabbing;
+      font-size: 13px;
+      color: var(--text-main);
+      font-weight: 400;
     }
 
     .nav-item:hover {
-      background: var(--primary-light);
-      color: var(--primary);
+      background: var(--bg-main);
     }
 
     .nav-item.active {
       background: var(--primary-light);
+      font-weight: 500;
       color: var(--primary);
-      box-shadow: none;
-    }
-
-    .nav-item.active::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 20%;
-      bottom: 20%;
-      width: 3px;
-      background: var(--primary);
-      border-radius: 0 4px 4px 0;
-    }
-
-    .nav-item.active .nav-count {
-      background: var(--primary);
-      color: white;
     }
 
     .nav-icon {
-      font-size: 16px;
-      width: 20px;
+      width: 18px;
       display: flex;
       justify-content: center;
-      opacity: 0.8;
+      opacity: 0.6;
+    }
+
+    .nav-item.active .nav-icon {
+      opacity: 1;
     }
 
     .nav-label {
@@ -242,67 +172,113 @@
     }
 
     .nav-count {
-      font-size: 10px;
-      background: var(--bg-main);
+      font-size: 11px;
       color: var(--text-muted);
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-weight: 800;
-      transition: var(--transition);
-    }
-
-    /* 子分类 */
-    .nav-children {
-      margin-left: 14px;
-      margin-bottom: 4px;
-      border-left: 1px solid var(--border-color);
-      padding-left: 12px;
-    }
-
-    .nav-children .nav-item {
-      font-size: 13px;
-      padding: 7px 10px;
       font-weight: 500;
     }
 
-    /* 添加分类按钮 */
+    /* 父分类（有子分类） */
+    .nav-item-parent {
+      position: relative;
+    }
+
+    .nav-item-parent > .nav-item {
+      padding-left: 6px;
+    }
+
+    /* 展开/折叠按钮 */
+    .nav-toggle {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--text-muted);
+      border-radius: 4px;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .nav-toggle:hover {
+      background: var(--bg-main);
+      color: var(--primary);
+    }
+
+    .nav-toggle svg {
+      width: 12px;
+      height: 12px;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-item-parent.expanded .nav-toggle svg {
+      transform: rotate(90deg);
+    }
+
+    /* 子分类容器 */
+    .nav-children {
+      margin-left: 18px;
+      padding-left: 10px;
+      border-left: 1px solid var(--border-color);
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.25s ease, opacity 0.2s ease, margin 0.2s ease;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .nav-item-parent.expanded .nav-children {
+      max-height: 500px;
+      opacity: 1;
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }
+
+    .nav-children .nav-item {
+      font-size: 12px;
+      padding: 6px 10px;
+      margin-left: 0;
+    }
+
+    .nav-children .nav-item .nav-icon {
+      font-size: 10px;
+      width: 14px;
+    }
+
     .add-nav-btn {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 12px;
-      border: 1px dashed var(--border-color);
+      padding: 8px 10px;
+      border: none;
       background: transparent;
-      border-radius: var(--radius-md);
+      border-radius: var(--radius-sm);
       cursor: pointer;
       color: var(--text-muted);
       font-size: 12px;
-      font-weight: 700;
       width: 100%;
-      margin-top: 8px;
-      transition: var(--transition);
+      margin-top: 4px;
+      transition: all 0.15s ease;
     }
 
     .add-nav-btn:hover {
-      border-color: var(--primary);
+      background: var(--bg-main);
       color: var(--primary);
-      background: var(--primary-light);
     }
 
     .sidebar-footer {
-      padding: 16px;
+      padding: 12px;
       border-top: 1px solid var(--border-color);
-      background: var(--bg-card);
     }
 
     .sync-status {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--text-muted);
-      margin-bottom: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      opacity: 0.5;
+      margin-bottom: 10px;
+      text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -314,162 +290,140 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: var(--success);
-      display: inline-block;
+      background: #6b9080;
     }
 
     .sync-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
     }
 
     .sync-btn {
       padding: 8px;
-      border: 1px solid var(--border-color);
+      border: none;
       background: var(--bg-main);
       border-radius: var(--radius-sm);
       font-size: 11px;
-      font-weight: 750;
+      font-weight: 500;
       cursor: pointer;
       color: var(--text-main);
-      transition: var(--transition);
+      transition: all 0.15s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
     }
 
     .sync-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
       background: var(--primary-light);
+      color: var(--primary);
     }
 
     .sync-btn-primary {
       grid-column: span 2;
-      background: var(--primary);
-      color: white;
-      border: none;
-      margin-top: 8px;
-      padding: 10px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: #ffffff;
+      margin-top: 6px;
     }
 
     .sync-btn-primary:hover {
-      background: var(--primary-hover);
-      color: white;
+      background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
     }
 
-    /* 右侧主内容区 */
+    /* 主内容区 */
     .main-content {
       display: flex;
       flex-direction: column;
       height: 100vh;
       overflow: hidden;
-      position: relative;
     }
 
     .content-header {
-      padding: 32px 40px;
+      padding: 20px 28px;
       background: var(--bg-card);
       border-bottom: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
-      backdrop-filter: var(--backdrop);
-      z-index: 5;
+      align-items: center;
     }
 
     .content-title {
-      font-size: 32px;
-      font-weight: 850;
+      font-size: 22px;
+      font-weight: 600;
       color: var(--text-main);
-      letter-spacing: -0.03em;
-      line-height: 1.1;
+      letter-spacing: -0.01em;
     }
 
     .content-title-sub {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
-      font-weight: 600;
-      margin-top: 8px;
-      display: block;
+      margin-top: 4px;
     }
 
     .header-actions {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
-      height: 40px;
-      flex: 1;
-      margin-left: 40px;
-      justify-content: flex-end;
     }
 
     .search-wrapper {
       position: relative;
-      height: 40px;
-      width: 320px;
-      transition: var(--transition);
+      width: 240px;
     }
 
     .search-box {
       width: 100%;
-      height: 100%;
-      padding: 0 16px 0 40px;
+      height: 36px;
+      padding: 0 12px 0 36px;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 13px;
       color: var(--text-main);
-      background: var(--bg-main) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z' /%3E%3C/svg%3E") 12px center / 18px no-repeat;
-      transition: var(--transition);
+      background: var(--bg-main) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%237a7067'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z' /%3E%3C/svg%3E") 10px center / 16px no-repeat;
+      transition: all 0.15s ease;
+    }
+
+    .search-box::placeholder {
+      color: var(--text-muted);
     }
 
     .search-box:focus {
       outline: none;
       border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
       background-color: var(--bg-card);
-      box-shadow: 0 0 0 4px var(--primary-light);
-    }
-
-    .search-wrapper:focus-within {
-      width: 420px;
     }
 
     .action-btn {
-      width: auto; /* 确保按钮宽度由内容决定 */
-      padding: 0 16px;
+      height: 36px;
+      padding: 0 14px;
       border: 1px solid var(--border-color);
       background: var(--bg-card);
       border-radius: var(--radius-md);
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
       color: var(--text-main);
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: var(--transition);
-      height: 40px;
-      white-space: nowrap;
+      gap: 6px;
+      transition: all 0.15s ease;
     }
 
-    /* 针对 select 元素的特殊处理 */
     select.action-btn {
       appearance: none;
-      padding-right: 32px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      width: 110px;
+      padding-right: 28px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%237a7067'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 10px center;
+      background-position: right 8px center;
       background-size: 14px;
     }
 
     .action-btn:hover {
       border-color: var(--primary);
       color: var(--primary);
-      background: var(--primary-light);
     }
 
     .view-controls {
@@ -477,332 +431,383 @@
       background: var(--bg-main);
       padding: 3px;
       border-radius: var(--radius-md);
-      border: 1px solid var(--border-color);
-      height: 40px;
-      align-items: center;
       gap: 2px;
     }
 
     .view-btn {
-      width: 32px;
-      height: 32px;
-      border: 1px solid transparent;
+      width: 30px;
+      height: 30px;
+      border: none;
       background: transparent;
       cursor: pointer;
-      border-radius: calc(var(--radius-md) - 3px);
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--text-muted);
-      transition: var(--transition);
+      transition: all 0.15s ease;
     }
 
     .view-btn:hover {
-      color: var(--primary);
+      color: var(--text-main);
     }
 
     .view-btn.active {
       background: var(--bg-card);
-      box-shadow: var(--shadow-sm);
       color: var(--primary);
-      border-color: var(--border-color);
+      box-shadow: var(--shadow-sm);
     }
 
     .content-body {
       flex: 1;
       overflow-y: auto;
-      padding: 40px;
-      scroll-behavior: smooth;
+      padding: 24px 28px;
     }
 
-    /* 书签网格 */
+    /* 书签网格 - Landing Page Mockup 风格 */
     .bookmarks-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 28px;
-      transition: var(--transition);
-    }
-
-    /* 列表视图模式 */
-    .bookmarks-grid.list-view {
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 12px;
     }
 
-    .bookmarks-grid.list-view .bookmark-card {
-      flex-direction: row;
-      height: 100px;
-      align-items: center;
-    }
-
-    .bookmarks-grid.list-view .card-image {
-      width: 140px;
-      height: 100%;
-      flex-shrink: 0;
-    }
-
-    .bookmarks-grid.list-view .card-content {
-      padding: 12px 24px;
-      flex-direction: row;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .bookmarks-grid.list-view .card-title {
-      flex: 1;
-      margin-bottom: 0;
-      -webkit-line-clamp: 1;
-      font-size: 15px;
-    }
-
-    .bookmarks-grid.list-view .card-summary,
-    .bookmarks-grid.list-view .card-url,
-    .bookmarks-grid.list-view .card-category {
-      display: none;
-    }
-
-    .bookmarks-grid.list-view .card-footer {
-      margin-top: 0;
-      padding-top: 0;
-      border-top: none;
-      width: auto;
+    .bookmarks-grid.grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 12px;
     }
 
     .bookmark-card {
+      display: flex;
+      gap: 14px;
+      padding: 14px;
       background: var(--bg-card);
       border-radius: var(--radius-lg);
       border: 1px solid var(--border-color);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: var(--transition);
-      backdrop-filter: var(--backdrop);
-      height: 100%;
+      transition: all 0.15s ease;
+      cursor: pointer;
     }
 
     .bookmark-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-lg);
-      border-color: var(--primary);
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
     }
 
-    .card-image {
-      height: 180px;
-      background: var(--primary-light);
+    /* 新添加状态 */
+    .bookmark-card.bookmark-new {
+      border-color: var(--primary-light);
+      background: rgba(201, 136, 90, 0.03);
+      box-shadow: 0 0 0 2px rgba(201, 136, 90, 0.1);
+    }
+
+    /* 缩略图 */
+    .card-thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #f0ebe6 0%, #e8e4df 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
       overflow: hidden;
-      position: relative;
     }
 
-    .card-image img {
+    .card-thumb svg {
+      width: 28px;
+      height: 28px;
+      color: var(--text-muted);
+      opacity: 0.4;
+    }
+
+    .card-thumb img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.5s ease;
     }
 
-    .bookmark-card:hover .card-image img {
-      transform: scale(1.05);
-    }
-
-    .card-category {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: var(--bg-card);
-      padding: 6px 14px;
-      border-radius: 100px;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--primary);
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      z-index: 2;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .card-category:hover {
-      background: var(--primary);
-      color: white;
-      transform: scale(1.05);
-    }
-
-    .card-content {
-      padding: 24px;
+    /* 内容区 */
+    .card-info {
       flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
     }
 
     .card-title {
-      font-size: 17px;
-      font-weight: 800;
+      font-size: 14px;
+      font-weight: 600;
       color: var(--text-main);
-      margin-bottom: 8px;
+      margin: 0 0 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.4;
+    }
+
+    .card-summary {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 0 0 8px 0;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      line-height: 1.4;
-      letter-spacing: -0.01em;
+      line-height: 1.5;
+      flex: 1;
     }
 
     .card-url {
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
       color: var(--primary);
-      margin-bottom: 16px;
       text-decoration: none;
-      display: inline-block;
-      opacity: 0.8;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
     }
 
     .card-url:hover {
-      opacity: 1;
       text-decoration: underline;
     }
 
-    .card-summary {
-      font-size: 14px;
-      color: var(--text-muted);
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      line-height: 1.6;
-      flex: 1;
-      margin-bottom: 12px;
+    /* 元信息栏 */
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
     }
 
-    /* 卡片标签区域 */
+    .card-category {
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: rgba(201, 136, 90, 0.1);
+      color: var(--primary);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .card-category:hover {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .card-date {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .card-date.new-badge {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .card-date.new-badge::before {
+      content: '✓ ';
+    }
+
+    /* 操作按钮 */
+    .card-actions {
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      margin-left: auto;
+    }
+
+    .bookmark-card:hover .card-actions {
+      opacity: 1;
+    }
+
+    .btn-icon {
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .btn-icon.delete:hover {
+      background: rgba(199, 90, 90, 0.1);
+      color: #c75a5a;
+    }
+
+    /* 标签 */
     .card-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 16px;
-      align-items: center;
+      gap: 4px;
+      margin-top: 6px;
     }
 
     .card-tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      background: var(--primary-light);
-      color: var(--primary);
+      padding: 2px 8px;
+      background: var(--bg-main);
+      color: var(--text-muted);
       border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      transition: var(--transition);
-      cursor: default;
+      font-size: 10px;
+      font-weight: 500;
+      transition: all 0.15s ease;
     }
 
     .card-tag:hover {
-      background: var(--primary);
-      color: white;
-      transform: scale(1.05);
+      background: var(--primary-light);
+      color: var(--primary);
     }
 
-    .card-tag-edit, .card-tag-add {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 8px;
+    .card-tag-add {
+      padding: 2px 8px;
       background: transparent;
       border: 1px dashed var(--border-color);
       color: var(--text-muted);
       border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 10px;
       cursor: pointer;
-      transition: var(--transition);
     }
 
-    .card-tag-edit:hover, .card-tag-add:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-      background: var(--primary-light);
+    /* 网格视图增强 */
+    .bookmarks-grid.grid-view .bookmark-card {
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
     }
 
-    .card-footer {
-      padding-top: 16px;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .bookmarks-grid.grid-view .card-thumb {
+      width: 100%;
+      height: 140px;
+      border-radius: 0;
     }
 
-    .card-date {
-      font-size: 12px;
-      color: var(--text-muted);
-      font-weight: 500;
+    .bookmarks-grid.grid-view .card-info {
+      padding: 14px;
     }
 
-    .card-actions {
-      display: flex;
-      gap: 8px;
+    .bookmarks-grid.grid-view .card-title {
+      white-space: normal;
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
     }
 
-    .btn-icon {
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-card);
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: var(--transition);
+    /* 列表视图（默认） */
+    .bookmarks-grid.list-view .bookmark-card {
+      flex-direction: row;
     }
 
-    .btn-icon:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-      background: var(--primary-light);
-      transform: scale(1.1);
-    }
-
-    .btn-icon.delete:hover {
-      border-color: var(--danger);
-      color: var(--danger);
-      background: #fff1f2;
-    }
-
-    /* 空状态 */
-    .empty-state {
-      padding: 120px 40px;
-      text-align: center;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    .empty-icon {
-      font-size: 72px;
-      margin-bottom: 24px;
-      filter: grayscale(1);
-      opacity: 0.2;
-    }
-
-    .empty-title {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--text-main);
+    /* 时间线视图卡片 */
+    .timeline-container .bookmark-card {
       margin-bottom: 12px;
     }
 
-    .empty-desc {
-      font-size: 15px;
-      color: var(--text-muted);
-      line-height: 1.6;
+    /* 动画效果 */
+    @keyframes slideInBookmark {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
-    /* 分类编辑弹窗 */
+    .bookmark-card {
+      animation: slideInBookmark 0.3s ease forwards;
+    }
+
+    .bookmark-card:nth-child(1) { animation-delay: 0s; }
+    .bookmark-card:nth-child(2) { animation-delay: 0.05s; }
+    .bookmark-card:nth-child(3) { animation-delay: 0.1s; }
+    .bookmark-card:nth-child(4) { animation-delay: 0.15s; }
+    .bookmark-card:nth-child(5) { animation-delay: 0.2s; }
+    .bookmark-card:nth-child(6) { animation-delay: 0.25s; }
+    .bookmark-card:nth-child(7) { animation-delay: 0.3s; }
+    .bookmark-card:nth-child(8) { animation-delay: 0.35s; }
+
+    /* 空状态 */
+    .empty-state {
+      padding: 80px 40px;
+      text-align: center;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .empty-illustration {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 24px;
+      background: var(--bg-main);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .empty-illustration svg {
+      width: 48px;
+      height: 48px;
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .empty-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .empty-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 12px rgba(var(--primary-rgb, 201, 136, 90), 0.25);
+    }
+
+    .empty-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(var(--primary-rgb, 201, 136, 90), 0.3);
+    }
+
+    /* 模态框 */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 1000;
+      background: rgba(45, 41, 38, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 50;
       display: none;
       align-items: center;
       justify-content: center;
@@ -814,15 +819,15 @@
 
     .modal {
       background: var(--bg-card);
-      border-radius: var(--radius-md);
-      width: 400px;
+      border-radius: var(--radius-lg);
+      width: 380px;
       max-width: 90vw;
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 4px 24px rgba(45, 41, 38, 0.15);
       border: 1px solid var(--border-color);
     }
 
     .modal-header {
-      padding: 20px 24px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
@@ -830,8 +835,8 @@
     }
 
     .modal-title {
-      font-size: 16px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 600;
       color: var(--text-main);
     }
 
@@ -840,18 +845,26 @@
       height: 28px;
       border: none;
       background: var(--bg-main);
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      font-size: 14px;
-      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--primary-light);
+      color: var(--primary);
     }
 
     .modal-body {
-      padding: 24px;
+      padding: 20px;
     }
 
     .modal-footer {
-      padding: 16px 24px;
+      padding: 12px 20px;
       border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: flex-end;
@@ -864,7 +877,7 @@
 
     .form-label {
       display: block;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-main);
       margin-bottom: 6px;
@@ -872,103 +885,110 @@
 
     .form-input {
       width: 100%;
-      padding: 10px 14px;
+      padding: 10px 12px;
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-md);
       font-size: 14px;
       background: var(--bg-card);
       color: var(--text-main);
+      transition: all 0.15s ease;
     }
 
     .form-input:focus {
       outline: none;
       border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
     }
 
     .modal-btn {
-      padding: 10px 20px;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.15s ease;
+      border: none;
     }
 
     .modal-btn-cancel {
       background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
+      color: var(--text-main);
+    }
+
+    .modal-btn-cancel:hover {
+      background: var(--primary-light);
     }
 
     .modal-btn-primary {
-      background: var(--primary);
-      border: none;
-      color: white;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: #ffffff;
+    }
+
+    .modal-btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
     }
 
     .modal-btn-danger {
-      background: var(--danger);
-      border: none;
+      background: #c75a5a;
       color: white;
     }
 
-    /* AI 标签云 */
+    .modal-btn-danger:hover {
+      background: #b54a4a;
+    }
+
+    /* 标签云 */
     .tag-cloud {
-      margin-bottom: 32px;
-      padding: 24px;
+      margin-bottom: 20px;
+      padding: 16px;
       background: var(--bg-card);
       border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
       border: 1px solid var(--border-color);
-      backdrop-filter: var(--backdrop);
     }
 
     .tag-cloud-title {
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 11px;
+      font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 16px;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
     }
 
     .tag-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
 
     .tag-item {
-      padding: 6px 14px;
+      padding: 6px 12px;
       background: var(--bg-main);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 13px;
-      font-weight: 600;
       color: var(--text-main);
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.15s ease;
+      border: none;
     }
 
     .tag-item:hover {
-      border-color: var(--primary);
-      color: var(--primary);
       background: var(--primary-light);
+      color: var(--primary);
     }
 
     .tag-item.active {
       background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      color: #ffffff;
     }
 
-    /* 侧边预览抽屉 */
+    /* 阅读抽屉 */
     .reader-drawer {
       position: fixed;
       inset: 0;
-      z-index: 2000;
+      z-index: 40;
       visibility: hidden;
-      transition: visibility 0.3s;
     }
 
     .reader-drawer.visible {
@@ -978,10 +998,10 @@
     .drawer-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.4);
+      background: rgba(45, 41, 38, 0.4);
       backdrop-filter: blur(4px);
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s;
     }
 
     .reader-drawer.visible .drawer-overlay {
@@ -991,15 +1011,14 @@
     .drawer-content {
       position: absolute;
       top: 0;
-      right: -600px;
-      width: 600px;
+      right: -560px;
+      width: 560px;
       height: 100%;
       background: var(--bg-card);
-      box-shadow: -10px 0 40px rgba(0,0,0,0.2);
       transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       flex-direction: column;
-      backdrop-filter: var(--backdrop);
+      box-shadow: -4px 0 24px rgba(45, 41, 38, 0.1);
     }
 
     .reader-drawer.visible .drawer-content {
@@ -1007,9 +1026,8 @@
     }
 
     .drawer-header {
-      padding: 20px 32px;
+      padding: 16px 24px;
       border-bottom: 1px solid var(--border-color);
-      background: var(--bg-card);
     }
 
     .drawer-header-actions {
@@ -1019,111 +1037,135 @@
     }
 
     .drawer-close-btn {
-      padding: 8px 16px;
-      border: 1px solid var(--border-color);
+      padding: 8px 14px;
+      border: none;
       background: var(--bg-main);
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 500;
       cursor: pointer;
       color: var(--text-main);
+      transition: all 0.15s ease;
+    }
+
+    .drawer-close-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
     }
 
     .drawer-source-btn {
       color: var(--primary);
       text-decoration: none;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 500;
+    }
+
+    .drawer-source-btn:hover {
+      text-decoration: underline;
     }
 
     .drawer-body {
       flex: 1;
       overflow-y: auto;
-      padding: 40px 60px;
+      padding: 32px 40px;
     }
 
     .reader-header {
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
 
     .reader-header h1 {
-      font-size: 32px;
-      font-weight: 850;
+      font-size: 24px;
+      font-weight: 600;
       color: var(--text-main);
-      line-height: 1.2;
-      margin: 12px 0;
-      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin: 10px 0;
     }
 
     .reader-meta {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
-      font-weight: 500;
     }
 
     .reader-summary {
-      font-size: 16px;
-      line-height: 1.8;
+      font-size: 15px;
+      line-height: 1.7;
       color: var(--text-main);
       background: var(--primary-light);
-      padding: 24px;
-      border-radius: var(--radius-md);
-      margin-bottom: 32px;
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 24px;
       white-space: pre-wrap;
     }
 
     .reader-main-text {
-      font-size: 16px;
-      line-height: 1.8;
+      font-size: 15px;
+      line-height: 1.7;
       color: var(--text-main);
       white-space: pre-wrap;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 20px 0;
+      border: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--primary-light);
+      color: var(--primary);
     }
 
     /* 时间线视图 */
     .timeline-container {
       position: relative;
-      padding-left: 40px;
+      padding-left: 32px;
     }
 
     .timeline-container::before {
       content: '';
       position: absolute;
-      left: 7px;
+      left: 6px;
       top: 0;
       bottom: 0;
-      width: 2px;
+      width: 1px;
       background: var(--border-color);
     }
 
     .timeline-group {
-      margin-bottom: 48px;
-      position: relative;
+      margin-bottom: 32px;
     }
 
     .timeline-header {
       position: relative;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
 
     .timeline-dot {
       position: absolute;
-      left: -40px;
+      left: -32px;
       top: 4px;
-      width: 16px;
-      height: 16px;
+      width: 12px;
+      height: 12px;
       background: var(--primary);
-      border: 4px solid var(--bg-main);
+      border: 3px solid var(--bg-main);
       border-radius: 50%;
-      z-index: 2;
     }
 
     .timeline-date {
-      font-size: 18px;
-      font-weight: 800;
+      font-size: 15px;
+      font-weight: 600;
       color: var(--text-main);
     }
 
-    /* 分类操作按钮 */
+    /* 分类操作 */
     .nav-item-actions {
       display: none;
       gap: 2px;
@@ -1134,49 +1176,42 @@
     }
 
     .nav-action {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border: none;
       background: transparent;
       cursor: pointer;
-      font-size: 11px;
       border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: var(--text-muted);
     }
 
     .nav-action:hover {
-      background: rgba(0,0,0,0.1);
+      background: var(--bg-main);
+      color: var(--primary);
     }
 
-    .nav-item.active .nav-action:hover {
-      background: rgba(255,255,255,0.2);
-    }
-
-    /* 分类编辑选项 */
     .category-edit-option {
       padding: 12px;
-      border: 2px solid var(--border-color);
+      border: 1px solid var(--border-color);
       background: var(--bg-card);
       border-radius: var(--radius-md);
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.15s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 500;
       color: var(--text-main);
-      text-align: center;
     }
 
     .category-edit-option:hover {
       border-color: var(--primary);
       background: var(--primary-light);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
     }
 
     .category-edit-option.active {
@@ -1185,57 +1220,47 @@
       color: var(--primary);
     }
 
-    .category-edit-option:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-      transform: none !important;
-    }
-
     .category-edit-icon {
-      font-size: 28px;
-      line-height: 1;
+      font-size: 24px;
     }
 
-    .category-edit-loading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
+    /* 拖拽样式 */
+    .nav-item[draggable="true"] {
+      cursor: grab;
     }
 
-    @keyframes pulse-scale {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+    .nav-item.dragging {
+      opacity: 0.5;
     }
 
+    .nav-item.drag-over {
+      border-top: 2px solid var(--primary);
+    }
+
+    .drag-handle {
+      opacity: 0;
+      color: var(--text-muted);
+      cursor: grab;
+    }
+
+    .nav-item:hover .drag-handle {
+      opacity: 1;
+    }
+
+    /* Loading */
     @keyframes spin {
-      from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
 
-    /* 通用loading spinner */
     .loading-spinner {
-      display: inline-block;
       width: 14px;
       height: 14px;
-      border: 2px solid currentColor;
-      border-top-color: transparent;
+      border: 2px solid var(--border-color);
+      border-top-color: var(--primary);
       border-radius: 50%;
       animation: spin 0.6s linear infinite;
     }
 
-    .loading-spinner-white {
-      border-color: white;
-      border-top-color: transparent;
-    }
-
-    .loading-spinner-lg {
-      width: 18px;
-      height: 18px;
-      border-width: 2.5px;
-    }
-
-    /* 全局加载遮罩 */
     .global-loading {
       position: fixed;
       inset: 0;
@@ -1243,9 +1268,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
-      opacity: 1;
-      transition: opacity 0.3s ease;
+      z-index: 100;
+      transition: opacity 0.3s;
     }
 
     .global-loading.fade-out {
@@ -1254,25 +1278,18 @@
     }
 
     .global-loading-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px;
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-xl);
-      border: 1px solid var(--border-color);
+      text-align: center;
     }
 
-    /* 右下角后台状态提示 */
+    /* 后台状态 */
     .background-status {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      z-index: 9998;
+      z-index: 60;
       opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.3s ease;
+      transform: translateY(10px);
+      transition: all 0.15s ease;
       pointer-events: none;
     }
 
@@ -1285,25 +1302,20 @@
     .background-status-content {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
+      gap: 8px;
+      padding: 10px 14px;
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-lg);
-      backdrop-filter: blur(10px);
-      min-width: 200px;
+      border: 1px solid var(--border-color);
     }
 
     .background-status-icon {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
     }
 
     .background-status-icon.syncing {
-      width: 14px;
-      height: 14px;
       border: 2px solid var(--primary);
       border-top-color: transparent;
       border-radius: 50%;
@@ -1311,66 +1323,43 @@
     }
 
     .background-status-icon.success {
-      width: 16px;
-      height: 16px;
+      background: #6b9080;
       border-radius: 50%;
-      background: var(--success);
-      position: relative;
-    }
-
-    .background-status-icon.success::after {
-      content: '✓';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 10px;
-      font-weight: bold;
-    }
-
-    .background-status-icon.warning {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: #f59e0b;
-      position: relative;
-    }
-
-    .background-status-icon.warning::after {
-      content: '!';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 12px;
-      font-weight: bold;
     }
 
     .background-status-text {
       font-size: 13px;
-      font-weight: 600;
       color: var(--text-main);
-      flex: 1;
     }
 
-    @keyframes slideInRight {
-      from { transform: translateX(400px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    /* Accessibility */
+    *:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
     }
 
-    @keyframes slideOutRight {
-      from { transform: translateX(0); opacity: 1; }
-      to { transform: translateX(400px); opacity: 0; }
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* 隐藏类 */
+    .hidden {
+      display: none !important;
     }
   </style>
 </head>
-<body>
+
+<body class="theme-toast">
   <!-- 全局加载遮罩 -->
   <div id="globalLoading" class="global-loading">
     <div class="global-loading-content">
-      <div class="loading-spinner loading-spinner-lg" style="width: 48px; height: 48px; border-width: 4px; border-color: var(--primary); border-top-color: transparent;"></div>
+      <div class="loading-spinner loading-spinner-lg"
+        style="width: 48px; height: 48px; border-width: 4px; border-color: var(--primary); border-top-color: transparent;">
+      </div>
       <p style="margin-top: 20px; font-size: 16px; font-weight: 600; color: var(--text-main);">正在加载知识库...</p>
       <p style="margin-top: 8px; font-size: 13px; color: var(--text-muted);" id="loadingProgress">初始化中</p>
     </div>
@@ -1380,8 +1369,13 @@
     <!-- 左侧分类导航 -->
     <aside class="sidebar">
       <div class="sidebar-brand">
-        <h1><span>📦</span> 知识库</h1>
-        <p>Your Digital Library</p>
+        <div class="logo-box">
+          <img src="icons/logo-icon-bold.svg" alt="ToastMark">
+        </div>
+        <div class="brand-text">
+          <h1>ToastMark</h1>
+          <p>Your Digital Library</p>
+        </div>
       </div>
 
       <div class="sidebar-stats">
@@ -1400,16 +1394,28 @@
         <div class="nav-section">
           <div class="nav-section-title">浏览</div>
           <div class="nav-item active" data-category="all" id="navAll">
-            <span class="nav-icon">📋</span>
+            <span class="nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+              </svg>
+            </span>
             <span class="nav-label">全部收藏</span>
             <span class="nav-count" id="allCountBadge">0</span>
           </div>
           <div class="nav-item" data-category="starred" id="navStarred">
-            <span class="nav-icon">⭐</span>
+            <span class="nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+              </svg>
+            </span>
             <span class="nav-label">特别关注</span>
           </div>
           <div class="nav-item" data-category="recent" id="navRecent">
-            <span class="nav-icon">🕒</span>
+            <span class="nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+            </span>
             <span class="nav-label">最近更新</span>
           </div>
         </div>
@@ -1424,7 +1430,8 @@
             <!-- 动态生成分类导航 -->
           </div>
           <button class="add-nav-btn" id="addCategoryBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" style="width: 14px; height: 14px;">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
             <span>创建新分类</span>
@@ -1436,20 +1443,26 @@
         <div class="sync-status" id="syncStatus">同步状态加载中</div>
         <div class="sync-buttons">
           <button class="sync-btn" id="syncFromCloudBtn" title="从云端拉取">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" style="width: 14px; height: 14px;">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
             </svg>
             <span>拉取</span>
           </button>
           <button class="sync-btn" id="syncToCloudBtn" title="推送至云端">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" style="width: 14px; height: 14px;">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
             </svg>
             <span>推送</span>
           </button>
           <button class="sync-btn sync-btn-primary" id="syncCategoriesBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" style="width: 14px; height: 14px;">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
             </svg>
             <span>同步分类架构</span>
           </button>
@@ -1467,18 +1480,23 @@
         <div class="header-actions">
           <div class="view-controls">
             <button class="view-btn active" id="gridViewBtn" title="网格视图">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" style="width: 18px; height: 18px;">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" />
               </svg>
             </button>
             <button class="view-btn" id="listViewBtn" title="列表视图">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" style="width: 18px; height: 18px;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
               </svg>
             </button>
             <button class="view-btn" id="timelineViewBtn" title="时间线视图">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" style="width: 18px; height: 18px;">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
               </svg>
             </button>
           </div>
@@ -1488,26 +1506,26 @@
             <option value="title">标题 A-Z</option>
           </select>
           <div class="search-wrapper">
-            <input type="text" id="searchBox" class="search-box" placeholder="搜索标题、域名、AI 摘要...">
+            <input type="text" id="searchBox" class="search-box" placeholder="搜索标题、标签、摘要...">
           </div>
-          <button class="action-btn" id="reclassifyBtn">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-            </svg>
-            <span>重新分类</span>
-          </button>
         </div>
       </header>
 
       <div class="content-body">
         <!-- AI 标签云区域 -->
         <div id="tagCloud" class="tag-cloud hidden">
-          <div class="tag-cloud-title">🏷️ 智能标签</div>
+          <div class="tag-cloud-title">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 6px;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+            </svg>
+            智能标签
+          </div>
           <div id="tagList" class="tag-list"></div>
         </div>
 
         <div id="bookmarksContainer">
-        <!-- 书签列表 -->
+          <!-- 书签列表 -->
         </div>
       </div>
     </main>
@@ -1518,7 +1536,11 @@
     <div class="modal">
       <div class="modal-header">
         <h3 class="modal-title" id="modalTitle">编辑分类</h3>
-        <button class="modal-close" id="modalClose">✕</button>
+        <button class="modal-close" id="modalClose" aria-label="关闭">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
       <div class="modal-body">
         <div class="form-group">
@@ -1542,17 +1564,29 @@
   <div id="editCategoryModal" class="modal-overlay" style="display: none;">
     <div class="modal">
       <div class="modal-header">
-        <h3 class="modal-title">📂 修改分类</h3>
-        <button class="modal-close" id="closeEditCategoryModal">✕</button>
+        <h3 class="modal-title">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px; vertical-align: middle; margin-right: 6px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+          </svg>
+          修改分类
+        </h3>
+        <button class="modal-close" id="closeEditCategoryModal" aria-label="关闭">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
       <div class="modal-body">
         <div class="form-group">
           <label class="form-label">当前书签</label>
-          <div id="editCategoryBookmarkTitle" style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 16px; padding: 12px; background: var(--bg-main); border-radius: var(--radius-sm); border: 1px solid var(--border-color);"></div>
+          <div id="editCategoryBookmarkTitle"
+            style="font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 16px; padding: 12px; background: var(--bg-main); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">选择新分类</label>
-          <div id="editCategoryList" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-height: 400px; overflow-y: auto;">
+          <div id="editCategoryList"
+            style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-height: 400px; overflow-y: auto;">
             <!-- 动态生成 -->
           </div>
         </div>
@@ -1569,7 +1603,12 @@
     <div class="drawer-content">
       <div class="drawer-header">
         <div class="drawer-header-actions">
-          <button class="drawer-close-btn" id="closeDrawer">✕ 关闭</button>
+          <button class="drawer-close-btn" id="closeDrawer" aria-label="关闭阅读器">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+            关闭
+          </button>
           <a href="#" target="_blank" id="drawerSourceLink" class="drawer-source-btn">访问原网页 ↗</a>
         </div>
       </div>
@@ -1599,4 +1638,5 @@
   <script src="turso.js"></script>
   <script src="bookmarks.js"></script>
 </body>
+
 </html>

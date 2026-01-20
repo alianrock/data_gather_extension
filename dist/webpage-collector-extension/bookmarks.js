@@ -538,6 +538,43 @@ async function saveCategories(syncToCloud = true) {
   }
 }
 
+// 获取展开状态
+function getExpandedCategories() {
+  try {
+    const saved = localStorage.getItem('expandedCategories');
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
+// 保存展开状态
+function saveExpandedCategories(expanded) {
+  try {
+    localStorage.setItem('expandedCategories', JSON.stringify(expanded));
+  } catch {
+    // 忽略存储错误
+  }
+}
+
+// 切换分类展开状态
+function toggleCategoryExpand(categoryId) {
+  const expanded = getExpandedCategories();
+  const index = expanded.indexOf(categoryId);
+  if (index > -1) {
+    expanded.splice(index, 1);
+  } else {
+    expanded.push(categoryId);
+  }
+  saveExpandedCategories(expanded);
+
+  // 更新 DOM
+  const wrapper = document.querySelector(`.nav-item-parent[data-parent-id="${categoryId}"]`);
+  if (wrapper) {
+    wrapper.classList.toggle('expanded', index === -1);
+  }
+}
+
 // 渲染左侧导航
 function renderSidebarNav() {
   const nav = document.getElementById('sidebarNav');
@@ -546,23 +583,38 @@ function renderSidebarNav() {
   const allCount = allBookmarks.length;
   const allCountBadge = document.getElementById('allCountBadge');
   if (allCountBadge) allCountBadge.textContent = allCount;
-  
+
+  const expandedCategories = getExpandedCategories();
   let html = '';
 
   categories.forEach((cat, index) => {
     const count = countBookmarksInCategory(cat.id);
     const hasChildren = cat.children && cat.children.length > 0;
-    
+    const isExpanded = expandedCategories.includes(cat.id);
+
+    if (hasChildren) {
+      // 有子分类的父分类 - 使用包装容器
+      html += `<div class="nav-item-parent ${isExpanded ? 'expanded' : ''}" data-parent-id="${cat.id}">`;
+    }
+
     html += `
-      <div class="nav-item ${currentCategory === cat.id ? 'active' : ''}" 
-           data-category="${cat.id}" 
+      <div class="nav-item ${currentCategory === cat.id ? 'active' : ''}"
+           data-category="${cat.id}"
            data-category-index="${index}"
            draggable="true">
-        <span class="drag-handle" title="拖动排序">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
-          </svg>
-        </span>
+        ${hasChildren ? `
+          <button class="nav-toggle" data-toggle="${cat.id}" title="${isExpanded ? '收起' : '展开'}">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        ` : `
+          <span class="drag-handle" title="拖动排序">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+            </svg>
+          </span>
+        `}
         <span class="nav-icon">${cat.icon || '📁'}</span>
         <span class="nav-label">${cat.name}</span>
         <span class="nav-count">${count}</span>
@@ -586,13 +638,13 @@ function renderSidebarNav() {
       cat.children.forEach((child, childIndex) => {
         const childCount = countBookmarksInCategory(child.id);
         html += `
-          <div class="nav-item ${currentCategory === child.id ? 'active' : ''}" 
+          <div class="nav-item ${currentCategory === child.id ? 'active' : ''}"
                data-category="${child.id}"
                data-parent-index="${index}"
                data-child-index="${childIndex}"
                draggable="true">
             <span class="drag-handle" title="拖动排序">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 12px; height: 12px;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
               </svg>
             </span>
@@ -609,7 +661,7 @@ function renderSidebarNav() {
           </div>
         `;
       });
-      html += '</div>';
+      html += '</div></div>'; // 关闭 nav-children 和 nav-item-parent
     }
   });
 
@@ -625,7 +677,19 @@ function renderSidebarNav() {
 
   // 绑定事件
   bindNavEvents();
+  bindToggleEvents();
   initDragAndDrop();
+}
+
+// 绑定展开/折叠事件
+function bindToggleEvents() {
+  document.querySelectorAll('.nav-toggle[data-toggle]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const categoryId = btn.dataset.toggle;
+      toggleCategoryExpand(categoryId);
+    });
+  });
 }
 
 // 拖拽排序状态
@@ -1554,11 +1618,13 @@ function renderBookmarks() {
   if (currentView === 'timeline') {
     renderTimeline(container);
   } else {
-  container.innerHTML = `
-      <div class="bookmarks-grid ${currentView === 'list' ? 'list-view' : ''}">
-      ${filteredBookmarks.map(b => createBookmarkCard(b)).join('')}
-    </div>
-  `;
+    // 默认列表视图，grid-view 为网格视图
+    const viewClass = currentView === 'grid' ? 'grid-view' : '';
+    container.innerHTML = `
+      <div class="bookmarks-grid ${viewClass}">
+        ${filteredBookmarks.map(b => createBookmarkCard(b)).join('')}
+      </div>
+    `;
   }
 
   // 绑定事件
@@ -1934,75 +2000,101 @@ async function editBookmarkTags(bookmarkId) {
   }
 }
 
-// 创建书签卡片
+// 创建书签卡片 - Landing Page Mockup 风格
 function createBookmarkCard(bookmark) {
   const title = bookmark.pageInfo?.title || '无标题';
   const url = bookmark.pageInfo?.url || '';
   const domain = bookmark.pageInfo?.domain || (url ? new URL(url).hostname : '');
   const summary = bookmark.summary || bookmark.pageInfo?.description || '暂无摘要内容';
   const category = bookmark.category || '其他';
-  const date = new Date(bookmark.createdAt || bookmark.timestamp).toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
   const screenshot = bookmark.screenshot || '';
-  
+
+  // 计算时间显示
+  const createdAt = new Date(bookmark.createdAt || bookmark.timestamp);
+  const now = new Date();
+  const diffMs = now - createdAt;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  let dateText;
+  let isNew = false;
+  if (diffMins < 5) {
+    dateText = '刚刚添加';
+    isNew = true;
+  } else if (diffMins < 60) {
+    dateText = `${diffMins}分钟前`;
+  } else if (diffHours < 24) {
+    dateText = `${diffHours}小时前`;
+  } else if (diffDays < 7) {
+    dateText = `${diffDays}天前`;
+  } else {
+    dateText = createdAt.toLocaleDateString('zh-CN', {
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+
   // 获取标签
   const tags = Array.isArray(bookmark.tags) ? bookmark.tags : [];
   const tagsHtml = tags.length > 0 ? `
     <div class="card-tags">
-      ${tags.map(tag => `<span class="card-tag">#${escapeHtml(tag)}</span>`).join('')}
-      <button class="card-tag-edit" id="edittag-${bookmark.id}" title="编辑标签">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 12px; height: 12px;">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-      </button>
+      ${tags.slice(0, 3).map(tag => `<span class="card-tag">#${escapeHtml(tag)}</span>`).join('')}
+      ${tags.length > 3 ? `<span class="card-tag">+${tags.length - 3}</span>` : ''}
     </div>
-  ` : `
-    <div class="card-tags">
-      <button class="card-tag-add" id="edittag-${bookmark.id}" title="添加标签">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 12px; height: 12px; margin-right: 4px;">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
-        </svg>
-        添加标签
-      </button>
-    </div>
-  `;
+  ` : '';
+
+  // 缩略图背景颜色 - 根据分类生成温暖的颜色
+  const categoryColors = {
+    '工具': 'linear-gradient(135deg, rgba(201, 136, 90, 0.15) 0%, rgba(212, 165, 116, 0.2) 100%)',
+    '开发': 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)',
+    '设计': 'linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%)',
+    '阅读': 'linear-gradient(135deg, #dcfce7 0%, #86efac 100%)',
+    '资讯': 'linear-gradient(135deg, #fce7f3 0%, #f9a8d4 100%)',
+    '视频': 'linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%)',
+    '其他': 'linear-gradient(135deg, #f0ebe6 0%, #e8e4df 100%)'
+  };
+  const thumbBg = categoryColors[category] || categoryColors['其他'];
 
   return `
-    <article class="bookmark-card">
-      <div class="card-image">
-        <span class="card-category" id="editcat-${bookmark.id}">${category}</span>
-        ${screenshot ? `<img src="${screenshot}" alt="${escapeHtml(title)}" loading="lazy">` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--primary);background:var(--primary-light);font-size:48px;font-weight:800;opacity:0.5;">${domain.charAt(0).toUpperCase()}</div>`}
+    <article class="bookmark-card${isNew ? ' bookmark-new' : ''}">
+      <div class="card-thumb" style="background: ${thumbBg};">
+        ${screenshot
+          ? `<img src="${screenshot}" alt="${escapeHtml(title)}" loading="lazy">`
+          : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>`
+        }
       </div>
-      <div class="card-content">
+      <div class="card-info">
         <h3 class="card-title" title="${escapeHtml(title)}">${escapeHtml(title)}</h3>
-        <a href="${url}" target="_blank" class="card-url">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 14px; height: 14px; margin-right: 4px; vertical-align: middle;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-          </svg>
-          ${domain}
-        </a>
         <p class="card-summary">${escapeHtml(summary)}</p>
         ${tagsHtml}
-        <div class="card-footer">
-          <span class="card-date">${date}</span>
+        <div class="card-meta">
+          <span class="card-category" id="editcat-${bookmark.id}">${category}</span>
+          <span class="card-date${isNew ? ' new-badge' : ''}">${dateText}</span>
           <div class="card-actions">
             <button class="btn-icon" id="preview-${bookmark.id}" title="快速预览">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width: 20px; height: 20px;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" style="width: 16px; height: 16px;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
             </button>
             <button class="btn-icon" id="open-${bookmark.id}" title="访问网页">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
             </button>
+            <button class="btn-icon" id="edittag-${bookmark.id}" title="编辑标签">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+              </svg>
+            </button>
             <button class="btn-icon delete" id="delete-${bookmark.id}" title="永久删除">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 16px; height: 16px;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
               </svg>
             </button>
